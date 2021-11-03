@@ -1,0 +1,261 @@
+{
+  "trainer": {
+    "max_epochs": 2000
+  },
+
+  "workflow": {
+    "name": "SupervisedSegmentation",
+
+    "settings": {
+      "num_classes": 3,
+      "learning_rate": 1e-4,
+      "scheduler": {
+        "interval": "step",
+        "frequency": 1
+      }
+    },
+
+    "components": {
+      "model": {
+        "name": "UNETR",
+        "args": {
+          "in_channels": 1,
+          "out_channels": 3,
+          "img_size": [96, 96, 96]
+        }
+      },
+      "inferer": {
+        "name": "SlidingWindowInferer",
+        "args": {
+          "roi_size": [96, 96, 96],
+          "sw_batch_size": 4,
+          "overlap": 0.5
+        }
+      },
+      "loss": {
+        "name": "DiceCELoss",
+        "args": {
+          "include_background": true,
+          "to_onehot_y": true,
+          "softmax": true
+        }
+      },
+      "optimizer": {
+        "name": "AdamW",
+        "args": {
+          "lr": 1e-4
+        }
+      },
+      "scheduler": {
+        "name": "WarmupCosineSchedule",
+        "path": "monai.optimizers.lr_scheduler",
+        "args": {
+          "warmup_steps": 200,
+          "t_total": 20000
+        }
+      },
+      "train_metrics": [],
+      "valid_metrics": []
+    }
+  },
+
+  "data": {
+    "name": "DecathlonDataModule",
+
+    "settings": {
+      "data_root": "/home/nanaha/data/Pancreas-CT",
+      "data_list": "/home/nanaha/data/Pancreas-CT/datalist.json",
+      "is_segmentation": true,
+
+      "use_shm_cache": false,
+      "shm_cache_path": "/dev/shm"
+    },
+
+    "training": {
+      "data_list_key": "training",
+      "transforms": [
+        {
+          "name": "LoadImaged",
+          "args": {
+            "keys": ["image", "label"]
+          }
+        },
+        {
+          "name": "AddChanneld",
+          "args": {
+            "keys": ["image", "label"]
+          }
+        },
+        {
+          "name": "Orientationd",
+          "args": {
+            "keys": ["image", "label"],
+            "as_closest_canonical": true
+          }
+        },
+        {
+          "name": "ScaleIntensityRanged",
+          "args": {
+            "keys": ["image"],
+            "a_min": -200.0,
+            "a_max":  250.0,
+            "b_min":   -1.0,
+            "b_max":    0.0,
+            "clip": true
+          }
+        },
+        {
+          "name": "RandCropByPosNegLabeld",
+          "args": {
+            "keys": ["image", "label"],
+            "label_key": "label",
+            "spatial_size": [96, 96, 96],
+            "pos": 1.0,
+            "neg": 1.0,
+            "num_samples": 6,
+            "image_key": "image",
+            "image_threshold": 0.0
+          }
+        },
+        {
+          "name": "RandShiftIntensityd",
+          "args": {
+            "keys": ["image"],
+            "offsets": 0.1,
+            "prob": 0.8
+          }
+        },
+        {
+          "name": "EnsureTyped",
+          "args": {
+            "keys": ["image", "label"]
+          }
+        }
+      ],
+      "dataset": {
+        "name": "CacheDataset",
+        "args": {
+          "cache_rate": 0.3,
+          "num_workers": 6
+        }
+      },
+      "dataloader": {
+        "name": "DataLoader",
+        "args": {
+          "batch_size": 2,
+          "shuffle": true,
+          "pin_memory": true,
+          "num_workers": 4
+        }
+      }
+    },
+
+    "validation": {
+      "data_list_key": "validation",
+      "transforms": [
+        {
+          "name": "LoadImaged",
+          "args": {
+            "keys": ["image", "label"]
+          }
+        },
+        {
+          "name": "AddChanneld",
+          "args": {
+            "keys": ["image", "label"]
+          }
+        },
+        {
+          "name": "Orientationd",
+          "args": {
+            "keys": ["image", "label"],
+            "as_closest_canonical": true
+          }
+        },
+        {
+          "name": "ScaleIntensityRanged",
+          "args": {
+            "keys": ["image"],
+            "a_min": -200.0,
+            "a_max":  250.0,
+            "b_min":   -1.0,
+            "b_max":    0.0,
+            "clip": true
+          }
+        },
+        {
+          "name": "EnsureTyped",
+          "args": {
+            "keys": ["image", "label"]
+          }
+        }
+      ],
+      "dataset": {
+        "name": "Dataset"
+      },
+      "dataloader": {
+        "name": "DataLoader",
+        "args": {
+          "batch_size": 1,
+          "shuffle": false,
+          "pin_memory": true,
+          "num_workers": 4
+        }
+      }
+    },
+
+    "test": {
+      "data_list_key": "testing",
+      "transforms": [
+        {
+          "name": "LoadImaged",
+          "args": {
+            "keys": ["image"]
+          }
+        },
+        {
+          "name": "AddChanneld",
+          "args": {
+            "keys": ["image"]
+          }
+        },
+        {
+          "name": "Orientationd",
+          "args": {
+            "keys": ["image"],
+            "as_closest_canonical": true
+          }
+        },
+        {
+          "name": "ScaleIntensityRanged",
+          "args": {
+            "keys": ["image"],
+            "a_min": -200.0,
+            "a_max":  250.0,
+            "b_min":   -1.0,
+            "b_max":    0.0,
+            "clip": true
+          }
+        },
+        {
+          "name": "EnsureTyped",
+          "args": {
+            "keys": ["image"]
+          }
+        }
+      ],
+      "dataset": {
+        "name": "Dataset"
+      },
+      "dataloader": {
+        "name": "DataLoader",
+        "args": {
+          "batch_size": 1,
+          "shuffle": false,
+          "pin_memory": true,
+          "num_workers": 6
+        }
+      }
+    }
+  }
+}

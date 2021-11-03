@@ -1,2 +1,2 @@
-monai-weekly[all]
-pytorch-lightning
+monai>=0.6.0
+pytorch-lightning>=1.4.9
