@@ -54,8 +54,54 @@
           "t_total": 20000
         }
       },
-      "train_metrics": [],
-      "valid_metrics": []
+      "post_transforms": {
+        "training": [],
+        "validation": [
+          {
+            "name": "Activationsd",
+            "args": {
+              "keys": "preds",
+              "softmax": true
+            }
+          },
+          {
+            "name": "AsDiscreted",
+            "args": {
+              "keys": ["preds", "label"],
+              "argmax": [true, false],
+              "to_onehot": [true, true],
+              "num_classes": 3
+            }
+          },
+          {
+            "name": "SplitChanneld",
+            "args": {
+              "keys": ["preds", "label"],
+              "output_postfixes": ["background", "pancreas", "tumor"],
+              "channel_dim": 1
+            }
+          }
+        ],
+        "test": [
+          {
+            "name": "AsDiscreted",
+            "args": {
+              "keys": "preds",
+              "argmax": true,
+              "num_classes": 3
+            }
+          },
+          {
+            "name": "SqueezeDimd",
+            "args": {
+              "keys": "preds",
+              "dim": 0
+            }
+          }
+        ]
+      },
+      "training_metrics": [],
+      "validation_metrics": []
     }
   },
 

@@ -8,7 +8,10 @@ from monai.data.decathlon_datalist import load_decathlon_datalist
 from pytorch_lightning import LightningDataModule
 
 from manafaln.common.constants import ComponentType
-from manafaln.utils.components import instantiate, build_transforms
+from manafaln.utils.builder import (
+    instantiate,
+    build_transforms
+)
 
 class DecathlonDataModule(LightningDataModule):
     def __init__(self, config: Dict):

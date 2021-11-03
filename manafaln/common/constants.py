@@ -12,6 +12,8 @@ class ComponentType(Enum):
     DATASET    = 7
     DATALOADER = 8
     TRANSFORM  = 9
+    DATAMODULE = 10
+    WORKFLOW   = 11
 
 # The default paths for each component are for the dynamic modeue loader
 class ComponentPaths:
@@ -24,4 +26,6 @@ class ComponentPaths:
     DEFAULT_DATASET_PATH    = "monai.data.dataset"
     DEFAULT_DATALOADER_PATH = "monai.data.dataloader"
     DEFAULT_TRANSFORM_PATH  = "monai.transforms"
+    DEFAULT_DATAMODULE_PATH = "manafaln.data"
+    DEFAULT_WORKFLOW_PATH   = "manafaln.workflow"
 

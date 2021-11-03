@@ -3,8 +3,14 @@ import monai
 from pytorch_lightning import LightningModule
 from pytorch_lightning.utilities.distributed import rank_zero_only
 
-from manafaln.common.constants import ComponentType
-from manafaln.utils.components import instantiate
+from manafaln.utils import (
+    build_model,
+    build_loss_fn,
+    build_inferer,
+    build_optimizer,
+    build_scheduler,
+    build_transforms
+)
 
 class SupervisedSegmentation(LightningModule):
     def __init__(self, config: dict):
@@ -15,26 +21,18 @@ class SupervisedSegmentation(LightningModule):
         # Save all hyperparameters
         self.save_hyperparameters(config)
 
-        self.model = instantiate(
-            name=config["model"]["name"],
-            path=config["model"].get("path", None),
-            component_type=ComponentType.MODEL,
-            **config["model"].get("args", {})
-        )
+        # Get configurations for all components
+        components = self.hparams.components
 
-        self.inferer = instantiate(
-            name=config["inferer"]["name"],
-            path=config["inferer"].get("path", None),
-            component_type=ComponentType.INFERER,
-            **config["inferer"].get("args", {})
-        )
+        self.model   = build_model(components["model"])
+        self.loss_fn = build_loss_fn(components["loss"])
+        self.inferer = build_inferer(components["inferer"])
 
-        self.loss_fn = instantiate(
-            name=config["loss"]["name"],
-            path=config["loss"].get("path", None),
-            component_type=ComponentType.LOSS,
-            **config["loss"].get("args", {})
-        )
+        self.post_transforms = {}
+        for phase in ["training", "validation", "test"]:
+            self.post_transforms[phase] = build_transforms(
+                components["post_transforms"].get(phase, [])
+            )
 
         # TODO: Add training/validation metrics here
         # train_metrics = []
@@ -47,11 +45,17 @@ class SupervisedSegmentation(LightningModule):
         image = batch["image"]
         label = batch["label"]
 
-        preds = self.model(image)
-        loss = self.loss_fn(preds, label)
+        # Apply model & compute loss
+        batch["preds"] = self.model(image)
+        loss = self.loss_fn(batch["preds"], batch["label"])
 
-        # Log loss value
-        self.log_dict({ "train_loss": loss })
+        # Apply post transforms & compute metrics
+        batch = self.post_transforms["training"](batch)
+
+        # Log training step metrics
+        self.log_dict({
+            "train_loss": loss
+        })
 
         return loss
 
@@ -63,41 +67,52 @@ class SupervisedSegmentation(LightningModule):
         image = batch["image"]
         label = batch["label"]
 
-        preds = self.forward(image)
+        # Run inference
+        batch["preds"] = self.forward(image)
+
+        # Apply post transforms
+        batch = self.post_transforms["validation"](batch)
 
         # Compute metrics here
 
-        return None
+        return 0
 
     def validation_epoch_end(self, validation_step_outputs):
         return None
 
+    def test_step(self, batch, batch_idx):
+        # No label for test
+        image = batch["image"]
+
+        # Run inference
+        batch["preds"] = self.forward(image)
+
+        # Apply post transforms
+        batch = self.post_transforms["test"](batch)
+
+        # TODO: Save results
+
+        return {}
+
     def configure_optimizers(self):
-        opt_config = getattr(self.hparams, "optimizer")
-        sch_config = getattr(self.hparams, "scheduler", None)
+        # Extract optimizer & scheduler configurations
+        opt_config = self.hparams.components["optimizer"]
+        sch_config = self.hparams.components.get("scheduler", None)
 
-        opt = instantiate(
-            name=opt_config["name"],
-            path=opt_config.get("path", None),
-            component_type=ComponentType.OPTIMIZER,
-            params=self.model.parameters(),
-            **opt_config.get("args", {})
-        )
+        opt = {
+            "optimizer": build_optimizer(opt_config, self.model.parameters())
+        }
 
-        if sch_config is not None:
-            sch = {
-                "scheduler": instantiate(
-                    name=sch_config["name"],
-                    path=sch_config.get("path", None),
-                    component_type=ComponentType.SCHEDULER,
-                    optimizer=opt,
-                    **sch_config.get("args", {})
-                ),
-                "interval": self.hparams.settings.get("interval", "epoch"),
-                "frequency": self.hparams.settings.get("frequency", 1)
+        if not sch_config is None:
+            # Get or set default scheduler mode
+            interval = self.hparams.settings.get("interval", "epoch")
+            frequency = self.hparams.settings.get("frequency", 1)
+
+            opt["lr_scheduler"] = {
+                "scheduler": build_scheduler(opt_config, opt),
+                "interval": interval,
+                "frequency": frequency
             }
-            return [opt], [sch]
 
         return opt
-
 
