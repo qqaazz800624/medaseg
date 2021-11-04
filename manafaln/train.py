@@ -7,43 +7,49 @@ from pytorch_lightning.callbacks import (
     ModelCheckpoint
 )
 
-from manafaln.utils import build_workflow, build_data_module
+from manafaln.args import (
+    parse_trainer_args,
+    load_training_config,
+    configure_training_args
+)
+from manafaln.utils import (
+    build_callback,
+    build_workflow,
+    build_data_module
+)
 
-def train(args):
-    # Load training config
-    with open(args.config, "r") as f:
-        config = json.load(f)
-
+def run(config_trainer, config_data, config_workflow):
     # Configure data first
-    data = build_data_module(config["data"])
+    data = build_data_module(config_data)
 
     # Configure workflow
-    workflow = build_workflow(config["workflow"])
-
-    # Process trainer configurations
-    # Prefer arguments over config file
+    workflow = build_workflow(config_workflow)
 
     # Create callbacks
-    callbacks = [
-        LearningRateMonitor(),
-        ModelCheckpoint()
-    ]
+    callbacks = config_trainer.get("callbacks", [])
+    callbacks = [build_callback(c) for c in callbacks]
 
     # Create trainer
-    trainer = Trainer.from_argparse_args(
-        args,
-        callbacks=callbacks
+    trainer = Trainer(
+        callbacks=callbacks,
+        **config_trainer["settings"]
     )
+
+    if config_trainer["settings"].get("auto_lr_find", False):
+        triner.tune()
 
     # Start training
     trainer.fit(workflow, data)
 
 if __name__ == "__main__":
-    parser = ArgumentParser()
-    parser = Trainer.add_argparse_args(parser)
+    args   = parse_trainer_args()
+    config = load_training_config(args.config)
 
-    parser.add_argument("--config", "-c", type=str, help="Training config file")
+    # Integrate the settings in args & config file
+    # When there is a setting conflict between args and config, the value set
+    # in the config file will be ignored
+    train, data, workflow = configure_training_args(args=args, config=config)
 
-    args = parser.parse_args()
+    # Run
+    run(config_train=train, config_data=data, config_workflow=workflow)
 
-    train(args)

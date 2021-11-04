@@ -5,7 +5,11 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from monai.transforms import Compose
-from pytorch_lightning import LightningModule, LightningDataModule
+from pytorch_lightning import (
+    LightningModule,
+    LightningDataModule
+)
+from pytorch_lightning.callbacks import Callback
 
 from manafaln.common.constants import ComponentType, ComponentPaths
 
@@ -22,7 +26,8 @@ def get_default_path(component_type: Union[ComponentType, str]) -> str:
             ComponentType.DATALOADER: ComponentPaths.DEFAULT_DATALOADER_PATH,
             ComponentType.TRANSFORM:  ComponentPaths.DEFAULT_TRANSFORM_PATH,
             ComponentType.WORKFLOW:   ComponentPaths.DEFAULT_WORKFLOW_PATH,
-            ComponentType.DATAMODULE: ComponentPaths.DEFAULT_DATAMODULE_PATH
+            ComponentType.DATAMODULE: ComponentPaths.DEFAULT_DATAMODULE_PATH,
+            ComponentType.CALLBACK:   ComponentPaths.DEFAULT_CALLBACK_PATH
         }
     else:
         component_type = component_type.lower()
@@ -37,7 +42,8 @@ def get_default_path(component_type: Union[ComponentType, str]) -> str:
             "dataloader": ComponentPaths.DEFAULT_DATALOADER_PATH,
             "transform":  ComponentPaths.DEFAULT_TRANSFORM_PATH,
             "workflow":   ComponentPaths.DEFAULT_WORKFLOW_PATH,
-            "datamodule": ComponentPaths.DEFAULT_DATAMODULE_PATH
+            "datamodule": ComponentPaths.DEFAULT_DATAMODULE_PATH,
+            "callback":   ComponentPaths.DEFAULT_CALLBACK_PATH
         }
     return mapping.get(component_type, "manafaln")
 
@@ -123,6 +129,8 @@ def build_transforms(trans_configs: List[Dict]) -> Callable:
             component_type=ComponentType.TRANSFORM,
             **config.get("args", {})
         )
+        if not isinstance(trans, Callable):
+            raise TypeError(f"{type(trans)} is not Callable type")
         transforms.append(trans)
     return Compose(transforms)
 
@@ -141,3 +149,15 @@ def build_data_module(config: Dict) -> LightningDataModule:
         component_type=ComponentType.DATAMODULE,
         config=config
     )
+
+def build_callback(config: Dict) -> Callback:
+    callback = instantiate(
+        name=config["name"],
+        path=config.get("path", None),
+        component_type=ComponentType.CALLBACK,
+        **config.get("args", {})
+    )
+
+    if not isinstance(callback, Callback):
+        raise TypeError(f"{type(callback)} is not a valid Callback type")
+    return callback

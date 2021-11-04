@@ -14,6 +14,7 @@ class ComponentType(Enum):
     TRANSFORM  = 9
     DATAMODULE = 10
     WORKFLOW   = 11
+    CALLBACK   = 12
 
 # The default paths for each component are for the dynamic modeue loader
 class ComponentPaths:
@@ -28,4 +29,5 @@ class ComponentPaths:
     DEFAULT_TRANSFORM_PATH  = "monai.transforms"
     DEFAULT_DATAMODULE_PATH = "manafaln.data"
     DEFAULT_WORKFLOW_PATH   = "manafaln.workflow"
+    DEFAULT_CALLBACK_PATH   = "pytorch_lightning.callbacks"
 

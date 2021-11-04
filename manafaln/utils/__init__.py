@@ -6,5 +6,6 @@ from .builder import (
     build_scheduler,
     build_transforms,
     build_workflow,
-    build_data_module
+    build_data_module,
+    build_callback
 )

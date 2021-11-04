@@ -1,6 +1,39 @@
 {
   "trainer": {
-    "max_epochs": 2000
+    "settings": {
+      "accelerator": "ddp",
+      "gpus": [0, 1, 2, 3],
+      "benchmark": true,
+      "amp_backend": "apex",
+      "amp_level": "O2",
+
+      "accumulate_grad_batches": null,
+      "max_steps": 25000,
+      "val_check_interval": 10,
+      "terminate_on_nan": true,
+
+      "auto_lr_find": false,
+
+      "default_root_dir": "models",
+      "log_every_n_steps": 10,
+      "resume_from_checkpoint": null
+    },
+
+    "callbacks": [
+      { 
+          "name": "LearningRateMonitor"
+      },
+      { 
+          "name": "ModelCheckpoint",
+          "args": {
+            "filename": "best_model",
+            "monitor": "val_meandice",
+            "mode": "max",
+            "save_last": true,
+            "save_top_k": 1
+          }
+      }
+    ]
   },
 
   "workflow": {
