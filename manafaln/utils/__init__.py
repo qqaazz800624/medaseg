@@ -1,4 +1,4 @@
-from .builder import (
+from .builders import (
     build_model,
     build_loss_fn,
     build_inferer,

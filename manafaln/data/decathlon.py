@@ -8,7 +8,7 @@ from monai.data.decathlon_datalist import load_decathlon_datalist
 from pytorch_lightning import LightningDataModule
 
 from manafaln.common.constants import ComponentType
-from manafaln.utils.builder import (
+from manafaln.utils.builders import (
     instantiate,
     build_transforms
 )
@@ -19,7 +19,7 @@ class DecathlonDataModule(LightningDataModule):
 
         # Data module do not load from checkpoints, but saving these
         # informations is useful for managing your experiments
-        self.save_hyperparameters(config)
+        self.save_hyperparameters({"data": config})
 
         settings = config["settings"]
 
@@ -51,7 +51,7 @@ class DecathlonDataModule(LightningDataModule):
             raise ValueError(f"{phase} split is not allowed for data module")
         print(phase)
 
-        config = getattr(self.hparams, phase)
+        config = self.hparams.data[phase]
 
         files = load_decathlon_datalist(
             data_list_file_path=self.data_list,

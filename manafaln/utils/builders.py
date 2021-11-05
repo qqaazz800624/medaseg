@@ -4,6 +4,7 @@ from importlib import import_module
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from monai.metrics import Metric
 from monai.transforms import Compose
 from pytorch_lightning import (
     LightningModule,
@@ -119,6 +120,18 @@ def build_scheduler(config: Dict, opt: optim.Optimizer):
         **config.get("args", {})
     )
     return sch
+
+def build_metric(config: Dict) -> Metric:
+    metric = instantiate(
+        name=config["name"],
+        path=config.get("path", None),
+        component_type=ComponentType.METRIC,
+        **config.get("args", {})
+    )
+
+    if not isinstance(metric, Metric):
+        raise TypeError(f"{type(metric)} is not a MONAI Metric")
+    return metric
 
 def build_transforms(trans_configs: List[Dict]) -> Callable:
     transforms = []

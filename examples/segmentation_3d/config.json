@@ -137,23 +137,23 @@
         {
           "name": "DiceMetric",
           "log_label": "train_meandice",
-          "output_transform": "lambda data: data['preds'], data['label']",
+          "output_transform": "lambda x: x['preds'], x['label']",
           "args": {
             "include_background": false,
             "reduction": "mean",
-            "get_non_nans": false
+            "get_not_nans": false
           }
         },
         {
-          "name": "ConfusionMatrix",
+          "name": "ConfusionMatrixMetric",
           "log_label": ["train_sensitivity", "train_specificity", "train_accuracy"],
-          "output_transform": "lambda data: data['preds'], data['label']",
+          "output_transform": "lambda x: x['preds'], x['label']",
           "args": {
             "include_background": false,
             "metric_name": ["sensitivity", "specificity", "accuracy"],
             "compute_sample": true,
             "reduction": "mean",
-            "get_non_nans": false
+            "get_not_nans": false
           }
         }
       ],
@@ -161,23 +161,23 @@
         {
           "name": "DiceMetric",
           "log_label": "val_meandice",
-          "output_transform": "lambda data: data['preds'], data['label']",
+          "output_transform": "lambda x: x['preds'], x['label']",
           "args": {
             "include_background": false,
             "reduction": "mean",
-            "get_non_nans": false
+            "get_not_nans": false
           }
         },
         {
-          "name": "ConfusionMatrix",
+          "name": "ConfusionMatrixMetric",
           "log_label": ["val_sensitivity", "val_specificity", "val_accuracy"],
-          "output_transform": "lambda data: data['preds'], data['label']",
+          "output_transform": "lambda x: x['preds'], x['label']",
           "args": {
             "include_background": false,
             "metric_name": ["sensitivity", "specificity", "accuracy"],
             "compute_sample": true,
             "reduction": "mean",
-            "get_non_nans": false
+            "get_not_nans": false
           }
         }
       ]

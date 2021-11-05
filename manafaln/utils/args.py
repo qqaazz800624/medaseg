@@ -52,6 +52,7 @@ def configure_training_args(args, config):
     # Overwrite trainer setting with args
     skips = ["config", "batch_size", "learning_rate"]
     for key in args.__dict__.keys():
-        trainer["settings"][key] = getattr(args, key)
+        if not key in skips:
+            trainer["settings"][key] = getattr(args, key)
 
     return trainer, data, workflow
