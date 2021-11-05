@@ -1,6 +1,7 @@
 {
   "trainer": {
-    "max_epochs": 2000
+    "max_epochs": 2000,
+    "default_root_dir": "models"
   },
 
   "workflow": {
@@ -100,8 +101,54 @@
           }
         ]
       },
-      "training_metrics": [],
-      "validation_metrics": []
+      "training_metrics": [
+        {
+          "name": "DiceMetric",
+          "log_label": "train_meandice",
+          "output_transform": "lambda data: data['preds'], data['label']",
+          "args": {
+            "include_background": false,
+            "reduction": "mean",
+            "get_non_nans": false
+          }
+        },
+        {
+          "name": "ConfusionMatrix",
+          "log_label": ["train_sensitivity", "train_specificity", "train_accuracy"],
+          "output_transform": "lambda data: data['preds'], data['label']",
+          "args": {
+            "include_background": false,
+            "metric_name": ["sensitivity", "specificity", "accuracy"],
+            "compute_sample": true,
+            "reduction": "mean",
+            "get_non_nans": false
+          }
+        }
+      ],
+      "validation_metrics": [
+        {
+          "name": "DiceMetric",
+          "log_label": "val_meandice",
+          "output_transform": "lambda data: data['preds'], data['label']",
+          "args": {
+            "include_background": false,
+            "reduction": "mean",
+            "get_non_nans": false
+          }
+        },
+        {
+          "name": "ConfusionMatrix",
+          "log_label": ["val_sensitivity", "val_specificity", "val_accuracy"],
+          "output_transform": "lambda data: data['preds'], data['label']",
+          "args": {
+            "include_background": false,
+            "metric_name": ["sensitivity", "specificity", "accuracy"],
+            "compute_sample": true,
+            "reduction": "mean",
+            "get_non_nans": false
+          }
+        }
+      ]
     }
   },
 
