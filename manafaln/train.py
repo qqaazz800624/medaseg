@@ -23,7 +23,6 @@ def run(config_train, config_data, config_workflow):
     callbacks = [build_callback(c) for c in callbacks]
 
     # Create trainer
-    print(config_train["settings"])
     trainer = Trainer(
         callbacks=callbacks,
         **config_train["settings"]
@@ -43,7 +42,7 @@ if __name__ == "__main__":
     # When there is a setting conflict between args and config, the value set
     # in the config file will be ignored, and the settings in data and
     # workflow also override the values in components as default
-    train, data, workflow = configure_training_args(args=args, config=config)
+    train, data, workflow = configure_training(args=args, config=config)
 
     # Run
     run(config_train=train, config_data=data, config_workflow=workflow)
