@@ -46,10 +46,8 @@ class DecathlonDataModule(LightningDataModule):
             copytree(self.ori_data_root, self.data_root)
 
     def build_loader(self, phase: str):
-        print(phase)
         if not phase in ["training", "validation", "test"]:
             raise ValueError(f"{phase} split is not allowed for data module")
-        print(phase)
 
         config = self.hparams.data[phase]
 

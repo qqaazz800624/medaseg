@@ -17,12 +17,14 @@ def parse_trainer_args():
         "--batch_size",
         "-b",
         type=int,
+        required=False,
         help="Training batch size"
     )
     parser.add_argument(
         "--learning_rate",
         "-lr",
         type=float,
+        required=False,
         help="Initial training leraning rate"
     )
 
@@ -41,8 +43,8 @@ def configure_training(args, config):
     workflow = config["workflow"]
 
     # Overwrite data settings
-    if hasattr(args, "batch_size"):
-        data["training"]["dataloader"]["args"]["batch_size"] = args.batch_size
+    if batch_size := getattr(args, "batch_size", None):
+        data["training"]["dataloader"]["args"]["batch_size"] = batch_size
 
     # Overwrite workflow settings
     lr = getattr(args, "learning_rate", None)

@@ -3,7 +3,7 @@ from pytorch_lightning import Trainer
 from manafaln.utils.args import (
     parse_trainer_args,
     load_training_config,
-    configure_training_args
+    configure_training
 )
 from manafaln.utils.builders import (
     build_callback,

@@ -2,14 +2,13 @@
   "trainer": {
     "settings": {
       "accelerator": "ddp",
-      "gpus": 1,
+      "gpus": 4,
       "benchmark": true,
       "amp_backend": "apex",
       "amp_level": "O2",
 
-      "accumulate_grad_batches": 4,
       "max_steps": 25000,
-      "val_check_interval": 10,
+      "check_val_every_n_epoch": 10,
       "terminate_on_nan": true,
 
       "auto_lr_find": false,
@@ -41,7 +40,7 @@
 
     "settings": {
       "num_classes": 3,
-      "learning_rate": 1e-4,
+      "learning_rate": 5e-4,
       "scheduler": {
         "interval": "step",
         "frequency": 1
@@ -54,13 +53,13 @@
         "args": {
           "in_channels": 1,
           "out_channels": 3,
-          "img_size": [64, 64, 64]
+          "img_size": [96, 96, 96]
         }
       },
       "inferer": {
         "name": "SlidingWindowInferer",
         "args": {
-          "roi_size": [64, 64, 64],
+          "roi_size": [96, 96, 96],
           "sw_batch_size": 4,
           "overlap": 0.5
         }
@@ -80,15 +79,27 @@
         }
       },
       "scheduler": {
-        "name": "WarmupCosineSchedule",
-        "path": "monai.optimizers.lr_scheduler",
+        "name": "CosineAnnealingWarmRestarts",
         "args": {
-          "warmup_steps": 200,
-          "t_total": 20000
+          "T_0": 2500,
+          "T_mult": 10,
+          "eta_min": 1e-5
         }
       },
       "post_transforms": {
-        "training": [],
+        "training": [
+          {
+            "name": "AsDiscreted",
+            "path": "manafaln.transforms",
+            "args": {
+              "keys": ["preds", "label"],
+              "argmax": [true, false],
+              "to_onehot": [true, true],
+              "num_classes": 3,
+              "channel_dim": 1
+            }
+          }
+        ],
         "validation": [
           {
             "name": "Activationsd",
@@ -99,11 +110,13 @@
           },
           {
             "name": "AsDiscreted",
+            "path": "manafaln.transforms",
             "args": {
               "keys": ["preds", "label"],
               "argmax": [true, false],
               "to_onehot": [true, true],
-              "num_classes": 3
+              "num_classes": 3,
+              "channel_dim": 1
             }
           },
           {
@@ -117,18 +130,18 @@
         ],
         "test": [
           {
+            "name": "SqueezeDimd",
+            "args": {
+              "keys": "preds",
+              "dim": 0
+            }
+          },
+          {
             "name": "AsDiscreted",
             "args": {
               "keys": "preds",
               "argmax": true,
               "num_classes": 3
-            }
-          },
-          {
-            "name": "SqueezeDimd",
-            "args": {
-              "keys": "preds",
-              "dim": 0
             }
           }
         ]
@@ -137,7 +150,7 @@
         {
           "name": "DiceMetric",
           "log_label": "train_meandice",
-          "output_transform": "lambda x: x['preds'], x['label']",
+          "output_transform": "lambda x: (x['preds'], x['label'])",
           "args": {
             "include_background": false,
             "reduction": "mean",
@@ -147,7 +160,7 @@
         {
           "name": "ConfusionMatrixMetric",
           "log_label": ["train_sensitivity", "train_specificity", "train_accuracy"],
-          "output_transform": "lambda x: x['preds'], x['label']",
+          "output_transform": "lambda x: (x['preds'], x['label'])",
           "args": {
             "include_background": false,
             "metric_name": ["sensitivity", "specificity", "accuracy"],
@@ -161,7 +174,7 @@
         {
           "name": "DiceMetric",
           "log_label": "val_meandice",
-          "output_transform": "lambda x: x['preds'], x['label']",
+          "output_transform": "lambda x: (x['preds'], x['label'])",
           "args": {
             "include_background": false,
             "reduction": "mean",
@@ -171,7 +184,7 @@
         {
           "name": "ConfusionMatrixMetric",
           "log_label": ["val_sensitivity", "val_specificity", "val_accuracy"],
-          "output_transform": "lambda x: x['preds'], x['label']",
+          "output_transform": "lambda x: (x['preds'], x['label'])",
           "args": {
             "include_background": false,
             "metric_name": ["sensitivity", "specificity", "accuracy"],
@@ -188,8 +201,8 @@
     "name": "DecathlonDataModule",
 
     "settings": {
-      "data_root": "/home/nanaha/data/Pancreas-CT",
-      "data_list": "/home/nanaha/data/Pancreas-CT/datalist.json",
+      "data_root": "/work/pancreas/nvidia-tlt/dataset/model/pancreas/MSD",
+      "data_list": "/work/pancreas/nvidia-tlt/dataset/model/pancreas/MSD/datalist.json",
       "is_segmentation": true,
 
       "use_shm_cache": false,
@@ -225,7 +238,7 @@
             "a_min": -200.0,
             "a_max":  250.0,
             "b_min":   -1.0,
-            "b_max":    0.0,
+            "b_max":    1.0,
             "clip": true
           }
         },
@@ -237,7 +250,7 @@
             "spatial_size": [96, 96, 96],
             "pos": 1.0,
             "neg": 1.0,
-            "num_samples": 2,
+            "num_samples": 3,
             "image_key": "image",
             "image_threshold": 0.0
           }
@@ -267,7 +280,7 @@
       "dataloader": {
         "name": "DataLoader",
         "args": {
-          "batch_size": 2,
+          "batch_size": 4,
           "shuffle": true,
           "pin_memory": true,
           "num_workers": 4

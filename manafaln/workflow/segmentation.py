@@ -61,7 +61,6 @@ class SupervisedSegmentation(LightningModule):
     def training_epoch_end(self, outputs):
         m = self.train_metrics.aggregate()
         self.log_dict(m)
-        return m
 
     def validation_step(self, batch, batch_idx):
         image = batch["image"]
@@ -81,7 +80,6 @@ class SupervisedSegmentation(LightningModule):
     def validation_epoch_end(self, validation_step_outputs):
         m = self.valid_metrics.aggregate()
         self.log_dict(m)
-        return m
 
     def test_step(self, batch, batch_idx):
         # No label for test

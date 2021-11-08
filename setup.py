@@ -6,6 +6,7 @@ packages = [
     "manafaln",
     "manafaln.common",
     "manafaln.data",
+    "manafaln.transforms",
     "manafaln.workflow",
     "manafaln.utils"
 ]
