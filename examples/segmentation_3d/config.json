@@ -102,13 +102,6 @@
         ],
         "validation": [
           {
-            "name": "Activationsd",
-            "args": {
-              "keys": "preds",
-              "softmax": true
-            }
-          },
-          {
             "name": "AsDiscreted",
             "path": "manafaln.transforms",
             "args": {
@@ -250,7 +243,7 @@
             "spatial_size": [96, 96, 96],
             "pos": 1.0,
             "neg": 1.0,
-            "num_samples": 3,
+            "num_samples": 4,
             "image_key": "image",
             "image_threshold": 0.0
           }
@@ -283,7 +276,7 @@
           "batch_size": 4,
           "shuffle": true,
           "pin_memory": true,
-          "num_workers": 4
+          "num_workers": 6
         }
       }
     },
@@ -317,7 +310,7 @@
             "a_min": -200.0,
             "a_max":  250.0,
             "b_min":   -1.0,
-            "b_max":    0.0,
+            "b_max":    1.0,
             "clip": true
           }
         },
@@ -371,7 +364,7 @@
             "a_min": -200.0,
             "a_max":  250.0,
             "b_min":   -1.0,
-            "b_max":    0.0,
+            "b_max":    1.0,
             "clip": true
           }
         },
@@ -391,7 +384,7 @@
           "batch_size": 1,
           "shuffle": false,
           "pin_memory": true,
-          "num_workers": 6
+          "num_workers": 4
         }
       }
     }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-HOST=$(curl https://ifconfig.co)
-PORT=8010
+HOST=$(curl -s https://ifconfig.co)
+LOGDIR=models
 
-tensorboard --logdir models --host $HOST --port $PORT
+tensorboard --host $HOST --logdir $LOGDIR $@ 
