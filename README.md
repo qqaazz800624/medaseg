@@ -26,11 +26,13 @@ docker build -t manafaln:latest .
 
 You can find examples in `examples` directory.
 
+```
 project_root
 ├── config.json
 ├── commands
 ├── models
 └── ...
+```
 
 ### Built-in Commands
 
