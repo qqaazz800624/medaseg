@@ -106,8 +106,12 @@ class SupervisedSegmentation(LightningModule):
 
         if not sch_config is None:
             # Get or set default scheduler mode
-            interval = workflow["settings"].get("interval", "epoch")
-            frequency = workflow["settings"].get("frequency", 1)
+            if sch_opts := workflow["settings"].get("scheduler", None):
+                interval = sch_opts.get("interval", "epoch")
+                frequency = sch_opts.get("frequency", 1)
+            else:
+                interval = "epoch"
+                frequency = 1
 
             opt["lr_scheduler"] = {
                 "scheduler": build_scheduler(sch_config, opt["optimizer"]),
