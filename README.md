@@ -70,36 +70,36 @@ The `trainer` section contains two parts: `settings` and `callbacks`. The option
 "trainer": {
   "settings": {
     "accelerator": "ddp",
-  ┆ "gpus": 4,
-┆ ┆ "benchmark": true,
-┆ ┆ "amp_backend": "apex",
-┆ ┆ "amp_level": "O2",
+    "gpus": 4,
+    "benchmark": true,
+    "amp_backend": "apex",
+    "amp_level": "O2",
 
-┆ ┆ "max_steps": 25000,
-┆ ┆ "check_val_every_n_epoch": 10,
-┆ ┆ "terminate_on_nan": true,
+    "max_steps": 25000,
+    "check_val_every_n_epoch": 10,
+    "terminate_on_nan": true,
 
-┆ ┆ "auto_lr_find": false,
+    "auto_lr_find": false,
 
-┆ ┆ "default_root_dir": "models",
-┆ ┆ "log_every_n_steps": 10,
-┆ ┆ "resume_from_checkpoint": null
-┆ },
+    "default_root_dir": "models",
+    "log_every_n_steps": 10,
+    "resume_from_checkpoint": null
+  },
 
-┆ "callbacks": [
-┆ ┆ {
-┆ ┆ ┆ "name": "LearningRateMonitor"
-┆ ┆ },
-┆ ┆ {
-┆ ┆ ┆ "name": "ModelCheckpoint",
-┆ ┆ ┆ "args": {
-┆ ┆ ┆ ┆ "filename": "best_model",
-┆ ┆ ┆ ┆ "monitor": "val_meandice",
-┆ ┆ ┆ ┆ "mode": "max",
-┆ ┆ ┆ ┆ "save_last": true,
+  "callbacks": [
+    {
+      "name": "LearningRateMonitor"
+    },
+    {
+      "name": "ModelCheckpoint",
+      "args": {
+        "filename": "best_model",
+        "monitor": "val_meandice",
+        "mode": "max",
+        "save_last": true,
         "save_top_k": 1
-  ┆ ┆ ┆}
-┆ ┆ }
+      }
+    }
   ]
 }
 ```
