@@ -13,7 +13,7 @@ packages = [
 
 setup(
     name="manafaln",
-    version="0.1.0",
+    version="0.2.0",
     author="Pochuan Wang",
     author_email="d08922016@csie.ntu.edu.tw",
     packages=packages,
