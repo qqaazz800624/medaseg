@@ -1,6 +1,8 @@
 from typing import Any, Callable, Dict, List, Union
 from collections.abc import Iterable
 
+from monai.metrics import Cumulative
+
 from manafaln.utils.builders import build_metric
 
 def ensure_label_list(data):
@@ -37,3 +39,8 @@ class MetricCollection:
             for name, value in zip(m["name"], results):
                 metrics[name] = value
         return metrics
+
+    def reset(self) -> None:
+        for m in self.metrics:
+            if isinstance(m["instance"], Cumulative):
+                m["instance"].reset()
