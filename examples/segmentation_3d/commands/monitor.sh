@@ -1,6 +1,6 @@
 #!/bin/bash
 
 HOST=$(curl -s https://ifconfig.co)
-LOGDIR=models
+LOGDIR=lightning_logs
 
 tensorboard --host $HOST --logdir $LOGDIR $@ 
