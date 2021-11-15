@@ -48,19 +48,24 @@ def get_default_path(component_type: Union[ComponentType, str]) -> str:
         }
     return mapping.get(component_type, "manafaln")
 
+def get_class(
+        name: str,
+        path: str,
+        component_type: Union[ComponentType, str] = ComponentType.UNKNOWN
+    ):
+    if path is None:
+        path = get_default_path(component_type)
+    M = import_module(path)
+    return getattr(M, name)
+
 def instantiate(
         name: str,
         path: str = None,
         component_type: Union[ComponentType, str] = ComponentType.UNKNOWN,
         **kwargs
     ):
-    if path is None:
-        path = get_default_path(component_type)
-
-    Module = import_module(path)
-    Class  = getattr(Module, name)
-
-    return Class(**kwargs)
+    C = get_class(name=name, path=path, component_type=component_type)
+    return C(**kwargs)
 
 def build_model(config: Dict) -> nn.Module:
     model = instantiate(

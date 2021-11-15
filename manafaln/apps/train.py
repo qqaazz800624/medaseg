@@ -1,7 +1,7 @@
 from pytorch_lightning import Trainer
 
 from manafaln.utils.args import (
-    parse_trainer_args,
+    parse_train_args,
     load_training_config,
     configure_training
 )
@@ -35,7 +35,7 @@ def run(config_train, config_data, config_workflow):
     trainer.fit(workflow, data)
 
 if __name__ == "__main__":
-    args   = parse_trainer_args()
+    args   = parse_train_args()
     config = load_training_config(args.config)
 
     # Integrate the settings in args & config file

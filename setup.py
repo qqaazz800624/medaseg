@@ -4,6 +4,7 @@ from setuptools import setup
 
 packages = [
     "manafaln",
+    "manafaln.apps",
     "manafaln.common",
     "manafaln.data",
     "manafaln.transforms",
