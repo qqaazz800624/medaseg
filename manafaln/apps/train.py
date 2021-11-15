@@ -1,10 +1,6 @@
 from pytorch_lightning import Trainer
 
-from manafaln.utils.args import (
-    parse_train_args,
-    load_training_config,
-    configure_training
-)
+from manafaln.utils.args import TrainConfigurator
 from manafaln.utils.builders import (
     build_callback,
     build_workflow,
@@ -35,14 +31,14 @@ def run(config_train, config_data, config_workflow):
     trainer.fit(workflow, data)
 
 if __name__ == "__main__":
-    args   = parse_train_args()
-    config = load_training_config(args.config)
+    # Use configurator for argument parsing & loading config files
+    c = TrainConfigurator()
+    c.configure()
 
-    # Integrate the settings in args & config file
-    # When there is a setting conflict between args and config, the value set
-    # in the config file will be ignored, and the settings in data and
-    # workflow also override the values in components as default
-    train, data, workflow = configure_training(args=args, config=config)
+    # Get config results
+    data     = c.get_data_config()
+    train    = c.get_trainer_config()
+    workflow = c.get_workflow_config()
 
     # Run
     run(config_train=train, config_data=data, config_workflow=workflow)

@@ -1,131 +1,182 @@
+import os
+import sys
 import json
+from abc import ABC, abstractmethod
 from typing import Dict
 from argparse import ArgumentParser
 
 from pytorch_lightning import Trainer
 
-def parse_train_args():
-    parser = ArgumentParser()
+class Configurator(ABC):
+    def __init__(self):
+        self.app_parser = ArgumentParser()
 
-    parser.add_argument(
-        "--config",
-        "-c",
-        type=str,
-        help="Training config file"
-    )
-    parser.add_argument(
-        "--batch_size",
-        "-b",
-        type=int,
-        required=False,
-        help="Training batch size"
-    )
-    parser.add_argument(
-        "--learning_rate",
-        "-lr",
-        type=float,
-        required=False,
-        help="Initial training leraning rate"
-    )
+    @abstractmethod
+    def preprocess_args(self, args) -> None:
+        raise NotImplementedError
 
-    # Ignore lightning trainer args first
-    args, _ = parser.parse_known_args()
-    return args
+    @abstractmethod
+    def configure_data(self) -> Dict:
+        raise NotImplementedError
 
-def load_training_config(config_file: str) -> Dict:
-    with open(config_file, "r") as f:
-        config = json.load(f)
-    return config
+    @abstractmethod
+    def configure_trainer(self) -> Dict:
+        raise NotImplementedError
 
-def configure_training(args, config):
-    trainer  = config["trainer"]
-    data     = config["data"]
-    workflow = config["workflow"]
+    @abstractmethod
+    def configure_workflow(self) -> Dict:
+        raise NotImplementedError
 
-    # Overwrite data settings
-    if batch_size := getattr(args, "batch_size", None):
-        data["training"]["dataloader"]["args"]["batch_size"] = batch_size
+    def configure(self) -> None:
+        # Use help will quit app, so add trainer help here
+        if "--help" in sys.argv or "-h" in sys.argv:
+            self.app_parser = Trainer.add_argparse_args(self.app_parser)
+            args = self.app_parser.parse_args()
 
-    # Overwrite workflow settings
-    lr = getattr(args, "learning_rate", None)
-    lr = lr or workflow["settings"].get("learning_rate", None)
-    if lr is not None:
-        workflow["components"]["optimizer"]["args"]["lr"] = lr
+        # Parse app arguments first
+        args, _ = self.app_parser.parse_known_args()
+        # Do whatever you like
+        self.preprocess_args(args)
 
-    # Overwrite trainer setting with args
-    parser = ArgumentParser(conflict_handler="resolve")
-    parser = Trainer.add_argparse_args(parser)
+        self.config_data     = self.configure_data()
+        self.config_trainer  = self.configure_trainer()
+        self.config_workflow = self.configure_workflow()
 
-    # Overwrite default values with config values
-    for key, value in trainer["settings"].items():
-        parser.add_argument(f"--{key}", default=value)
+    def get_data_config(self) -> Dict:
+        return self.config_data
 
-    trainer_args, _ = parser.parse_known_args()
-    trainer["settings"] = trainer_args.__dict__
+    def get_trainer_config(self) -> Dict:
+        return self.config_trainer
 
-    return trainer, data, workflow
+    def get_workflow_config(self) -> Dict:
+        return self.config_workflow
 
-def parse_validate_args():
-    parser = ArgumentParser()
+class TrainConfigurator(Configurator):
+    def __init__(self):
+        super().__init__()
 
-    parser.add_argument(
-        "--config",
-        "-c",
-        type=str,
-        help="Training config file for restoring checkpoint"
-    )
+        self.app_parser.add_argument(
+            "--config",
+            "-c",
+            type=str,
+            help="Training config file"
+        )
+        self.app_parser.add_argument(
+            "--batch_size",
+            "-b",
+            type=int,
+            required=False,
+            help="Training batch size"
+        )
+        self.app_parser.add_argument(
+            "--learning_rate",
+            "-lr",
+            type=float,
+            required=False,
+            help="Initial training leraning rate"
+        )
 
-    parser.add_argument(
-        "--data",
-        "-d",
-        type=str,
-        default=None,
-        help="(Optional) Use this option to override data in training config"
-    )
+    def preprocess_args(self, args) -> None:
+        with open(args.config) as f:
+            config = json.load(f)
 
-    parser.add_argument(
-        "--ckpt",
-        type=str,
-        help="Path to the model checkpoint"
-    )
+        self.args = args
+        self.config = config
 
-    args, _ = parser.parse_known_args()
-    return args
+    def configure_data(self) -> None:
+        data = dict(self.config["data"])
+        if batch_size := getattr(self.args, "batch_size", None):
+            data["training"]["dataloader"]["args"]["batch_size"] = batch_size
+        return data
 
-def load_validate_config(config_train: str, config_data: str = None) -> Dict:
-    with open(config_train) as fc:
-        config = json.load(fc)
+    def configure_trainer(self) -> None:
+        trainer = dict(self.config["trainer"])
+        # Overwrite trainer setting with args
+        parser = ArgumentParser(conflict_handler="resolve")
+        parser = Trainer.add_argparse_args(parser)
 
-    if config_data:
-        with open(config_data) as fd:
-            data = json.load(fd)
-        # Validate the format of data config
-        # can be an independent json file or other training config
-        keys = data.keys()
-        if "name" in keys or "path" in keys:
-            config["data"] = data
-        elif "data" in keys:
-            config["data"] = data["data"]
-        else:
-            raise ValueError("Data config must contains data section or data module name")
+        # Overwrite default values with config values
+        for key, value in trainer["settings"].items():
+            parser.add_argument(f"--{key}", default=value)
 
-    return config
+        trainer_args, _ = parser.parse_known_args()
+        trainer["settings"] = trainer_args.__dict__
 
-def configure_validation(args, config):
-    trainer  = config["trainer"]
-    data     = config["data"]
-    workflow = config["workflow"]
+        return trainer
 
-    # Overwrite trainer setting with args
-    parser = ArgumentParser(conflict_handler="resolve")
-    parser = Trainer.add_argparse_args(parser)
+    def configure_workflow(self) -> None:
+        workflow = dict(self.config["workflow"])
+        lr = getattr(self.args, "learning_rate", None)
+        lr = lr or workflow["settings"].get("learning_rate", None)
+        if lr is not None:
+            workflow["components"]["optimizer"]["args"]["lr"] = lr
+        return workflow
 
-    # Overwrite default values with config values
-    for key, value in trainer["settings"].items():
-        parser.add_argument(f"--{key}", default=value)
+class ValidateConfigurator(Configurator):
+    def __init__(self):
+        super().__init__()
 
-    trainer_args, _ = parser.parse_known_args()
-    trainer["settings"] = trainer_args.__dict__
+        self.app_parser.add_argument(
+            "--config",
+            "-c",
+            type=str,
+            help="Training config file for restoring checkpoint"
+        )
+        self.app_parser.add_argument(
+            "--data",
+            "-d",
+            type=str,
+            default=None,
+            help="(Optional) data config file"
+        )
+        self.app_parser.add_argument(
+            "--ckpt",
+            type=str,
+            help="Path to the model checkpoint"
+        )
 
-    return trainer, data, workflow
+    def preprocess_args(self, args) -> None:
+        with open(args.config) as fc:
+            config = json.load(fc)
+
+        if config_data := getattr(args, "data", None):
+            with open(config_data) as fd:
+                data = json.load(fd)
+            # Validate the format of data config
+            # can be an independent json file or other training config
+            keys = data.keys()
+            if "name" in keys or "path" in keys:
+                config["data"] = data
+            elif "data" in keys:
+                config["data"] = data["data"]
+            else:
+                raise ValueError("Data config must contains data section or data module name")
+
+        self.args   = args
+        self.config = config
+
+    def configure_data(self) -> None:
+        return dict(self.config["data"])
+
+    def configure_trainer(self) -> None:
+        trainer = dict(self.config["trainer"])
+
+        # Overwrite trainer setting with args
+        parser = ArgumentParser(conflict_handler="resolve")
+        parser = Trainer.add_argparse_args(parser)
+
+        # Overwrite default values with config values
+        for key, value in trainer["settings"].items():
+            parser.add_argument(f"--{key}", default=value)
+
+        trainer_args, _ = parser.parse_known_args()
+        trainer["settings"] = trainer_args.__dict__
+
+        return trainer
+
+    def configure_workflow(self) -> None:
+        return dict(self.config["workflow"])
+
+    def get_ckpt_path(self):
+        return self.args.ckpt
 

@@ -1,10 +1,6 @@
 from pytorch_lightning import Trainer
 
-from manafaln.utils.args import (
-    parse_validate_args,
-    load_validate_config,
-    configure_validation
-)
+from manafaln.utils.args import ValidateConfigurator
 from manafaln.utils.builders import build_data_module
 from manafaln.utils.checkpoint import restore_from_checkpoint
 
@@ -24,12 +20,15 @@ def run(config_train, config_data, config_workflow, ckpt):
     print(metrics)
 
 if __name__ == "__main__":
-    # Load all settings
-    args   = parse_validate_args()
-    config = load_validate_config(args.config, args.data)
+    c = ValidateConfigurator()
+    c.configure()
 
-    # Organize all settings
-    train, data, workflow = configure_validation(args, config)
+    data     = c.get_data_config()
+    train    = c.get_trainer_config()
+    workflow = c.get_workflow_config()
+
+    # Extra information for validation only
+    ckpt_path = c.get_ckpt_path()
 
     # Run
-    run(train, data, workflow, args.ckpt)
+    run(train, data, workflow, ckpt_path)
