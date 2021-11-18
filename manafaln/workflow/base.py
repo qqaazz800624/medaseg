@@ -1,5 +1,6 @@
 import torch
 import monai
+from monai.transforms import Decollated
 from pytorch_lightning import LightningModule
 from pytorch_lightning.utilities.distributed import rank_zero_only
 
@@ -12,6 +13,13 @@ from manafaln.utils.builders import (
     build_scheduler,
     build_transforms
 )
+
+def configure_batch_decollate(settings, phase, keys):
+    decollate = settings.get("decollate", False)
+    decollate_phases = settings.get("decollate_phases", [])
+    if decollate and phase in decollate_phases:
+        return Decollated(keys=keys)
+    return None
 
 class SupervisedLearning(LightningModule):
     def __init__(self, config: dict):
@@ -26,6 +34,31 @@ class SupervisedLearning(LightningModule):
         self.model   = build_model(components["model"])
         self.loss_fn = build_loss_fn(components["loss"])
         self.inferer = build_inferer(components["inferer"])
+
+        # Configure batch decollate
+        self.train_decollate = configure_batch_decollate(
+            config["settings"],
+            "training",
+            keys=[
+                "image", "image_meta_dict", "image_transforms",
+                "label", "label_meta_dict", "label_transforms",
+                "preds"
+            ]
+        )
+        self.valid_decollate = configure_batch_decollate(
+            config["settings"],
+            "validation",
+            keys=[
+                "image", "image_meta_dict", "image_transforms",
+                "label", "label_meta_dict", "label_transforms",
+                "preds"
+            ]
+        )
+        self.test_decollate = configure_batch_decollate(
+            config["settings"],
+            "test",
+            keys=["image", "image_meta_dict", "image_transforms", "preds"]
+        )
 
         self.post_transforms = {}
         for phase in ["training", "validation", "test"]:
@@ -47,11 +80,18 @@ class SupervisedLearning(LightningModule):
         batch["preds"] = self.model(image)
         loss = self.loss_fn(batch["preds"], batch["label"])
 
-        # Apply post transforms & compute metrics
-        batch = self.post_transforms["training"](batch)
-
-        # Add result to metric
-        self.train_metrics.apply(batch)
+        if self.train_decollate is not None:
+            # Decolloate batch before post transform
+            for item in self.train_decollate(batch):
+                # Apply post transform on single item
+                item = self.post_transforms["training"](item)
+                # Compute metric for single item
+                self.train_metrics.apply(item)
+        else:
+            # Apply post transforms on the whole batch
+            batch = self.post_transforms["training"](batch)
+            # Add result of whole batch to metric
+            self.train_metrics.apply(batch)
 
         # Log current loss value
         self.log_dict({ "train_loss": loss })
@@ -70,11 +110,14 @@ class SupervisedLearning(LightningModule):
         # Run inference
         batch["preds"] = self.forward(image)
 
-        # Apply post transforms
-        batch = self.post_transforms["validation"](batch)
-
-        # Compute metrics here
-        self.valid_metrics.apply(batch)
+        # Post transform & compute metrics
+        if self.valid_decollate is not None:
+            for item in self.valid_decollate(batch):
+                item = self.post_transforms["validation"](item)
+                self.valid_metrics.apply(item)
+        else:
+            batch = self.post_transforms["validation"](batch)
+            self.valid_metrics.apply(batch)
 
         return None
 
@@ -90,8 +133,11 @@ class SupervisedLearning(LightningModule):
         # Run inference
         batch["preds"] = self.forward(image)
 
-        # Apply post transforms
-        batch = self.post_transforms["test"](batch)
+        if self.test_decollate is not None:
+            for item in self.test_decollate(batch):
+                item = self.post_transforms["test"](item)
+        else:
+            batch = self.post_transforms["test"](batch)
 
         # Nothing to output for pure inference
         return None
