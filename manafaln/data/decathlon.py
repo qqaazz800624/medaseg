@@ -1,5 +1,5 @@
 import os
-from typing import Dict
+from typing import Dict, List
 from shutil import copytree
 
 import torch
@@ -51,12 +51,24 @@ class DecathlonDataModule(LightningDataModule):
 
         config = self.hparams.data[phase]
 
-        files = load_decathlon_datalist(
-            data_list_file_path=self.data_list,
-            is_segmentation=self.is_segmentation,
-            data_list_key=config["data_list_key"],
-            base_dir=self.data_root
-        )
+        if isinstance(config["data_list_key"], str):
+            files = load_decathlon_datalist(
+                data_list_file_path=self.data_list,
+                is_segmentation=self.is_segmentation,
+                data_list_key=config["data_list_key"],
+                base_dir=self.data_root
+            )
+        else:
+            files = []
+            for key in config["data_list_key"]:
+                subset = load_decathlon_datalist(
+                    data_list_file_path=self.data_list,
+                    is_segmentation=self.is_segmentation,
+                    data_list_key=key,
+                    base_dir=self.data_root
+                )
+                files = files + subset
+
         transforms = build_transforms(config["transforms"])
 
         dataset = instantiate(
