@@ -43,7 +43,9 @@
       "scheduler": {
         "interval": "step",
         "frequency": 1
-      }
+      },
+      "decollate": true,
+      "decollate_phases": ["validation", "test"]
     },
 
     "components": {
@@ -102,13 +104,11 @@
         "validation": [
           {
             "name": "AsDiscreted",
-            "path": "manafaln.transforms",
             "args": {
               "keys": ["preds", "label"],
               "argmax": [true, false],
               "to_onehot": [true, true],
-              "num_classes": 3,
-              "channel_dim": 1
+              "num_classes": 3
             }
           },
           {
@@ -116,24 +116,46 @@
             "args": {
               "keys": ["preds", "label"],
               "output_postfixes": ["background", "pancreas", "tumor"],
-              "channel_dim": 1
+              "channel_dim": 0
+            }
+          },
+          {
+            "name": "Unsqueezed",
+            "path": "manafaln.transforms",
+            "args": {
+              "keys": ["preds", "label"],
+              "dim": 0
             }
           }
         ],
         "test": [
-          {
-            "name": "SqueezeDimd",
-            "args": {
-              "keys": "preds",
-              "dim": 0
-            }
-          },
           {
             "name": "AsDiscreted",
             "args": {
               "keys": "preds",
               "argmax": true,
               "num_classes": 3
+            }
+          },
+          {
+            "name": "EnsureTyped",
+            "args": {
+              "keys": ["preds", "image_meta_dict"],
+              "data_type": "numpy"
+            }
+          },
+          {
+            "name": "SaveImaged",
+            "args": {
+              "keys": ["preds"],
+              "meta_keys": ["image_meta_dict"],
+              "output_dir": "results",
+              "output_postfix": "pred",
+              "output_ext": ".nii.gz",
+              "mode": "nearest",
+              "squeeze_end_dims": true,
+              "separate_folder": false,
+              "print_log": false
             }
           }
         ]
