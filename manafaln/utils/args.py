@@ -112,7 +112,7 @@ class TrainConfigurator(Configurator):
             workflow["components"]["optimizer"]["args"]["lr"] = lr
         return workflow
 
-class ValidateConfigurator(Configurator):
+class InferenceConfigurator(Configurator):
     def __init__(self):
         super().__init__()
 

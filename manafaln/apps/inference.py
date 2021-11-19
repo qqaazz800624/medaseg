@@ -14,10 +14,8 @@ def run(config_train, config_data, config_workflow, ckpt):
     # Build trainer for validation
     trainer = Trainer(**config_train["settings"])
 
-    # Start validation
-    metrics = trainer.validate(workflow, data.val_dataloader())
-
-    print(metrics)
+    # Start inference
+    trainer.test(workflow, data.test_dataloader())
 
 if __name__ == "__main__":
     c = InferenceConfigurator()
