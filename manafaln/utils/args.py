@@ -109,7 +109,10 @@ class TrainConfigurator(Configurator):
         lr = getattr(self.args, "learning_rate", None)
         lr = lr or workflow["settings"].get("learning_rate", None)
         if lr is not None:
-            workflow["components"]["optimizer"]["args"]["lr"] = lr
+            if "args" in workflow["components"]["optimizer"].keys():
+                workflow["components"]["optimizer"]["args"]["lr"] = lr
+            else:
+                workflow["components"]["optimizer"]["args"] = { "lr": lr }
         return workflow
 
 class InferenceConfigurator(Configurator):

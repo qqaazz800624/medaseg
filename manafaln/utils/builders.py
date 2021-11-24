@@ -48,6 +48,26 @@ def get_default_path(component_type: Union[ComponentType, str]) -> str:
         }
     return mapping.get(component_type, "manafaln")
 
+class InstanceQuery:
+    def __init__(
+        self,
+        name: str,
+        path: str,
+        component_type: Union[ComponentType, str] = ComponentType.UNKNOWN
+    ):
+        self.name = name
+        self.path = path
+        self.component_type = component_type
+
+    def get_name(self) -> str:
+        return self.name
+
+    def get_path(self) -> str:
+        return self.path
+
+    def get_type(self) -> ComponentType:
+        return self.component_type
+
 def get_class(
         name: str,
         path: str,
@@ -57,6 +77,14 @@ def get_class(
         path = get_default_path(component_type)
     M = import_module(path)
     return getattr(M, name)
+
+def instance_builder(instance_query: InstanceQuery, /, **kwargs):
+    C = get_class(
+        name=instance_query.get_name(),
+        path=instance_query.get_path(),
+        component_type=instance_query.get_type()
+    )
+    return C(**kwargs)
 
 def instantiate(
         name: str,
@@ -141,12 +169,12 @@ def build_metric(config: Dict) -> Metric:
 def build_transforms(trans_configs: List[Dict]) -> Callable:
     transforms = []
     for config in trans_configs:
-        trans = instantiate(
+        query = InstanceQuery(
             name=config["name"],
             path=config.get("path", None),
-            component_type=ComponentType.TRANSFORM,
-            **config.get("args", {})
+            component_type=ComponentType.TRANSFORM
         )
+        trans = instance_builder(query, **config.get("args", {}))
         if not isinstance(trans, Callable):
             raise TypeError(f"{type(trans)} is not Callable type")
         transforms.append(trans)
