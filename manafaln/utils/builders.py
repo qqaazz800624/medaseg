@@ -96,46 +96,49 @@ def instantiate(
     return C(**kwargs)
 
 def build_model(config: Dict) -> nn.Module:
-    model = instantiate(
+    query = InstanceQuery(
         name=config["name"],
         path=config.get("path", None),
-        component_type=ComponentType.MODEL,
-        **config.get("args", {})
+        component_type=ComponentType.MODEL
     )
+    model = instance_builder(query, **config.get("args", {}))
 
     if not isinstance(model, torch.nn.Module):
         raise TypeError(f"{type(model)} is not a PyTorch module")
     return model
 
 def build_loss_fn(config: Dict) -> Callable:
-    loss_fn = instantiate(
+    query = InstanceQuery(
         name=config["name"],
         path=config.get("path", None),
-        component_type=ComponentType.LOSS,
-        **config.get("args", {})
+        component_type=ComponentType.LOSS
     )
+    loss_fn = instance_builder(query, **config.get("args", {}))
 
     if not isinstance(loss_fn, Callable):
         raise TypeError(f"{type(loss_fn)} is not Callable type")
     return loss_fn
 
 def build_inferer(config: Dict) -> Callable:
-    inferer = instantiate(
+    query = InstanceQuery(
         name=config["name"],
         path=config.get("path", None),
-        component_type=ComponentType.INFERER,
-        **config.get("args", {})
+        component_type=ComponentType.INFERER
     )
+    inferer = instance_builder(query, **config.get("args", {}))
 
     if not isinstance(inferer, Callable):
         raise TypeError(f"{type(inferer)} is not Callable type")
     return inferer
 
 def build_optimizer(config: Dict, model_params: List) -> optim.Optimizer:
-    opt = instantiate(
+    query = InstanceQuery(
         name=config["name"],
         path=config.get("path", None),
-        component_type=ComponentType.OPTIMIZER,
+        component_type=ComponentType.OPTIMIZER
+    )
+    opt = instance_builder(
+        query,
         params=model_params,
         **config.get("args", {})
     )
@@ -145,22 +148,21 @@ def build_optimizer(config: Dict, model_params: List) -> optim.Optimizer:
     return opt
 
 def build_scheduler(config: Dict, opt: optim.Optimizer):
-    sch = instantiate(
+    query = InstanceQuery(
         name=config["name"],
         path=config.get("path", None),
-        component_type=ComponentType.SCHEDULER,
-        optimizer=opt,
-        **config.get("args", {})
+        component_type=ComponentType.SCHEDULER
     )
+    sch = instance_builder(query, **config.get("args", {}))
     return sch
 
 def build_metric(config: Dict) -> Metric:
-    metric = instantiate(
+    query = InstanceQuery(
         name=config["name"],
         path=config.get("path", None),
-        component_type=ComponentType.METRIC,
-        **config.get("args", {})
+        component_type=ComponentType.METRIC
     )
+    metric = instance_builder(query, **config.get("args", {}))
 
     if not isinstance(metric, Metric):
         raise TypeError(f"{type(metric)} is not a MONAI Metric")

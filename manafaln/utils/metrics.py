@@ -17,7 +17,10 @@ def unpack_fn(unpack_fn: str = None):
         return eval(unpack_fn)
 
 class MetricCollection:
-    def __init__(self, metric_list: Union[Dict, List]):
+    def __init__(
+        self,
+        metric_list: Union[Dict, List]
+    ):
         self.metrics = []
         for metric_config in metric_list:
             metric = {
