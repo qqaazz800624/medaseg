@@ -45,12 +45,7 @@ class DecathlonDataModule(LightningDataModule):
             # Copy the whole directory to SHM
             copytree(self.ori_data_root, self.data_root)
 
-    def build_loader(self, phase: str):
-        if not phase in ["training", "validation", "test"]:
-            raise ValueError(f"{phase} split is not allowed for data module")
-
-        config = self.hparams.data[phase]
-
+    def build_dataset(self, config: dict):
         if isinstance(config["data_list_key"], str):
             files = load_decathlon_datalist(
                 data_list_file_path=self.data_list,
@@ -79,6 +74,24 @@ class DecathlonDataModule(LightningDataModule):
             transform=transforms,
             **config["dataset"].get("args", {})
         )
+        return dataset
+
+    def build_loader(self, phase: str):
+        phase_to_dataset = {
+            "training": "train_dataset",
+            "validation": "val_dataset",
+            "test": "test_dataset"
+        }
+
+        if not phase in phase_to_dataset.keys():
+            raise ValueError(f"{phase} split is not allowed for data module")
+
+        config = self.hparams.data[phase]
+
+        # Don't build dataset again if already exists
+        if dataset := getattr(self, phase_to_dataset[phase], None) is None:
+            dataset = self.build_dataset(config)
+            setattr(self, phase_to_dataset[phase], dataset)
 
         loader = instantiate(
             name=config["dataloader"]["name"],

@@ -153,7 +153,11 @@ def build_scheduler(config: Dict, opt: optim.Optimizer):
         path=config.get("path", None),
         component_type=ComponentType.SCHEDULER
     )
-    sch = instance_builder(query, **config.get("args", {}))
+    sch = instance_builder(
+        query,
+        optimizer=opt,
+        **config.get("args", {})
+    )
     return sch
 
 def build_metric(config: Dict) -> Metric:
