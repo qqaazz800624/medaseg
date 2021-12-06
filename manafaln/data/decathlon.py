@@ -76,23 +76,39 @@ class DecathlonDataModule(LightningDataModule):
         )
         return dataset
 
+    def get_train_dataset(self):
+        if dataset := getattr(self, "train_dataset", None) is None:
+            config = self.hparams.data["training"]
+            self.train_dataset = self.build_dataset(config)
+        return self.train_dataset
+
+    def get_val_dataset(self):
+        if dataset := getattr(self, "val_dataset", None) is None:
+            config = self.hparams.data["validation"]
+            self.val_dataset = self.build_dataset(config)
+        return self.val_dataset
+
+    def get_test_dataset(self):
+        if dataset := getattr(self, "test_dataset", None) is None:
+            config = self.hparams.data["test"]
+            self.test_dataset = self.build_dataset(config)
+        return self.test_dataset
+
     def build_loader(self, phase: str):
         phase_to_dataset = {
-            "training": "train_dataset",
-            "validation": "val_dataset",
-            "test": "test_dataset"
+            "training": self.get_train_dataset,
+            "validation": self.get_val_dataset,
+            "test": self.get_test_dataset
         }
 
         if not phase in phase_to_dataset.keys():
             raise ValueError(f"{phase} split is not allowed for data module")
 
+        # Get dataset
+        dataset = phase_to_dataset[phase]()
+
+        # Build data loader
         config = self.hparams.data[phase]
-
-        # Don't build dataset again if already exists
-        if dataset := getattr(self, phase_to_dataset[phase], None) is None:
-            dataset = self.build_dataset(config)
-            setattr(self, phase_to_dataset[phase], dataset)
-
         loader = instantiate(
             name=config["dataloader"]["name"],
             path=config["dataloader"].get("path", None),
