@@ -1,7 +1,7 @@
 import logging
-from typing import Union
+from typing import Union, Sequence
 from itertools import chain
-from torch.data import Dataset
+from torch.utils.data import Dataset, DataLoader
 from pytorch_lightning import Callback, LightningModule, Trainer
 from pytorch_lightning.trainer.supporters import CombinedDataset, CombinedLoader
 from monai.data.dataset import SmartCacheDataset
@@ -15,8 +15,12 @@ class SmartCacheHandler(Callback):
         self.valid_smart_cahcer = []
 
     def get_dataset(self, dataloader):
-        if dataloader is not None:
+        if isinstance(dataloader, DataLoader):
             return dataloader.dataset
+        elif isinstance(dataloader, Sequence):
+            return [loader.dataset for loader in dataloader]
+        else:
+            return None
 
     # Note: pytorch_lightning CombinedDataset is NOT a torch Dataset
     def extract_smart_cacher(self, dataset: Union[Dataset, CombinedDataset]):
@@ -33,6 +37,12 @@ class SmartCacheHandler(Callback):
                     if isinstance(ds, SmartCacheDataset):
                         smcs.append(ds)
                 return smcs
+        elif isinstance(dataset, Sequence):
+            smcs = []
+            for ds in dataset:
+                if isinstance(ds, SmartCacheDataset):
+                    smcs.append(ds)
+                return smcs
         return []
 
     def on_train_start(
@@ -44,13 +54,14 @@ class SmartCacheHandler(Callback):
         self.train_smart_cacher = self.extract_smart_cacher(
             self.get_dataset(trainer.train_dataloader)
         )
+        # Note: the 's' in val_dataloaders is not a typo
         self.valid_smart_cacher = self.extract_smart_cacher(
-            self.get_dataset(trainer.val_dataloader)
+            self.get_dataset(trainer.val_dataloaders)
         )
 
         if self.verbose:
             self.logger.info(
-                f"Smart Cache Handler startup summary:",
+                "Smart Cache Handler startup summary:",
                 f"Found {len(self.train_smart_cacher)} smc datasets for training",
                 f"Found {len(self.valid_smart_cacher)} smc datasets for validation"
             )
@@ -64,7 +75,7 @@ class SmartCacheHandler(Callback):
         trainer: Trainer,
         pl_module: LightningModule
     ) -> None:
-        if self.verbose:
+        if self.verbose and len(self.train_smart_cacher) > 0:
             self.logger.info(
                 f"Updating {len(self.train_smart_cacher)} smart cache dataset(s) for training"
             )
@@ -77,7 +88,7 @@ class SmartCacheHandler(Callback):
         trainer: Trainer,
         pl_module: LightningModule
     ) -> None:
-        if self.verbose:
+        if self.verbose and len(self.valid_smart_cacher) > 0:
             self.logger.info(
                 f"Updating {len(self.valid_smart_cacher)} smart cache dataset(s) for validation"
             )
