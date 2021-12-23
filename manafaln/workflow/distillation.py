@@ -1,12 +1,15 @@
+import warnings
 import torch
 from manafaln.workflow import SupervisedLearning
 from manafaln.utils.builders import build_loss_fn
+
+warnings.simplefilter("once")
 
 class DistillationLearning(SupervisedLearning):
     def __init__(self, config: dict):
         super().__init__(config)
 
-        self.kd_lambda = config["settings"].get("kd_lambda", 1.0)
+        self.kd_temp = config["settings"].get("kd_temperature", 1.0)
 
         # Setup teacher model
         self.teacher_model = torch.jit.load(config["settings"]["teacher_model_path"])
@@ -24,13 +27,18 @@ class DistillationLearning(SupervisedLearning):
 
         # Teacher model forward
         with torch.no_grad():
+            device = next(self.model.parameters()).device
+            if next(self.teacher_model.parameters()).device != device:
+                print(f"Move teacher model to {device}")
+                self.teacher_model = self.teacher_model.to(device)
+
             kd_preds = self.teacher_model(image)
-            kd_preds = torch.nn.functional.softmax(kd_preds, dim=1)
+            kd_preds = torch.nn.functional.softmax(kd_preds / self.kd_temp, dim=1)
 
         # Compute losses
         gt_loss = self.loss_fn(batch["preds"], batch["label"])
         kd_loss = self.kd_loss_fn(batch["preds"], kd_preds)
-        loss = gt_loss + self.kd_lambda * kd_loss
+        loss = gt_loss + kd_loss
 
         if self.train_decollate is not None:
             # Decolloate batch before post transform

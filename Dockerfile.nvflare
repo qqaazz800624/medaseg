@@ -1,4 +1,4 @@
-from nvcr.io/nvidia/pytorch:21.10-py3
+from nvcr.io/nvidia/pytorch:21.11-py3
 
 RUN pip install -U pip && \
     pip install monai[all]==0.7.0 pytorch-lightning>=1.5.0 nvflare>=2.0.0

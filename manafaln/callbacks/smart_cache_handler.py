@@ -11,11 +11,11 @@ class SmartCacheHandler(Callback):
         self.verbose = verbose
         self.logger = logging.getLogger(self.__class__.__name__)
 
-        self.train_smart_cacher = []
-        self.valid_smart_cahcer = []
+        self.train_smart_cacher = None
+        self.valid_smart_cacher = None
 
     def get_dataset(self, dataloader):
-        if isinstance(dataloader, DataLoader):
+        if isinstance(dataloader, DataLoader) or isinstance(dataloader, CombinedLoader):
             return dataloader.dataset
         elif isinstance(dataloader, Sequence):
             return [loader.dataset for loader in dataloader]
@@ -23,7 +23,7 @@ class SmartCacheHandler(Callback):
             return None
 
     # Note: pytorch_lightning CombinedDataset is NOT a torch Dataset
-    def extract_smart_cacher(self, dataset: Union[Dataset, CombinedDataset]):
+    def extract_smart_cacher(self, dataset: Union[Dataset, CombinedDataset, Sequence]):
         if isinstance(dataset, SmartCacheDataset):
             return [dataset]
         elif isinstance(dataset, CombinedDataset):
@@ -45,30 +45,19 @@ class SmartCacheHandler(Callback):
                 return smcs
         return []
 
-    def on_train_start(
+    def on_train_epoch_start(
         self,
         trainer: Trainer,
         pl_module: LightningModule
     ) -> None:
-        # Get smc dataset from the trainer
-        self.train_smart_cacher = self.extract_smart_cacher(
-            self.get_dataset(trainer.train_dataloader)
-        )
-        # Note: the 's' in val_dataloaders is not a typo
-        self.valid_smart_cacher = self.extract_smart_cacher(
-            self.get_dataset(trainer.val_dataloaders)
-        )
-
-        if self.verbose:
-            self.logger.info(
-                "Smart Cache Handler startup summary:",
-                f"Found {len(self.train_smart_cacher)} smc datasets for training",
-                f"Found {len(self.valid_smart_cacher)} smc datasets for validation"
+        if self.train_smart_cacher is None:
+            # Get smc dataset from the trainer
+            self.train_smart_cacher = self.extract_smart_cacher(
+                self.get_dataset(trainer.train_dataloader)
             )
-
-        # Start all smc datasets
-        for smc in chain(self.train_smart_cacher, self.valid_smart_cacher):
-            smc.start()
+            # Start all SMC
+            for smc in self.train_smart_cacher:
+                smc.start()
 
     def on_train_epoch_end(
         self,
@@ -82,6 +71,21 @@ class SmartCacheHandler(Callback):
 
         for smc in self.train_smart_cacher:
             smc.update_cache()
+
+    def on_validation_epoch_start(
+        self,
+        trainer: Trainer,
+        pl_module: LightningModule
+    ) -> None:
+        if self.valid_smart_cacher is None:
+            # Note: the 's' in val_dataloaders is not a typo
+            self.valid_smart_cacher = self.extract_smart_cacher(
+                self.get_dataset(trainer.val_dataloaders)
+            )
+            # Start all SMC
+            for smc in self.valid_smart_cacher:
+                smc.start()
+
 
     def on_validate_epoch_end(
         self,
@@ -109,5 +113,5 @@ class SmartCacheHandler(Callback):
             smc.shutdown()
 
         # Release references
-        self.train_smart_cacher = []
-        self.valid_smart_cacher = []
+        self.train_smart_cacher = None
+        self.valid_smart_cacher = None
