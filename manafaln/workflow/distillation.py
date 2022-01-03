@@ -12,8 +12,13 @@ class DistillationLearning(SupervisedLearning):
         self.kd_temp = config["settings"].get("kd_temperature", 1.0)
 
         # Setup teacher model
-        self.teacher_model = torch.jit.load(config["settings"]["teacher_model_path"])
-        self.teacher_model.eval()
+        try:
+            self.teacher_model = torch.jit.load(
+                config["settings"]["teacher_model_path"]
+            )
+            self.teacher_model.eval()
+        except ValueError:
+            self.teacher_model = None
 
         # Setup knowledge distillation loss
         self.kd_loss_fn = build_loss_fn(config["settings"]["kd_loss"])
@@ -26,19 +31,24 @@ class DistillationLearning(SupervisedLearning):
         batch["preds"] = self.model(image)
 
         # Teacher model forward
-        with torch.no_grad():
-            device = next(self.model.parameters()).device
-            if next(self.teacher_model.parameters()).device != device:
-                print(f"Move teacher model to {device}")
-                self.teacher_model = self.teacher_model.to(device)
-
-            kd_preds = self.teacher_model(image)
-            kd_preds = torch.nn.functional.softmax(kd_preds / self.kd_temp, dim=1)
+        if self.teacher_model is not None:
+            with torch.no_grad():
+                kd_preds = self.teacher_model(image)
+                kd_preds = torch.nn.functional.softmax(
+                    kd_preds / self.kd_temp,
+                    dim=1
+                )
+            #end
+        #endif
 
         # Compute losses
         gt_loss = self.loss_fn(batch["preds"], batch["label"])
-        kd_loss = self.kd_loss_fn(batch["preds"], kd_preds)
-        loss = gt_loss + kd_loss
+
+        if self.teacher_model is not None:
+            kd_loss = self.kd_loss_fn(batch["preds"], kd_preds)
+            loss = gt_loss + kd_loss
+        else:
+            loss = gt_loss
 
         if self.train_decollate is not None:
             # Decolloate batch before post transform

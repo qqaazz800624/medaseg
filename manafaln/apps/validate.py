@@ -11,6 +11,10 @@ def run(config_train, config_data, config_workflow, ckpt):
     # Restore workflow
     workflow = restore_from_checkpoint(ckpt, config=config_workflow)
 
+    # NO LOGGING FOR VALIDATION
+    config_train["settings"]["logger"] = False
+    config_train["settings"]["checkpoint_callback"] = False
+
     # Build trainer for validation
     trainer = Trainer(**config_train["settings"])
 
