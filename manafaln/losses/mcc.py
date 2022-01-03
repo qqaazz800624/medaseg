@@ -11,9 +11,9 @@ class MCCLoss(_Loss):
     def __init__(
         self,
         include_background: bool = True,
-        to_onehot_y: bool = True,
-        sigmoid: bool = True,
-        softmax: bool = True,
+        to_onehot_y: bool = False,
+        sigmoid: bool = False,
+        softmax: bool = False,
         reduction: Union[LossReduction, str] = LossReduction.MEAN,
         smooth_nr: float = 1e-5,
         smooth_dr: float = 1e-5,

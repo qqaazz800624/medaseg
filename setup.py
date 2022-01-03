@@ -8,6 +8,7 @@ packages = [
     "manafaln.callbacks",
     "manafaln.common",
     "manafaln.data",
+    "manafaln.losses",
     "manafaln.transforms",
     "manafaln.metrics",
     "manafaln.workflow",
