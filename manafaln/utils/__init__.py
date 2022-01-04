@@ -9,3 +9,6 @@ from .builders import (
     build_data_module,
     build_callback
 )
+from .data import (
+    MultiEpochDataLoader
+)
