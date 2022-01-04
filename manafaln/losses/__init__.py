@@ -1,1 +1,4 @@
-from .mcc import MCCLoss
+from .mcc import (
+    MCCLoss,
+    MCCFocalLoss
+)

@@ -1,11 +1,12 @@
 import warnings
-from typing import Callable, List, Optional, Union
+from typing import Callable, List, Optional, Union, Sequence
 
 import torch
 from torch.nn.modules.loss import _Loss
 
 from monai.networks import one_hot
 from monai.utils import LossReduction
+from monai.losses.focal_loss import FocalLoss
 
 class MCCLoss(_Loss):
     def __init__(
@@ -84,4 +85,56 @@ class MCCLoss(_Loss):
             return torch.mean(mcc_loss)
         raise ValueError(f"Unsupported reduction: {self.reduction}")
 
+class MCCFocalLoss(_Loss):
+    def __init__(
+        self,
+        include_background: bool = True,
+        to_onehot_y: bool = False,
+        sigmoid: bool = False,
+        softmax: bool = False,
+        reduction: Union[LossReduction, str] = LossReduction.MEAN,
+        smooth_nr: float = 1e-5,
+        smooth_dr: float = 1e-5,
+        batch: bool = False,
+        gamma: float = 2.0,
+        focal_weight: Optional[Union[Sequence[float], float, int, torch.Tensor]] = None,
+        lambda_mcc: float = 1.0,
+        lambda_focal: float = 1.0
+    ):
+        super().__init__()
+
+        assert lambda_mcc > 0.0
+        assert lambda_focal > 0.0
+
+        self.mcc = MCCLoss(
+            include_background=include_background,
+            to_onehot_y=to_onehot_y,
+            sigmoid=sigmoid,
+            softmax=softmax,
+            reduction=reduction,
+            smooth_nr=smooth_nr,
+            smooth_dr=smooth_dr,
+            batch=batch
+        )
+        self.focal = FocalLoss(
+            include_background=include_background,
+            to_onehot_y=to_onehot_y,
+            gamma=gamma,
+            weight=focal_weight,
+            reduction=reduction
+        )
+
+        self.lambda_mcc = lambda_mcc
+        self.lambda_focal = lambda_focal
+
+    def forward(
+        self,
+        input: torch.Tensor,
+        target: torch.Tensor
+    ) -> torch.Tensor:
+        mcc_loss = self.mcc(input, target)
+        focal_loss = self.focal(input, target)
+        total_loss = self.lambda_mcc * mcc_loss + self.lambda_focal * focal_loss
+
+        return total_loss
 
