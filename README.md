@@ -37,9 +37,8 @@ project_root
 ### Built-in Commands
 
  - train
- - validate (TODO)
- - export (TODO)
- - inference (TODO)
+ - validate
+ - inference
 
 ### Configuration File Structure
 
