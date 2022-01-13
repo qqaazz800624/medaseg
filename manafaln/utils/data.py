@@ -5,6 +5,9 @@ class RepeatSampler(object):
     def __init__(self, sampler):
         self.sampler = sampler
 
+        self.batch_size = sampler.batch_size
+        self.drop_last= sampler.drop_last
+
     def __iter__(self):
         while True:
             yield from iter(self.sampler)
@@ -14,7 +17,11 @@ class MultiEpochDataLoader(DataLoader):
         super().__init__(*args, **kwargs)
 
         # PyTorch 1.3 make batch_sampler private
-        object.__setattr__(self, 'batch_sampler', RepeatSampler(self.batch_sampler))
+        object.__setattr__(
+            self,
+            'batch_sampler',
+            RepeatSampler(self.batch_sampler)
+        )
         self.iterator = super().__iter__()
 
     def __len__(self):
