@@ -8,7 +8,16 @@
         "path": "trainer.LightningTrainer",
         "args": {
           "config": "config/config_train.json",
-          "aggregation_epochs": 10
+          "aggregation_epochs": 1
+        }
+      }
+    },
+    {
+      "tasks": ["validate"],
+      "executor": {
+        "path": "validator.LightningValidator",
+        "args": {
+          "config_file": "config/config_validation.json"
         }
       }
     }

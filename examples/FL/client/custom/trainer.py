@@ -63,6 +63,9 @@ class LightningTrainer(Executor):
         self._train_task_name = train_task_name
         self._submit_model_task_name = submit_model_task_name
 
+        self.key_metric = None
+        self.current_metric = -np.inf
+
     def patch_config(self, config: Dict) -> Dict:
         # Remove unwanted settings
         if config["trainer"].get("settings", None):
@@ -79,6 +82,7 @@ class LightningTrainer(Executor):
         for c in callbacks:
             if c["name"] == "ModelCheckpoint":
                 c["args"]["dirpath"] = os.path.join(self.app_root, "models")
+                self.key_metric = c["args"].get("monitor", None)
         config["trainer"]["callbacks"] = callbacks
 
         return config
@@ -99,7 +103,6 @@ class LightningTrainer(Executor):
                     raise ValueError(
                         f"Convert weight from {var_name} failed with error {str(e)}"
                     )
-
         model.load_state_dict(local_var_dict)
 
     def extract_weights(self) -> Dict[str, np.ndarray]:
@@ -112,7 +115,6 @@ class LightningTrainer(Executor):
                 raise ValueError(
                     f"Convert weight from {var_name} failed with error: {str(e)}"
                 )
-
         return local_model_dict
 
     def local_train(self):
@@ -133,9 +135,17 @@ class LightningTrainer(Executor):
             val_dataloaders=self.data.val_dataloader()
         )
 
+    def update_key_metric(self):
+        metrics = self.trainer.callback_metrics
+
+        if self.key_metric in metrics.keys():
+            self.current_metric = metrics[self.key_metric]
+            print(f"Update current metric: {self.current_metric}")
+
     def local_validate(self):
         # Run validation manually
         self.trainer.validate(self.workflow, self.data.val_dataloader())
+        self.update_key_metric()
 
         # Make sure all metrics are on the same device
         if self.checkpoint_saver.current_score is not None:
@@ -147,11 +157,29 @@ class LightningTrainer(Executor):
                 else:
                     metrics[key] = value
             self.trainer.logger_connector._callback_metrics = metrics
+        else:
+            print("Checkpoint saver doesn't update metrics yet")
         # Use saver to save checkpoint
         # The saver will be able to get metrics from the last validation,
         # and handle and compare to the previous results as usual
         # TODO: still have some problem, need fix
         # self.checkpoint_saver.save_checkpoint(self.trainer)
+
+    def load_local_model(self, fl_ctx: FLContext) -> Dict:
+        app_root = fl_ctx.get_prop(FLContextKey.APP_ROOT)
+
+        best_model = os.path.join(app_root, "models", "best_model.ckpt")
+        last_model = os.path.join(app_root, "models", "last.ckpt")
+
+        if os.path.exists(best_model):
+            ckpt = torch.load(best_model, map_location="cpu")
+        elif os.path.exists(last_model):
+            ckpt = torch.load(last_model, map_location="cpu")
+            print("Best local model not found, use the lastest model instead.")
+        else:
+            raise RuntimeError("No model checkpoint available for submission")
+
+        return ckpt
 
     def generate_shareable(self) -> Shareable:
         if self.achieved_meta is None:
@@ -159,11 +187,25 @@ class LightningTrainer(Executor):
         else:
             meta = self.achieved_meta
             meta[MetaKey.NUM_STEPS_CURRENT_ROUND] = self.trainer.global_step
-        return DXO(
+        dxo = DXO(
             data_kind=DataKind.WEIGHTS,
             data=self.extract_weights(),
             meta=meta
-        ).to_shareable()
+        )
+        dxo.set_meta_prop(MetaKey.INITIAL_METRICS, self.current_metric)
+        dxo.set_meta_prop(MetaKey.NUM_STEPS_CURRENT_ROUND, self.epoch_length)
+        return dxo.to_shareable()
+
+    def ckpt_to_dxo(self, ckpt: Dict, meta: Dict = None) -> DXO:
+        if meta is None:
+            meta = {}
+        meta[MetaKey.NUM_STEPS_CURRENT_ROUND] = ckpt["global_step"]
+
+        return DXO(
+            data_kind=DataKind.WEIGHTS,
+            data=ckpt["state_dict"],
+            meta=meta
+        )
 
     def handle_event(self, event_type: str, fl_ctx: FLContext):
         try:
@@ -216,6 +258,8 @@ class LightningTrainer(Executor):
                 self.data.setup()
                 self.train_dataloader = self.data.train_dataloader()
                 self.val_dataloader = self.data.val_dataloader()
+
+                self.epoch_length = len(self.train_dataloader)
             elif event_type == EventType.ABORT_TASK:
                 # Nothing can do here
                 pass
@@ -272,8 +316,6 @@ class LightningTrainer(Executor):
                 if abort_signal.triggered:
                     return make_reply(ReturnCode.TASK_ABORTED)
 
-                print(self.checkpoint_saver.best_model_path)
-
                 # Run validation before submitting model
                 self.local_validate()
                 if abort_signal.triggered:
@@ -286,9 +328,9 @@ class LightningTrainer(Executor):
                 return self.generate_shareable()
             elif task_name == self._submit_model_task_name:
                 # Get current local model
-                model = self.load_local_model(fl_ctx)
+                ckpt = self.load_local_model(fl_ctx)
                 # Create DXO
-                dxo = model_learnable_to_dxo(model)
+                dxo = self.ckpt_to_dxo(ckpt)
                 return dxo.to_shareable()
             else:
                 return make_reply(ReturnCode.TASK_UNKNOWN)

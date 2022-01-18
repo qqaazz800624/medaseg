@@ -36,6 +36,21 @@
       "args": {
         "expected_data_kind": "WEIGHTS"
       }
+    },
+    {
+      "id": "model_selector",
+      "name": "IntimeModelSelectionHandler",
+      "args": {}
+    },
+    {
+      "id": "model_locator",
+      "path": "model_locator.LightningModelLocator",
+      "args": {}
+    },
+    {
+      "id": "formatter",
+      "path": "lightning_formatter.LightningFormatter",
+      "args": {}
     }
   ],
 
@@ -45,7 +60,7 @@
       "name": "ScatterAndGather",
       "args": {
         "min_clients": 3,
-        "num_rounds": 60,
+        "num_rounds": 3,
         "start_round": 0,
         "wait_time_after_min_received": 180,
         "aggregator_id": "aggregator",
@@ -53,6 +68,17 @@
         "shareable_generator_id": "shareable_generator",
         "train_task_name": "train",
         "train_timeout": 0
+      }
+    },
+    {
+      "id": "cross_site_model_eval",
+      "name": "CrossSiteModelEval",
+      "args": {
+        "model_locator_id": "model_locator",
+        "formatter_id": "formatter",
+        "submit_model_timeout": 600,
+        "validation_timeout": 6000,
+        "cleanup_models": true
       }
     }
   ]

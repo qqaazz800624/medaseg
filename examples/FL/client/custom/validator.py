@@ -1,9 +1,14 @@
 import os
+import json
 import traceback
+from typing import Dict
 
 import torch
+import numpy as np
 from nvflare.apis.dxo import from_shareable, DataKind, DXO
 from nvflare.apis.executor import Executor
+from nvflare.apis.event_type import EventType
+from nvflare.apis.fl_constant import FLContextKey
 from nvflare.apis.fl_constant import ReturnCode
 from nvflare.apis.fl_context import FLContext
 from nvflare.apis.shareable import Shareable, make_reply
@@ -64,11 +69,11 @@ class LightningValidator(Executor):
         config["trainer"]["settings"]["default_root_dir"] = self.app_root
         config["trainer"]["settings"]["strategy"] = "ddp"
 
-        callbacks = config["trainer"].get("callbacks", [])
-        for c in callbacks:
-            if c["name"] == "ModelCheckpoint":
-                c["args"]["dirpath"] = os.path.join(self.app_root, "models")
-        config["trainer"]["callbacks"] = callbacks
+        # Disable logging and checkpoints for validation,
+        # otherwise there will be a lot of `versions` of logs
+        # with only validation result
+        config["trainer"]["settings"]["logger"] = False
+        config["trainer"]["settings"]["checkpoint_callback"] = False
 
         return config
 
@@ -97,13 +102,9 @@ class LightningValidator(Executor):
         self.signal_handler = AbortTraining()
         callbacks.append(self.signal_handler)
 
-        # Create custom logger
-        tb_logger = TensorBoardLogger(save_dir="logs", name="")
-
         # Configure lightning trainer
         self.trainer = Trainer(
             callbacks=callbacks,
-            logger=tb_logger,
             **self.config["trainer"]["settings"]
         )
 
@@ -122,9 +123,9 @@ class LightningValidator(Executor):
             elif event_type == EventType.END_RUN:
                 self.teardown(fl_ctx)
         except Exception as e:
-            self.log_exception(traceback.format_exc())
+            self.log_exception(fl_ctx, traceback.format_exc())
 
-    def apply_weight(self, weights: Dict[str, np.ndarray]):
+    def apply_weight(self, model_weights: Dict[str, np.ndarray]):
         model = self.workflow.model
 
         local_var_dict = model.state_dict()
@@ -144,7 +145,8 @@ class LightningValidator(Executor):
         model.load_state_dict(local_var_dict)
 
     def run_validation(self):
-        return self.trainer.validate(self.workflow, self.data.val_dataloader())
+        self.trainer.validate(self.workflow, self.data.val_dataloader())
+        return self.trainer.callback_metrics
 
     def execute(
         self,
@@ -193,7 +195,7 @@ class LightningValidator(Executor):
                 dxo = DXO(data_kind=DataKind.METRICS, data=metrics)
                 return dxo.to_shareable()
             except Exception as e:
-                self.log_exception(traceback.format_exc())
+                self.log_exception(fl_ctx, traceback.format_exc())
                 return make_reply(ReturnCode.EXECUTION_EXCEPTION)
         else:
             return make_reply(ReturnCode.TASK_UNKNOWN)
