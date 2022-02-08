@@ -111,15 +111,26 @@ class SupervisedLearning(LightningModule):
         batch["preds"] = self.forward(image)
 
         # Post transform & compute metrics
+        metrics = []
         if self.valid_decollate is not None:
             for item in self.valid_decollate(batch):
+                # Apply post transforms first
                 item = self.post_transforms["validation"](item)
-                self.valid_metrics.apply(item)
+                # Calculate iteration metrics
+                m = self.valid_metrics.apply(item)
+                # Save meta data and results
+                m["image_meta_dict"] = item.get("image_meta_dict", {})
+                m["label_meta_dict"] = item.get("label_meta_dict", {})
+                metrics.append(m)
         else:
             batch = self.post_transforms["validation"](batch)
-            self.valid_metrics.apply(batch)
+            m = self.valid_metrics.apply(batch)
+            m["image_meta_dict"] = batch.get("image_meta_dict")
+            m["label_meta_dict"] = batch.get("label_meta_dict")
+            metrics.append(m)
 
-        return None
+        # Output metrics and meta data of this batch
+        return metrics
 
     def validation_epoch_end(self, validation_step_outputs):
         m = self.valid_metrics.aggregate()

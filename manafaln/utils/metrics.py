@@ -1,7 +1,7 @@
 from typing import Any, Callable, Dict, List, Union
 from collections.abc import Iterable
 
-from monai.metrics import Cumulative
+from monai.metrics import Cumulative, IterationMetric
 
 from manafaln.utils.builders import build_metric
 
@@ -30,17 +30,24 @@ class MetricCollection:
             }
             self.metrics.append(metric)
 
-    def apply(self, data) -> None:
+    def apply(self, data) -> Dict[str, torch.Tensor]:
+        batch_metrics = {}
         for m in self.metrics:
             out = m["unpack"](data)
-            m["instance"](*out)
+            if isinstance(m["instance"], IterationMetric):
+                batch_metrics[m["name"]] = m["instance"](*out)
+            else:
+                m["instance"].append(*out)
+        return batch_metrics
 
     def aggregate(self) -> Dict:
         metrics = {}
         for m in self.metrics:
-            results = m["instance"].aggregate()
-            for name, value in zip(m["name"], results):
-                metrics[name] = value
+            if isinstance(m["instance"], Cumulative):
+                results = m["instance"].aggregate()
+                # Some metrics will contain more than one results
+                for name, value in zip(m["name"], results):
+                    metrics[name] = value
         return metrics
 
     def reset(self) -> None:
