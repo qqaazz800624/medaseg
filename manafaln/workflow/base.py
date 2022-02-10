@@ -18,7 +18,7 @@ def configure_batch_decollate(settings, phase, keys):
     decollate = settings.get("decollate", False)
     decollate_phases = settings.get("decollate_phases", [])
     if decollate and phase in decollate_phases:
-        return Decollated(keys=keys)
+        return Decollated(keys=keys, allow_missing_keys=True)
     return None
 
 class SupervisedLearning(LightningModule):

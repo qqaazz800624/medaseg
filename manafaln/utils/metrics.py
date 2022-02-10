@@ -1,6 +1,7 @@
 from typing import Any, Callable, Dict, List, Union
 from collections.abc import Iterable
 
+import torch
 from monai.metrics import Cumulative, IterationMetric
 
 from manafaln.utils.builders import build_metric
@@ -35,7 +36,8 @@ class MetricCollection:
         for m in self.metrics:
             out = m["unpack"](data)
             if isinstance(m["instance"], IterationMetric):
-                batch_metrics[m["name"]] = m["instance"](*out)
+                for name, value in zip(m["name"], m["instance"](*out)):
+                    batch_metrics[name] = value
             else:
                 m["instance"].append(*out)
         return batch_metrics

@@ -1,6 +1,8 @@
 from typing import Dict, Hashable, Mapping, Optional, Sequence, Union
+from numbers import Real
 
 import torch
+import numpy as np
 from monai.config import KeysCollection
 from monai.transforms import Transform, MapTransform
 from monai.config.type_definitions import NdarrayOrTensor
@@ -41,3 +43,19 @@ class Unsqueezed(MapTransform):
             d[key] = self.converter(d[key])
         return d
 
+class ScalarToNumpyArrayd(MapTransform):
+    def __init__(
+        self,
+        keys: KeysCollection
+    ):
+        super().__init__(keys, False)
+
+    def __call__(
+        self,
+        data: Mapping[Hashable, NdarrayOrTensor]
+    ):
+        d = dict(data)
+        for key in self.keys:
+            if isinstance(d[key], Real):
+                d[key] = np.array([d[key]])
+        return d

@@ -1,7 +1,7 @@
 from pytorch_lightning import Trainer
 
 from manafaln.utils.args import InferenceConfigurator
-from manafaln.utils.builders import build_data_module
+from manafaln.utils.builders import build_callback, build_data_module
 from manafaln.utils.checkpoint import restore_from_checkpoint
 
 def run(config_train, config_data, config_workflow, ckpt):
@@ -13,10 +13,17 @@ def run(config_train, config_data, config_workflow, ckpt):
 
     # NO LOGGING FOR VALIDATION
     config_train["settings"]["logger"] = False
-    config_train["settings"]["checkpoint_callback"] = False
+    config_train["settings"]["enable_checkpointing"] = False
+
+    # Create callbacks
+    callbacks = config_train.get("callbacks", [])
+    callbacks = [build_callback(c) for c in callbacks]
 
     # Build trainer for validation
-    trainer = Trainer(**config_train["settings"])
+    trainer = Trainer(
+        callbacks=callbacks,
+        **config_train["settings"]
+    )
 
     # Start validation
     metrics = trainer.validate(workflow, data.val_dataloader())

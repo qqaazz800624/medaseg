@@ -1,4 +1,4 @@
-from typing import Any, Union, List, Tuple
+from typing import Any, Dict, Union, List, Tuple
 
 import torch
 import pandas as pd
@@ -10,6 +10,14 @@ def ensure_list(arg: Union[Any, List[Any]]):
         return [arg]
     else:
         return arg
+
+def ensure_python_value(value: Any):
+    if isinstance(value, torch.Tensor):
+        try:
+            return value.item()
+        except ValueError:
+            return value.tolist()
+    return value
 
 class IterationMetricSaver(Callback):
     def __init__(
@@ -31,9 +39,9 @@ class IterationMetricSaver(Callback):
 
         if decollate:
             if self.save_preds:
-                keys = [meta_dict_key, preds, metrics]
+                keys = [meta_dict_key, "preds"] + self.metrics
             else:
-                keys = [meta_dict_key, metrics]
+                keys = [meta_dict_key] + self.metrics
 
             self.decollate_fn = Decollated(
                 keys=keys
@@ -55,6 +63,7 @@ class IterationMetricSaver(Callback):
         if self.decollate_fn is not None:
             if len(outputs) > 1:
                 raise ValueError("MetricSaver expected collated inputs if 'decollate' is enabled")
+            outputs = outputs[0]
 
             if self.save_preds:
                 outputs["preds"] = batch["preds"]
@@ -64,19 +73,23 @@ class IterationMetricSaver(Callback):
                 for key in self.meta_dict_info:
                     row.append(item[self.meta_dict_key][key])
                 if self.save_preds:
-                    row.append(item["preds"])
+                    preds = ensure_python_value(item["preds"])
+                    row.append(preds)
                 for m in self.metrics:
-                    row.append(item[m])
+                    metric = ensure_python_value(item[m])
+                    row.append(metric)
                 self.buffer.append(row)
         else:
-            for item, idx in enumerate(outputs):
+            for idx, item in enumerate(outputs):
                 row = []
                 for key in self.meta_dict_info:
                     row.append(item[self.meta_dict_key][key])
                 if self.save_preds:
-                    row.append(batch["preds"][idx])
+                    preds = ensure_python_value(batch["preds"][idx])
+                    row.append(preds)
                 for m in self.metrics:
-                    row.append(item[m])
+                    metric = ensure_python_value(item[m])
+                    row.append(metric)
                 self.buffer.append(row)
 
     def on_validation_epoch_end(
@@ -99,3 +112,4 @@ class IterationMetricSaver(Callback):
 
             # Cleanup
             self.buffer = []
+
