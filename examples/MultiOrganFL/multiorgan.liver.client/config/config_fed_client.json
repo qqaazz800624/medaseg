@@ -1,0 +1,31 @@
+{
+  "format_version": 2,
+
+  "executors": [
+    {
+      "tasks": ["train", "submit_model"],
+      "executor": {
+        "path": "trainer.LightningTrainer",
+        "args": {
+          "config": "config/config_train.json",
+          "aggregation_epochs": 10
+        }
+      }
+    },
+    {
+      "tasks": ["validate"],
+      "executor": {
+        "path": "validator.LightningValidator",
+        "args": {
+          "config_file": "config/config_validation.json"
+        }
+      }
+    }
+  ],
+  "task_result_filters": [
+  ],
+  "task_data_filters": [
+  ],
+  "components": [
+  ]
+}
