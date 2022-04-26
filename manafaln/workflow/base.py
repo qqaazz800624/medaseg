@@ -165,7 +165,8 @@ class SupervisedLearning(LightningModule):
 
         if not sch_config is None:
             # Get or set default scheduler mode
-            if sch_opts := workflow["settings"].get("scheduler", None):
+            sch_opts = workflow["settings"].get("scheduler", None)
+            if sch_opts is not None:
                 interval = sch_opts.get("interval", "epoch")
                 frequency = sch_opts.get("frequency", 1)
             else:

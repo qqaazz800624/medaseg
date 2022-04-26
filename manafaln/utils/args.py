@@ -85,7 +85,8 @@ class TrainConfigurator(Configurator):
 
     def configure_data(self) -> None:
         data = dict(self.config["data"])
-        if batch_size := getattr(self.args, "batch_size", None):
+        batch_size = getattr(self.args, "batch_size", None)
+        if batch_size:
             data["training"]["dataloader"]["args"]["batch_size"] = batch_size
         return data
 
@@ -142,7 +143,8 @@ class InferenceConfigurator(Configurator):
         with open(args.config) as fc:
             config = json.load(fc)
 
-        if config_data := getattr(args, "data", None):
+        config_data = getattr(args, "data", None)
+        if config_data:
             with open(config_data) as fd:
                 data = json.load(fd)
             # Validate the format of data config

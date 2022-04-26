@@ -77,19 +77,22 @@ class DecathlonDataModule(LightningDataModule):
         return dataset
 
     def get_train_dataset(self):
-        if dataset := getattr(self, "train_dataset", None) is None:
+        dataset = getattr(self, "train_dataset", None)
+        if dataset is None:
             config = self.hparams.data["training"]
             self.train_dataset = self.build_dataset(config)
         return self.train_dataset
 
     def get_val_dataset(self):
-        if dataset := getattr(self, "val_dataset", None) is None:
+        dataset = getattr(self, "val_dataset", None)
+        if dataset is None:
             config = self.hparams.data["validation"]
             self.val_dataset = self.build_dataset(config)
         return self.val_dataset
 
     def get_test_dataset(self):
-        if dataset := getattr(self, "test_dataset", None) is None:
+        dataset = getattr(self, "test_dataset", None)
+        if dataset is None:
             config = self.hparams.data["test"]
             self.test_dataset = self.build_dataset(config)
         return self.test_dataset

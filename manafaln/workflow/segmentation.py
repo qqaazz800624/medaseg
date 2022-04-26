@@ -8,10 +8,10 @@ class SupervisedSegmentation(SupervisedLearning):
         super().__init__(config)
 
         settings = self.hparams.workflow["settings"]
-        if use_crf := settings.get("use_crf", False):
+        self.use_crf = settings.get("use_crf", False)
+        if self.use_crf:
             crf_args = settings.get("crf_args", {})
             self.crf_module = monai.networks.blocks.CRF(**crf_args)
-        self.use_crf = use_crf
 
     def forward(self, data):
         if self.use_crf:
