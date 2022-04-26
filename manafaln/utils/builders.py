@@ -78,7 +78,7 @@ def get_class(
     M = import_module(path)
     return getattr(M, name)
 
-def instance_builder(instance_query: InstanceQuery, /, **kwargs):
+def instance_builder(instance_query: InstanceQuery, **kwargs):
     C = get_class(
         name=instance_query.get_name(),
         path=instance_query.get_path(),
