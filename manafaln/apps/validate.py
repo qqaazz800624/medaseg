@@ -16,7 +16,9 @@ def run(config_train, config_data, config_workflow, ckpt):
     config_train["settings"]["enable_checkpointing"] = False
 
     # Create callbacks
+    blacklist = ["ModelCheckpoint"]
     callbacks = config_train.get("callbacks", [])
+    callbacks= [c for c in callbacks if c["name"] not in blacklist]
     callbacks = [build_callback(c) for c in callbacks]
 
     # Build trainer for validation

@@ -13,7 +13,7 @@ def run(config_train, config_data, config_workflow, ckpt):
 
     # NO LOGGING FOR VALIDATION
     config_train["settings"]["logger"] = False
-    config_train["settings"]["checkpoint_callback"] = False
+    config_train["settings"]["enable_checkpointing"] = False
 
     # Build trainer for validation
     trainer = Trainer(**config_train["settings"])
