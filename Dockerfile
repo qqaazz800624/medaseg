@@ -1,8 +1,7 @@
-from nvcr.io/nvidia/pytorch:21.10-py3
+from projectmonai/monai:latest
 
 RUN pip install -U pip && \
-    pip install monai[all]==0.7.0 && \
-    pip install pytorch-lightning==1.4.9
+    pip install pytorch-lightning>=1.5.0
 
 COPY . /opt/manafaln
 RUN cd /opt/manafaln && \
