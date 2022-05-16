@@ -52,13 +52,13 @@ class AsDiscrete(Transform):
 
         img_t, *_ = convert_data_type(img, torch.Tensor)
         if argmax or self.argmax:
-            img_t = torch.argmax(img_t, dim=0, keepdim=True)
+            img_t = torch.argmax(img_t, dim=self.channel_dim, keepdim=True)
 
         to_onehot = self.to_onehot if to_onehot is None else to_onehot
         if to_onehot is not None:
             if not isinstance(to_onehot, int):
                 raise AssertionError("the number of classes for One-Hot must be an integer.")
-            img_t = one_hot(img_t, num_classes=to_onehot, dim=0)
+            img_t = one_hot(img_t, num_classes=to_onehot, dim=self.channel_dim)
 
         threshold = self.threshold if threshold is None else threshold
         if threshold is not None:
