@@ -156,7 +156,7 @@ class LightningTrainer(Executor):
                     metrics[key] = value.to(device)
                 else:
                     metrics[key] = value
-            self.trainer.logger_connector._callback_metrics = metrics
+            self.trainer._logger_connector._callback_metrics.update(metrics)
         else:
             print("Checkpoint saver doesn't update metrics yet")
         # Use saver to save checkpoint

@@ -7,7 +7,7 @@
 
       "benchmark": true,
       "amp_backend": "apex",
-      "amp_level": "O2",
+      "amp_level": "O1",
 
       "detect_anomaly": true,
 
@@ -66,11 +66,11 @@
         }
       },
       "loss": {
-        "name": "DiceCELoss",
+        "name": "DiceLoss",
         "args": {
           "include_background": true,
           "to_onehot_y": true,
-          "softmax": true
+          "sigmoid": true
         }
       },
       "optimizer": {
@@ -268,8 +268,8 @@
           "name": "ScaleIntensityRanged",
           "args": {
             "keys": ["image"],
-            "a_min": -200.0,
-            "a_max":  250.0,
+            "a_min": -500.0,
+            "a_max":  500.0,
             "b_min":    0.0,
             "b_max":    1.0,
             "clip": true
@@ -347,8 +347,8 @@
           "name": "ScaleIntensityRanged",
           "args": {
             "keys": ["image"],
-            "a_min": -200.0,
-            "a_max":  250.0,
+            "a_min": -500.0,
+            "a_max":  500.0,
             "b_min":    0.0,
             "b_max":    1.0,
             "clip": true
@@ -401,8 +401,8 @@
           "name": "ScaleIntensityRanged",
           "args": {
             "keys": "image",
-            "a_min": -200.0,
-            "a_max":  250.0,
+            "a_min": -500.0,
+            "a_max":  500.0,
             "b_min":    0.0,
             "b_max":    1.0,
             "clip": true

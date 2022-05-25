@@ -7,7 +7,7 @@
 
       "benchmark": true,
       "amp_backend": "apex",
-      "amp_level": "O2",
+      "amp_level": "O1",
 
       "check_val_every_n_epoch": 10,
       "detect_anomaly": true,
@@ -52,11 +52,11 @@
         }
       },
       "loss": {
-        "name": "DiceCELoss",
+        "name": "DiceLoss",
         "args": {
           "include_background": false,
           "to_onehot_y": true,
-          "softmax": true
+          "sigmoid": true
         }
       },
       "optimizer": {
@@ -75,25 +75,36 @@
       "post_transforms": {
         "training": [
           {
+            "name": "Activationsd",
+            "args": {
+              "keys": ["preds"],
+              "sigmoid": [true]
+            }
+          },
+          {
             "name": "AsDiscreted",
             "path": "manafaln.transforms",
             "args": {
               "keys": ["preds", "label"],
-              "argmax": [true, false],
-              "to_onehot": [true, true],
-              "num_classes": 8,
-              "channel_dim": 1
+              "to_onehot": [null, 8],
+              "threshold_values": [0.5, null]
             }
           }
         ],
         "validation": [
           {
+            "name": "Activationsd",
+            "args": {
+              "keys": ["preds"],
+              "sigmoid": [true]
+            }
+          },
+          {
             "name": "AsDiscreted",
             "args": {
               "keys": ["preds", "label"],
-              "argmax": [true, false],
-              "to_onehot": [true, true],
-              "num_classes": 8
+              "to_onehot": [null, 8],
+              "threshold_values": [0.5, null]
             }
           },
           {
@@ -127,11 +138,18 @@
         ],
         "test": [
           {
+            "name": "Activationsd",
+            "args": {
+              "keys": ["preds"],
+              "sigmoid": [true]
+            }
+          },
+          {
             "name": "AsDiscreted",
             "args": {
-              "keys": "preds",
-              "argmax": true,
-              "num_classes": 8
+              "keys": ["preds"],
+              "to_onehot": [8],
+              "threshold_values": [0.5]
             }
           },
           {
@@ -239,11 +257,19 @@
           }
         },
         {
+          "name": "Spacingd",
+          "args": {
+            "keys": ["image", "label"],
+            "pixdim": [1.0, 1.0, 1.0],
+            "mode": ["bilinear", "nearest"]
+          }
+        },
+        {
           "name": "ScaleIntensityRanged",
           "args": {
             "keys": ["image"],
-            "a_min": -200.0,
-            "a_max":  250.0,
+            "a_min": -500.0,
+            "a_max":  500.0,
             "b_min":    0.0,
             "b_max":    1.0,
             "clip": true
@@ -318,11 +344,19 @@
           }
         },
         {
+          "name": "Spacingd",
+          "args": {
+            "keys": ["image", "label"],
+            "pixdim": [1.0, 1.0, 1.0],
+            "mode": ["bilinear", "nearest"]
+          }
+        },
+        {
           "name": "ScaleIntensityRanged",
           "args": {
             "keys": ["image"],
-            "a_min": -200.0,
-            "a_max":  250.0,
+            "a_min": -500.0,
+            "a_max":  500.0,
             "b_min":    0.0,
             "b_max":    1.0,
             "clip": true
@@ -372,11 +406,19 @@
           }
         },
         {
+          "name": "Spacingd",
+          "args": {
+            "keys": "image",
+            "pixdim": [1.0, 1.0, 1.0],
+            "mode": "bilinear"
+          }
+        },
+        {
           "name": "ScaleIntensityRanged",
           "args": {
             "keys": "image",
-            "a_min": -200.0,
-            "a_max":  250.0,
+            "a_min": -500.0,
+            "a_max":  500.0,
             "b_min":    0.0,
             "b_max":    1.0,
             "clip": true
