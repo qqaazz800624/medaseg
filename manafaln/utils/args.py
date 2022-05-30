@@ -1,11 +1,11 @@
 import os
 import sys
-import json
 from abc import ABC, abstractmethod
 from typing import Dict
 from argparse import ArgumentParser
 
 from pytorch_lightning import Trainer
+from ruamel.yaml import YAML
 
 class Configurator(ABC):
     def __init__(self):
@@ -77,8 +77,9 @@ class TrainConfigurator(Configurator):
         )
 
     def preprocess_args(self, args) -> None:
+        config_loader = YAML()
         with open(args.config) as f:
-            config = json.load(f)
+            config = config_loader.load(f)
 
         self.args = args
         self.config = config
@@ -140,13 +141,15 @@ class InferenceConfigurator(Configurator):
         )
 
     def preprocess_args(self, args) -> None:
+        config_loader = YAML()
+
         with open(args.config) as fc:
-            config = json.load(fc)
+            config = config_loader.load(fc)
 
         config_data = getattr(args, "data", None)
         if config_data:
             with open(config_data) as fd:
-                data = json.load(fd)
+                data = config_loader.load(fd)
             # Validate the format of data config
             # can be an independent json file or other training config
             keys = data.keys()

@@ -23,8 +23,9 @@ setup(
     packages=packages,
     include_package_data=True,
     install_requires=[
-        "monai>=0.7.0",
-        "pytorch-lightning>=1.4.9"
+        "monai>=0.8.0",
+        "pytorch-lightning>=1.5.0",
+        "ruamel.yaml"
     ],
     python_requires=">=3.8"
 )
