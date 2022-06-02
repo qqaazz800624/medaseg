@@ -1,26 +1,13 @@
 #!/usr/bin/env python
 
-from setuptools import setup
-
-packages = [
-    "manafaln",
-    "manafaln.apps",
-    "manafaln.callbacks",
-    "manafaln.common",
-    "manafaln.data",
-    "manafaln.losses",
-    "manafaln.transforms",
-    "manafaln.metrics",
-    "manafaln.workflow",
-    "manafaln.utils"
-]
+from setuptools import setup, find_packages
 
 setup(
     name="manafaln",
-    version="0.2.1",
+    version="0.2.2",
     author="Pochuan Wang",
     author_email="d08922016@csie.ntu.edu.tw",
-    packages=packages,
+    packages=find_packages(),
     include_package_data=True,
     install_requires=[
         "monai>=0.8.0",

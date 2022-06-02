@@ -1,4 +1,3 @@
-
 __all__ = [
     "apps",
     "common",
@@ -6,6 +5,7 @@ __all__ = [
     "data",
     "transforms",
     "metrics",
+    "models",
     "workflow",
     "utils"
 ]
