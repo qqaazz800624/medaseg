@@ -12,7 +12,7 @@ class LibSpecMeta(type):
 
         return super().__new__(mcls, name, base, attrs)
 
-class LibSpec(metaclass=LibSpecMeta):
+class LibSpecNative(metaclass=LibSpecMeta):
     MODEL      = "manafaln.models"
     LOSS       = "manafaln.losses"
     METRIC     = "manafaln.metrics"
@@ -43,7 +43,7 @@ class LibSpecTorchVision(metaclass=LibSpecMeta):
     DATASET = "torchvision.datasets"
 
 AVAILABLE_LIBS = {
-    "manafaln": LibSpec,
+    "manafaln": LibSpecNative,
     "MONAI": LibSpecMONAI,
     "PyTorch": LibSpecPyTorch,
     "PyTorchLightning": LibSpecPyTorchLightning,
