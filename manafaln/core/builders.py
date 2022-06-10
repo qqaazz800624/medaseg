@@ -1,6 +1,7 @@
 import abc
 import inspect
 import importlib
+import logging
 from typing import Any, Dict, List
 
 import torch
@@ -17,6 +18,7 @@ class ComponentBuilder(object):
     ):
         self.component_type = ComponentType(component_type)
         self.check_instance = check_instance
+        self.logger = logging.getLogger(self.__class__.__name__)
 
     def _build_instance(self, spec, name, path, args, kwargs):
         out = None
@@ -31,7 +33,11 @@ class ComponentBuilder(object):
                     M = importlib.import_module(path)
                     C = getattr(M, name)
                     out = C(*args, **kwargs)
-                except:
+                except ModuleNotFoundError as e:
+                    self.logger.warning("Module {path} not found")
+                    continue
+                except AttributeError:
+                    self.logger.debug("Unable to find {name} in {path}")
                     continue
                 break
         return out
@@ -152,9 +158,15 @@ class DatasetBuilder(ComponentBuilder):
         path = config.get("path", None)
         spec = ComponentSpecs[self.component_type.name]
         args = args
-        kwargs = kwargs
 
-        out = self._build_instance(spec, name, path, args, kwargs)
+        # Build _kwargs from config and kwargs
+        _kwargs = config.get("args", {})
+        for k in kwargs:
+            if k in _kwargs:
+                self.logger.warning("Overwrite kwargs from {_kwargs[k]} to {kwargs[k]}")
+            _kwargs[k] = kwargs[k]
+
+        out = self._build_instance(spec, name, path, args, _kwargs)
         if out is None:
             raise RuntimeError(f"Could not found {name} in supported libraries.")
 
