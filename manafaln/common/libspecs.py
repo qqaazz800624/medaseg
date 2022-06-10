@@ -26,12 +26,14 @@ class LibSpecMONAI(metaclass=LibSpecMeta):
     LOSS       = "monai.losses"
     INFERER    = "monai.inferers"
     OPTIMIZER  = "monai.optimizers"
+    SCHEDULER  = "monai.optimizers"
     METRIC     = "monai.metrics"
     TRANSFORM  = "monai.transforms"
     DATASET    = "monai.data.dataset"
     DATALOADER = "monai.data.dataloader"
 
 class LibSpecPyTorch(metaclass=LibSpecMeta):
+    LOSS      = "torch.nn"
     OPTIMIZER = "torch.optim"
     SCHEDULER = "torch.optim.lr_scheduler"
 
@@ -42,10 +44,3 @@ class LibSpecTorchVision(metaclass=LibSpecMeta):
     MODEL   = "torchvision.models"
     DATASET = "torchvision.datasets"
 
-AVAILABLE_LIBS = {
-    "manafaln": LibSpecNative,
-    "MONAI": LibSpecMONAI,
-    "PyTorch": LibSpecPyTorch,
-    "PyTorchLightning": LibSpecPyTorchLightning,
-    "TorchVision": LibSpecTorchVision
-}
