@@ -14,5 +14,6 @@ setup(
         "pytorch-lightning>=1.5.0",
         "ruamel.yaml"
     ],
+    tests_require=["pytest"],
     python_requires=">=3.8"
 )

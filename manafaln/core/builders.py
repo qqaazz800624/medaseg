@@ -1,7 +1,7 @@
 import abc
 import inspect
 import importlib
-from typing import Dict, List
+from typing import Any, Dict, List
 
 import torch
 from torch.optim import Optimizer
@@ -37,6 +37,8 @@ class ComponentBuilder(object):
         return out
 
     def _check_instance(self, spec, instance):
+        if spec.INSTANCE_TYPE == Any:
+            return
         if not isinstance(instance, spec.INSTANCE_TYPE):
             raise TypeError(
                 f"Builder expect {spec.INSTANCE_TYPE} but got {type(instance)} instead"
