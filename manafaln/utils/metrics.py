@@ -56,3 +56,4 @@ class MetricCollection:
         for m in self.metrics:
             if isinstance(m["instance"], Cumulative):
                 m["instance"].reset()
+
