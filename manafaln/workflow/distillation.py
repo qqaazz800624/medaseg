@@ -5,8 +5,8 @@ from typing import Dict
 import torch
 from monai.networks import one_hot
 
+from manafaln.core.builders import LossBuilder
 from manafaln.workflow import SupervisedLearning
-from manafaln.utils.builders import build_loss_fn
 
 warnings.simplefilter("once")
 
@@ -62,7 +62,8 @@ class DistillationLearning(SupervisedLearning):
             self.teacher_model = None
 
         # Setup knowledge distillation loss
-        self.kd_loss_fn = build_loss_fn(config["settings"]["kd_loss"])
+        loss_builder = LossBuilder()
+        self.kd_loss_fn = loss_builder(config["settings"]["kd_loss"])
 
     def training_step(self, batch, batch_idx):
         image = batch["image"]

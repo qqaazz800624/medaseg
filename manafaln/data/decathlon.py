@@ -5,13 +5,15 @@ from shutil import copytree
 import torch
 import monai
 from monai.data.decathlon_datalist import load_decathlon_datalist
+from monai.transforms import Compose
 from pytorch_lightning import LightningDataModule
 
-from manafaln.common.constants import ComponentType
-from manafaln.utils.builders import (
-    instantiate,
-    build_transforms
+from manafaln.core.builders import (
+    DatasetBuilder,
+    DataLoaderBuilder,
+    TransformBuilder
 )
+from manafaln.core.transforms import build_transforms
 
 class DecathlonDataModule(LightningDataModule):
     def __init__(self, config: Dict):
@@ -64,16 +66,11 @@ class DecathlonDataModule(LightningDataModule):
                 )
                 files = files + subset
 
-        transforms = build_transforms(config["transforms"])
+        builder = DatasetBuilder()
 
-        dataset = instantiate(
-            name=config["dataset"]["name"],
-            path=config["dataset"].get("path", None),
-            component_type=ComponentType.DATASET,
-            data=files,
-            transform=transforms,
-            **config["dataset"].get("args", {})
-        )
+        transforms = build_transforms(config["transforms"])
+        dataset = builder(config, [files], { "transforms": transforms })
+
         return dataset
 
     def get_train_dataset(self):
@@ -107,18 +104,15 @@ class DecathlonDataModule(LightningDataModule):
         if not phase in phase_to_dataset.keys():
             raise ValueError(f"{phase} split is not allowed for data module")
 
+        # Create data loader builder
+        builder = DataLoaderBuilder()
+
         # Get dataset
         dataset = phase_to_dataset[phase]()
 
         # Build data loader
         config = self.hparams.data[phase]
-        loader = instantiate(
-            name=config["dataloader"]["name"],
-            path=config["dataloader"].get("path", None),
-            component_type=ComponentType.DATALOADER,
-            dataset=dataset,
-            **config["dataloader"].get("args", {})
-        )
+        loader = builder(config["dataloader"], dataset)
 
         return loader
 

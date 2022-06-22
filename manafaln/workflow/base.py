@@ -4,15 +4,15 @@ from monai.transforms import Decollated
 from pytorch_lightning import LightningModule
 from pytorch_lightning.utilities.distributed import rank_zero_only
 
-from manafaln.utils.metrics import MetricCollection
-from manafaln.utils.builders import (
-    build_model,
-    build_loss_fn,
-    build_inferer,
-    build_optimizer,
-    build_scheduler,
-    build_transforms
+from manafaln.core.metrics import MetricCollection
+from manafaln.core.builders import (
+    ModelBuilder,
+    LossBuilder,
+    InfererBuilder,
+    OptimizerBuilder,
+    SchedulerBuilder
 )
+from manafaln.core.transforms import build_transforms
 
 def configure_batch_decollate(settings, phase, keys):
     decollate = settings.get("decollate", False)
@@ -31,33 +31,19 @@ class SupervisedLearning(LightningModule):
         # Get configurations for all components
         components = self.hparams.workflow["components"]
 
-        self.model   = build_model(components["model"])
-        self.loss_fn = build_loss_fn(components["loss"])
-        self.inferer = build_inferer(components["inferer"])
+        self.model   = self.build_model(components["model"])
+        self.loss_fn = self.build_loss_fn(components["loss"])
+        self.inferer = self.build_inferer(components["inferer"])
 
         # Configure batch decollate
-        self.train_decollate = configure_batch_decollate(
-            config["settings"],
-            "training",
-            keys=[
-                "image", "image_meta_dict", "image_transforms",
-                "label", "label_meta_dict", "label_transforms",
-                "preds"
-            ]
+        self.train_decollate = self.configure_batch_decollate(
+            config["settings"], "training"
         )
-        self.valid_decollate = configure_batch_decollate(
-            config["settings"],
-            "validation",
-            keys=[
-                "image", "image_meta_dict", "image_transforms",
-                "label", "label_meta_dict", "label_transforms",
-                "preds"
-            ]
+        self.valid_decollate = self.configure_batch_decollate(
+            config["settings"], "validation"
         )
-        self.test_decollate = configure_batch_decollate(
-            config["settings"],
-            "test",
-            keys=["image", "image_meta_dict", "image_transforms", "preds"]
+        self.test_decollate = self.configure_batch_decollate(
+            config["settings"], "test"
         )
 
         self.post_transforms = {}
@@ -68,6 +54,35 @@ class SupervisedLearning(LightningModule):
 
         self.train_metrics = MetricCollection(components["training_metrics"])
         self.valid_metrics = MetricCollection(components["validation_metrics"])
+
+    def build_model(self, config):
+        builder = ModelBuilder()
+        return builder(config)
+
+    def build_loss_fn(self, config):
+        builder = LossBuilder()
+        return builder(config)
+
+    def build_inferer(self, config):
+        builder = InfererBuilder()
+        return builder(config)
+
+    def configure_batch_decollate(self, config, phase):
+        if phase == "training" or phase == "validation":
+            keys = [
+                "image", "image_meta_dict", "image_transforms",
+                "label", "label_meta_dict", "label_transforms",
+                "preds"
+            ]
+        elif phase == "test":
+            keys = ["image", "image_meta_dict", "image_transforms", "preds"]
+        else:
+            raise RuntimeError("Cannot configure decollate for unknow phase.")
+
+        if config.get("decollate", False):
+            if phase in config.get("decollate_phases", []):
+                return Decollated(keys=keys, allow_missing_keys=True)
+        return None
 
     def forward(self, data):
         return self.inferer(data, self.model)
@@ -153,14 +168,23 @@ class SupervisedLearning(LightningModule):
         # Nothing to output for pure inference
         return None
 
+    def get_optimize_parameters(self):
+        return self.model.parameters()
+
     def configure_optimizers(self):
         # Extract optimizer & scheduler configurations
         workflow = self.hparams.workflow
         opt_config = workflow["components"]["optimizer"]
         sch_config = workflow["components"].get("scheduler", None)
 
+        opt_builder = OptimizerBuilder()
+        sch_builder = SchedulerBuilder()
+
         opt = {
-            "optimizer": build_optimizer(opt_config, self.model.parameters())
+            "optimizer": opt_builder(
+                opt_config,
+                params=self.get_optimize_parameters()
+            )
         }
 
         if not sch_config is None:
@@ -174,7 +198,7 @@ class SupervisedLearning(LightningModule):
                 frequency = 1
 
             opt["lr_scheduler"] = {
-                "scheduler": build_scheduler(sch_config, opt["optimizer"]),
+                "scheduler": sch_builder(sch_config, opt=opt["optimizer"]),
                 "interval": interval,
                 "frequency": frequency
             }
