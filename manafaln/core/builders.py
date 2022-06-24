@@ -2,7 +2,7 @@ import abc
 import inspect
 import importlib
 import logging
-from typing import Any, Dict, List
+from typing import Any, Callable, Dict, List, Optional
 
 import torch
 from torch.optim import Optimizer
@@ -22,11 +22,7 @@ class ComponentBuilder(object):
 
     def _build_instance(self, spec, name, path, args, kwargs):
         out = None
-        if path is not None:
-            M = importlib.import_module(path)
-            C = getattr(M, name)
-            out = C(*args, **kwargs)
-        else:
+        if path is None:
             for provider in spec.PROVIDERS:
                 path = getattr(provider, self.component_type.name)
                 try:
@@ -40,6 +36,10 @@ class ComponentBuilder(object):
                     self.logger.debug("Unable to find {name} in {path}")
                     continue
                 break
+        else:
+            M = importlib.import_module(path)
+            C = getattr(M, name)
+            out = C(*args, **kwargs)
         return out
 
     def _check_instance(self, spec, instance):
@@ -72,6 +72,8 @@ class ModelBuilder(ComponentBuilder):
         check_instance: bool = True
     ):
         super().__init__(component_type, check_instance)
+            return super(
+                self._check_instance(
 
 class LossBuilder(ComponentBuilder):
     def __init__(
@@ -222,6 +224,57 @@ class WorkflowBuilder(ComponentBuilder):
         check_instance: bool = True
     ):
         super().__init__(component_type, check_instance)
+
+    def __call__(self, config: Dict, ckpt: Optional[str] = None):
+        if ckpt is None:
+            return super().__call__(config)
+        else:
+            name = config["name"]
+            path = config.get("path", None)
+            spec = ComponentSpecs[self.component_type.name]
+            args = config.get("args", {})
+
+            out = None
+            if path is None:
+                for provider in spec.PROVIDERS:
+                    path = getattr(provider, self.component_type.name)
+                    try:
+                        M = importlib.import_module(path)
+                        C = getattr(M, name)
+                    except ModuleNotFoundError as e:
+                        self.logger.warning("Module {path} not found")
+                        continue
+                    except AttributeError:
+                        self.logger.debug("Unable to find {name} in {path}")
+                        continue
+                    break
+            else:
+                M = importlib.import_module(path)
+                C = getattr(M, name)
+            out = C.load_from_checkpoint(ckpt, config=config, strict=False)
+
+            if out is None:
+                raise RuntimeError(f"Unable to restore ckpt {ckpt} to workflow {name}")
+
+            if self.check_instance:
+                self._check_instance(spec, out)
+
+            return out
+
+    def restore_from_checkpoint(
+        self,
+        ckpt: str,
+        config: Optional[Dict] = None
+    ):
+        checkpoint = torch.load(ckpt)
+        if config is None:
+            # Try to get config from checkpoint file
+            config = checkpoint["hyper_parameters"]["workflow"]
+
+        # TODO: Support pre-trained weight only ckpt & var name mapping
+
+        return self.__call__(config, ckpt)
+
 
 class CallbackBuilder(ComponentBuilder):
     def __init__(
