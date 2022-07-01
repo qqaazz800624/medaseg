@@ -23,7 +23,7 @@ class MetricHelper:
 
     @property
     def is_cumulative(self) -> bool:
-        return isinstance(self.metric_instance, CumulativeMetric)
+        return isinstance(self.metric_instance, Cumulative)
 
     @property
     def is_iterative(self) -> bool:
