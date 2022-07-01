@@ -38,7 +38,7 @@ class MetricHelper:
         out = {}
         args = self.output_transform(data)
         if self.is_iterative:
-            val = self.metric_instance(args)
+            val = self.metric_instance(*args)
             out = self._update_output(val, out)
         else:
             self.metric_instance(*args)
