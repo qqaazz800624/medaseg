@@ -72,8 +72,6 @@ class ModelBuilder(ComponentBuilder):
         check_instance: bool = True
     ):
         super().__init__(component_type, check_instance)
-            return super(
-                self._check_instance(
 
 class LossBuilder(ComponentBuilder):
     def __init__(

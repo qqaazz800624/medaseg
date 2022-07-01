@@ -69,7 +69,7 @@ class DecathlonDataModule(LightningDataModule):
         builder = DatasetBuilder()
 
         transforms = build_transforms(config["transforms"])
-        dataset = builder(config, [files], { "transforms": transforms })
+        dataset = builder(config["dataset"], [files], { "transform": transforms })
 
         return dataset
 
