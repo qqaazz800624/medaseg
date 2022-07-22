@@ -25,7 +25,7 @@ If `start_fl.sh` is successfully executed, a tmux session will be created, each 
 
 ### Code
 
-Put the code in `transfer` directory under the admin client directory. You will be able to deploy the code to the `server` and `client`
+Put the code (`server` and `client` directories) in `transfer` directory under the admin client directory. You will be able to deploy the code to the `server` and `client`
 via admin interface.
 
 The training/validation code is in `client/custom`, the configuration is `config`. In `config`, `config_fed_client.json` and `config_fed_server.json` are for NVFlare,
