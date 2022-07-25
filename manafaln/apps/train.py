@@ -1,10 +1,10 @@
 from pytorch_lightning import Trainer
 
-from manafaln.utils.args import TrainConfigurator
-from manafaln.utils.builders import (
-    build_callback,
+from manafaln.core.configurators import TrainConfigurator
+from manafaln.apps.utils import (
+    build_data_module,
     build_workflow,
-    build_data_module
+    build_callbacks
 )
 
 def run(config_train, config_data, config_workflow):
@@ -12,11 +12,11 @@ def run(config_train, config_data, config_workflow):
     data = build_data_module(config_data)
 
     # Configure workflow
-    workflow = build_workflow(config_workflow)
+    workflow = build_workflow(config_workflow, ckpt=None)
 
     # Create callbacks
     callbacks = config_train.get("callbacks", [])
-    callbacks = [build_callback(c) for c in callbacks]
+    callbacks = build_callbacks(callbacks)
 
     # Create trainer
     trainer = Trainer(
