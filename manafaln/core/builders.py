@@ -215,6 +215,21 @@ class DataModuleBuilder(ComponentBuilder):
     ):
         super().__init__(component_type, check_instance)
 
+    def __call__(self, config: Dict):
+        name = config["name"]
+        path = config.get("path", None)
+        spec = ComponentSpecs[self.component_type.name]
+        args = { "config": config }
+
+        out = self._build_instance(spec, name, path, [], args)
+        if out is None:
+            raise RuntimeError(f"Could not found {name} in supported libraries.")
+
+        if self.check_instance:
+            self._check_instance(spec, out)
+
+        return out
+
 class WorkflowBuilder(ComponentBuilder):
     def __init__(
         self,
@@ -224,14 +239,21 @@ class WorkflowBuilder(ComponentBuilder):
         super().__init__(component_type, check_instance)
 
     def __call__(self, config: Dict, ckpt: Optional[str] = None):
-        if ckpt is None:
-            return super().__call__(config)
-        else:
-            name = config["name"]
-            path = config.get("path", None)
-            spec = ComponentSpecs[self.component_type.name]
-            args = config.get("args", {})
+        name = config["name"]
+        path = config.get("path", None)
+        spec = ComponentSpecs[self.component_type.name]
+        args = { "config": config }
 
+        if ckpt is None:
+            out = self._build_instance(spec, name, path, [], args)
+            if out is None:
+                raise RuntimeError(f"Could not found {name} in supported libraries.")
+
+            if self.check_instance:
+                self._check_instance(spec, out)
+
+            return out
+        else:
             out = None
             if path is None:
                 for provider in spec.PROVIDERS:
