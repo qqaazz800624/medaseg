@@ -1,5 +1,6 @@
 __all__ = [
     "apps",
+    "adapters",
     "common",
     "core",
     "callbacks",
@@ -7,6 +8,6 @@ __all__ = [
     "transforms",
     "metrics",
     "models",
-    "workflow",
-    "utils"
+    "losses",
+    "workflow"
 ]
