@@ -1,15 +1,19 @@
+from torch import Tensor
 from pytorch_lightning import Trainer
 
-from manafaln.utils.args import InferenceConfigurator
-from manafaln.utils.builders import build_callback, build_data_module
-from manafaln.utils.checkpoint import restore_from_checkpoint
+from manafaln.core.configurators import ValidateConfigurator
+from manafaln.apps.utils import (
+    build_data_module,
+    build_workflow,
+    build_callbacks
+)
 
 def run(config_train, config_data, config_workflow, ckpt):
     # Configure data module (only val_dataloader will be used)
     data = build_data_module(config_data)
 
     # Restore workflow
-    workflow = restore_from_checkpoint(ckpt, config=config_workflow)
+    workflow = build_workflow(config_workflow, ckpt=ckpt)
 
     # NO LOGGING FOR VALIDATION
     config_train["settings"]["logger"] = False
@@ -18,8 +22,8 @@ def run(config_train, config_data, config_workflow, ckpt):
     # Create callbacks
     blacklist = ["ModelCheckpoint"]
     callbacks = config_train.get("callbacks", [])
-    callbacks= [c for c in callbacks if c["name"] not in blacklist]
-    callbacks = [build_callback(c) for c in callbacks]
+    callbacks = [c for c in callbacks if c["name"] not in blacklist]
+    callbacks = build_callbacks(callbacks)
 
     # Build trainer for validation
     trainer = Trainer(
@@ -30,10 +34,8 @@ def run(config_train, config_data, config_workflow, ckpt):
     # Start validation
     metrics = trainer.validate(workflow, data.val_dataloader())
 
-    print(metrics)
-
 if __name__ == "__main__":
-    c = InferenceConfigurator()
+    c = ValidateConfigurator()
     c.configure()
 
     data     = c.get_data_config()
