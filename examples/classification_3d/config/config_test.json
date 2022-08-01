@@ -1,0 +1,454 @@
+{
+  "trainer": {
+    "settings": {
+      "accelerator": "auto",
+      "devices": 1,
+      "benchmark": true,
+      "amp_backend": "apex",
+      "amp_level": "O2",
+
+      "max_steps": 25000,
+      "check_val_every_n_epoch": 1,
+      "detect_anomaly": true,
+
+      "auto_lr_find": false,
+
+      "log_every_n_steps": 10,
+      "resume_from_checkpoint": null
+    },
+
+    "callbacks": [
+      {
+        "name": "IterationMetricSaver",
+        "args": {
+          "filename": "test_metrics.csv",
+          "metrics": [],
+          "meta_dict_key": "image_meta_dict",
+          "meta_dict_info": "filename_or_obj",
+          "decollate": true,
+          "save_preds": true
+        }
+      }
+    ]
+  },
+
+  "workflow": {
+    "name": "SupervisedClassification",
+
+    "settings": {
+      "scheduler": {
+        "interval": "step",
+        "frequency": 1
+      },
+      "decollate": true,
+      "decollate_phases": ["validation", "test"]
+    },
+
+    "components": {
+      "model": {
+        "name": "DenseNet121",
+        "args": {
+          "spatial_dims": 3,
+          "in_channels": 1,
+          "num_classes": 2,
+          "dropout_prob": 0.2
+        }
+      },
+
+      "inferer": {
+        "name": "SimpleInferer"
+      },
+
+      "loss": {
+        "name": "BCEWithLogitsLoss",
+        "args": {
+          "reduction": "mean",
+          "pos_weight": [3.18, 1.15]
+        }
+      },
+
+      "optimizer": {
+        "name": "AdamW",
+        "args": {
+          "lr": 3e-4
+        }
+      },
+
+      "scheduler": {
+        "name": "CosineAnnealingLR",
+        "args": {
+          "T_max": 300,
+          "eta_min": 1e-6
+        }
+      },
+
+      "post_transforms": {
+        "training": [
+          {
+            "name": "Activationsd",
+            "args": {
+              "keys": ["preds"],
+              "sigmoid": true
+            }
+          },
+          {
+            "name": "AsDiscreted",
+            "args": {
+              "keys": ["preds", "label"],
+              "to_onehot": [null, 2],
+              "threshold": [0.5, null]
+            }
+          }
+        ],
+        "validation": [
+          {
+            "name": "Activationsd",
+            "args": {
+              "keys": ["preds"],
+              "sigmoid": true
+            }
+          },
+          {
+            "name": "AsDiscreted",
+            "args": {
+              "keys": ["preds", "label"],
+              "to_onehot": [null, 2],
+              "threshold": [0.5, null]
+            }
+          }
+        ],
+        "test": [
+          {
+            "name": "Activationsd",
+            "args": {
+              "keys": ["preds"],
+              "sigmoid": true
+            }
+          },
+          {
+            "name": "AsDiscreted",
+            "args": {
+              "keys": ["preds"],
+              "threshold": 0.5
+            }
+          }
+        ]
+      },
+
+      "training_metrics": [
+        {
+          "name": "ConfusionMatrixMetric",
+          "log_label": ["train_sensitivity", "train_specificity", "train_f1_score"],
+          "output_transform": "lambda x: (x['preds'], x['label'])",
+          "args": {
+            "include_background": true,
+            "metric_name": ["sensitivity", "specificity", "f1 score"],
+            "compute_sample": false,
+            "reduction": "mean"
+          }
+        },
+        {
+          "name": "ROCAUCMetric",
+          "log_label": ["train_roauc"],
+          "output_transform": "lambda x: (x['preds'], x['label'])",
+          "args": {
+            "average": "macro"
+          }
+        }
+      ],
+
+      "validation_metrics": [
+        {
+          "name": "ConfusionMatrixMetric",
+          "log_label": ["val_sensitivity", "val_specificity", "val_f1_score"],
+          "output_transform": "lambda x: (x['preds'], x['label'])",
+          "args": {
+            "include_background": true,
+            "metric_name": ["sensitivity", "specificity", "f1 score"],
+            "compute_sample": false,
+            "reduction": "mean"
+          }
+        },
+        {
+          "name": "ROCAUCMetric",
+          "log_label": ["val_roauc"],
+          "output_transform": "lambda x: (x['preds'], x['label'])",
+          "args": {
+            "average": "macro"
+          }
+        }
+      ]
+    }
+  },
+
+  "data": {
+    "name": "DecathlonDataModule",
+
+    "settings": {
+      "data_root": "/work/pancreas/nvidia-tlt/dataset/model/pancreas/MSD",
+      "data_list": "/work/pancreas/nvidia-tlt/dataset/model/pancreas/MSD/datalist.json",
+      "is_segmentation": false
+    },
+
+    "training": {
+      "data_list_key": "training",
+
+      "transforms": [
+        {
+          "name": "LoadImaged",
+          "args": {
+            "keys": ["image", "mask"]
+          }
+        },
+        {
+          "name": "AddChanneld",
+          "args": {
+            "keys": ["image", "mask"]
+          }
+        },
+        {
+          "name": "CropForegroundd",
+          "args": {
+            "keys": ["image", "mask"],
+            "source_key": "mask"
+          }
+        },
+        {
+          "name": "Resized",
+          "args": {
+            "keys": ["image", "mask"],
+            "spatial_size": [128, 128, 128],
+            "align_corners": [true, null],
+            "mode": ["trilinear", "nearest"]
+          }
+        },
+        {
+          "name": "ScaleIntensityRanged",
+          "args": {
+            "keys": ["image"],
+            "a_min": -125.0,
+            "a_max":  225.0,
+            "b_min":    0.0,
+            "b_max":    1.0,
+            "clip": true
+          }
+        },
+        {
+          "name": "RandGaussianSharpend",
+          "args": {
+            "keys": ["image"]
+          }
+        },
+        {
+          "name": "RandAdjustContrastd",
+          "args": {
+            "keys": ["image"],
+            "prob": 0.75
+          }
+        },
+        {
+          "name": "RandGaussianNoised",
+          "args": {
+            "keys": ["image"],
+            "prob": 0.75
+          }
+        },
+        {
+          "name": "MaskIntensityd",
+          "args": {
+            "keys": ["image"],
+            "mask_key": "mask"
+          }
+        },
+        {
+          "name": "DeleteItemsd",
+          "args": {
+            "keys": ["mask", "mask_meta_dict"]
+          }
+        },
+        {
+          "name": "EnsureTyped",
+          "args": {
+            "keys": ["image", "label"]
+          }
+        }
+      ],
+
+      "dataset": {
+        "name": "CacheDataset",
+        "args": {
+          "cache_num": 200,
+          "num_workers": 4
+        }
+      },
+
+      "dataloader": {
+        "name": "DataLoader",
+        "args": {
+          "batch_size": 8,
+          "shuffle": true,
+          "pin_memory": false,
+          "num_workers": 8
+        }
+      }
+    },
+
+    "validation": {
+      "data_list_key": "testing",
+
+      "transforms": [
+        {
+          "name": "LoadImaged",
+          "args": {
+            "keys": ["image", "mask"]
+          }
+        },
+        {
+          "name": "AddChanneld",
+          "args": {
+            "keys": ["image", "mask"]
+          }
+        },
+        {
+          "name": "CropForegroundd",
+          "args": {
+            "keys": ["image", "mask"],
+            "source_key": "mask"
+          }
+        },
+        {
+          "name": "Resized",
+          "args": {
+            "keys": ["image", "mask"],
+            "spatial_size": [128, 128, 128],
+            "align_corners": [true, null],
+            "mode": ["trilinear", "nearest"]
+          }
+        },
+        {
+          "name": "ScaleIntensityRanged",
+          "args": {
+            "keys": ["image"],
+            "a_min": -125.0,
+            "a_max":  225.0,
+            "b_min":    0.0,
+            "b_max":    1.0,
+            "clip": true
+          }
+        },
+        {
+          "name": "MaskIntensityd",
+          "args": {
+            "keys": ["image"],
+            "mask_key": "mask"
+          }
+        },
+        {
+          "name": "DeleteItemsd",
+          "args": {
+            "keys": ["mask", "mask_meta_dict"]
+          }
+        },
+        {
+          "name": "EnsureTyped",
+          "args": {
+            "keys": ["image", "label"]
+          }
+        }
+      ],
+
+      "dataset": {
+        "name": "Dataset"
+      },
+
+      "dataloader": {
+        "name": "DataLoader",
+        "args": {
+          "batch_size": 1,
+          "shuffle": false,
+          "pin_memory": true,
+          "num_workers": 4
+        }
+      }
+    },
+
+    "test": {
+      "data_list_key": ["training", "validation", "testing"],
+
+      "transforms": [
+        {
+          "name": "LoadImaged",
+          "args": {
+            "keys": ["image", "mask"]
+          }
+        },
+        {
+          "name": "AddChanneld",
+          "args": {
+            "keys": ["image", "mask"]
+          }
+        },
+        {
+          "name": "CropForegroundd",
+          "args": {
+            "keys": ["image", "mask"],
+            "source_key": "mask"
+          }
+        },
+        {
+          "name": "Resized",
+          "args": {
+            "keys": ["image", "mask"],
+            "spatial_size": [128, 128, 128],
+            "align_corners": [true, null],
+            "mode": ["trilinear", "nearest"]
+          }
+        },
+        {
+          "name": "ScaleIntensityRanged",
+          "args": {
+            "keys": ["image"],
+            "a_min": -125.0,
+            "a_max":  225.0,
+            "b_min":    0.0,
+            "b_max":    1.0,
+            "clip": true
+          }
+        },
+        {
+          "name": "MaskIntensityd",
+          "args": {
+            "keys": ["image"],
+            "mask_key": "mask"
+          }
+        },
+        {
+          "name": "DeleteItemsd",
+          "args": {
+            "keys": ["mask", "mask_meta_dict"]
+          }
+        },
+        {
+          "name": "EnsureTyped",
+          "args": {
+            "keys": ["image"]
+          }
+        }
+      ],
+
+      "dataset": {
+        "name": "Dataset"
+      },
+
+      "dataloader": {
+        "name": "DataLoader",
+        "args": {
+          "batch_size": 1,
+          "shuffle": false,
+          "pin_memory": true,
+          "num_workers": 4
+        }
+      }
+    }
+  }
+}

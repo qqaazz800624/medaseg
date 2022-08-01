@@ -36,14 +36,15 @@ class SupervisedLearning(LightningModule):
         self.inferer = self.build_inferer(components["inferer"])
 
         # Configure batch decollate
+        settings = config.get("settings", {})
         self.train_decollate = self.configure_batch_decollate(
-            config["settings"], "training"
+            settings, "training"
         )
         self.valid_decollate = self.configure_batch_decollate(
-            config["settings"], "validation"
+            settings, "validation"
         )
         self.test_decollate = self.configure_batch_decollate(
-            config["settings"], "test"
+            settings, "test"
         )
 
         self.post_transforms = {}
