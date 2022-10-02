@@ -48,8 +48,12 @@ class RandAdjustBrightnessAndContrast(RandomizableTransform):
         prob = (p + q) - p * q
         RandomizableTransform.__init__(self, prob)
 
-        self.prob_b = p / prob
-        self.prob_c = q / prob
+        if prob != 0.0:
+            self.prob_b = p / prob
+            self.prob_c = q / prob
+        else:
+            self.prob_b = 0.0
+            self.prob_c = 0.0
         self._brightness = None
         self._contrast = None
 

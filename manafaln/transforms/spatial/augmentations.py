@@ -33,9 +33,14 @@ class RandFlipAxes3D(RandomizableTransform):
         prob = 1.0 - (1.0 - p) * (1.0 - q) * (1.0 - r)
         RandomizableTransform.__init__(self, prob)
 
-        self.p = p / prob
-        self.q = q / prob
-        self.r = r / prob
+        if prob != 0.0:
+            self.p = p / prob
+            self.q = q / prob
+            self.r = r / prob
+        else:
+            self.p = 0.0
+            self.q = 0.0
+            self.r = 0.0
         self._flip_x = False
         self._flip_y = False
         self._flip_z = False
