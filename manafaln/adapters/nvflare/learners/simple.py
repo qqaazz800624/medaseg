@@ -14,7 +14,7 @@ from pytorch_lightning.loggers import TensorBoardLogger
 from ruamel.yaml import YAML
 
 from manafaln.adapters.nvflare.callbacks import (
-    AbortTraining
+    AbortTraining,
     RestoreLR
 )
 from manafaln.adapters.nvflare.utils import (
