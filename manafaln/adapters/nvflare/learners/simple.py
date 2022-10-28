@@ -2,14 +2,16 @@ import os
 from typing import Dict, List, Literal
 
 import numpy as np
-import pytorch
+import torch
+from nvflare.apis.dxo import DXO, DataKind, MetaKey, from_shareable
 from nvflare.apis.fl_component import FLComponent
 from nvflare.apis.fl_context import FLContext
+from nvflare.apis.fl_constant import FLContextKey
 from nvflare.apis.shareable import ReturnCode, Shareable, make_reply
 from nvflare.apis.signal import Signal
 from nvflare.app_common.abstract.learner_spec import Learner
 from nvflare.app_common.app_constant import AppConstants
-from pytroch_lightning import Trainer
+from pytorch_lightning import Trainer
 from pytorch_lightning.loggers import TensorBoardLogger
 from ruamel.yaml import YAML
 
@@ -105,7 +107,7 @@ class SimpleLearner(Learner):
         builder = WorkflowBuilder()
         return builder(config_workflow, ckpt=None)
 
-    def build_callbacks(self, canfig_callbacks: List[Dict]):
+    def build_callbacks(self, config_callbacks: List[Dict]):
         builder = CallbackBuilder()
         return [builder(c) for c in config_callbacks]
 
@@ -121,7 +123,8 @@ class SimpleLearner(Learner):
             config_train = config_loader.load(f)
         config_train = self.process_train_config(config_train)
 
-        self.train_workflow = self.build_workflow(config_train["workflow"])
+        self.workflow = self.build_workflow(config_train["workflow"])
+        self.train_workflow = self.workflow
         self.train_datamodule = self.build_data_module(config_train["data"])
 
         # Configure training callbacks & insert signal handler
@@ -141,10 +144,11 @@ class SimpleLearner(Learner):
 
         # For (cross-site) validation
         with open(self.config_valid) as f:
-            config_valid = config_loader(f)
+            config_valid = config_loader.load(f)
         config_valid = self.process_valid_config(config_valid)
 
-        self.valid_workflow = self.build_workflow(config_valid["workflow"])
+        # self.valid_workflow = self.build_workflow(config_valid["workflow"])
+        self.valid_workflow = self.train_workflow
         self.valid_datamodule = self.build_data_module(config_valid["data"])
 
         # Insert signal handler as well
@@ -156,11 +160,11 @@ class SimpleLearner(Learner):
             **config_valid["trainer"].get("settings", {})
         )
 
-    def local_train(self):
+    def local_train(self, fl_ctx: FLContext):
         # Manually set training length
         init_steps = self.trainer.global_step
         if self.aggregation_interval == "step":
-            self.trainer.fit_loop.each_loop.max_steps = (
+            self.trainer.fit_loop.epoch_loop.max_steps = (
                 self.trainer.global_step + self.aggregation_frequency
             )
         else:
@@ -169,7 +173,7 @@ class SimpleLearner(Learner):
             )
 
         # Run training
-        self.log_info("Start Lightning Trainer fit.")
+        self.log_info(fl_ctx, "Start Lightning Trainer fit.")
         self.trainer.fit(self.workflow, self.train_datamodule)
 
         # Get number of steps 
@@ -178,9 +182,9 @@ class SimpleLearner(Learner):
     def update_key_metric(self):
         metrics = self.trainer.callback_metrics
         if self.key_metric is not None and self.key_metric in metrics.keys():
-            self.current_metric = metric[self.key_metric]
+            self.current_metric = metrics[self.key_metric]
 
-    def local_validate(self):
+    def local_validate(self, fl_ctx: FLContext):
         self.trainer.validate(self.workflow, self.train_datamodule)
         self.update_key_metric()
 
@@ -192,9 +196,9 @@ class SimpleLearner(Learner):
                     metrics[key] = value.to(device)
                 else:
                     metrics[key] = value
-            self.trainer.logger_connector._callback_metrics = metrics
+            self.trainer._logger_connector._callback_metrics = metrics
         else:
-            self.log_info("Checkpoint saver doesn't update metrics yet.")
+            self.log_info(fl_ctx, "Checkpoint saver doesn't update metrics yet.")
 
     def train(self, data: Shareable, fl_ctx: FLContext, abort_signal: Signal) -> Shareable:
         # 1. Prepare datasets (training & validation)
@@ -212,23 +216,23 @@ class SimpleLearner(Learner):
 
         # 3. Update model weight
         dxo = from_shareable(data)
-        load_weights(self.workflow.model, dxo.data)
+        load_weights(self.train_workflow.model, dxo.data)
 
         # Attach signal to handler callback
         self.signal_handler.attach_signal(abort_signal)
 
         # 4. Evaluate global model
-        self.local_validate()
+        self.local_validate(fl_ctx)
         if abort_signal.triggered:
             return make_reply(ReturnCode.TASK_ABORTED)
 
         # 5. Run local training
-        self.local_train()
+        self.local_train(fl_ctx)
         if abort_signal.triggered:
             return make_reply(ReturnCode.TASK_ABORTED)
 
         # 6. Local validation
-        self.local_validate()
+        self.local_validate(fl_ctx)
         if abort_signal.triggered:
             return make_reply(ReturnCode.TASK_ABORTED)
 
@@ -236,7 +240,7 @@ class SimpleLearner(Learner):
         self.signal_handler.detach_signal()
 
         # 7. Generate Shareable
-        local_weights = extract_weights(self.workflow.model)
+        local_weights = extract_weights(self.train_workflow.model)
         meta = {
             MetaKey.INITIAL_METRICS: self.current_metric,
             MetaKey.NUM_STEPS_CURRENT_ROUND: self.num_steps_current_round
@@ -317,7 +321,7 @@ class SimpleLearner(Learner):
         self.log_info(
             fl_ctx,
             f"Validation metrics of {model_owner}'s model on"
-            f" {fl_ctx.get_identity_name()}'s data: {metric}"
+            f" {fl_ctx.get_identity_name()}'s data: {metrics}"
         )
 
         # 5. Return results

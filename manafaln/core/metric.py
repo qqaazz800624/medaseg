@@ -30,8 +30,12 @@ class MetricHelper:
         return isinstance(self.metric_instance, IterationMetric)
 
     def _update_output(self, values, output):
+        if (len(self.metric_name) == 1) and (not isinstance(values, list)):
+            values = [values]
+
         for name, value in zip(self.metric_name, values):
             output[name] = value
+
         return output
 
     def apply(self, data) -> Dict:

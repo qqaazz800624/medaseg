@@ -4,14 +4,14 @@ from setuptools import setup, find_packages
 
 setup(
     name="manafaln",
-    version="0.2.9",
+    version="0.3.0",
     author="Pochuan Wang",
     author_email="d08922016@csie.ntu.edu.tw",
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        "monai>=0.8.0",
-        "pytorch-lightning>=1.5.0",
+        "monai>=1.0.0",
+        "pytorch-lightning>=1.7.0",
         "ruamel.yaml"
     ],
     tests_require=["pytest"],

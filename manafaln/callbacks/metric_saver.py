@@ -66,9 +66,6 @@ class IterationMetricSaver(Callback):
                 raise ValueError("MetricSaver expected collated inputs if 'decollate' is enabled")
             outputs = outputs[0]
 
-            if self.save_preds:
-                outputs["preds"] = batch["preds"]
-
             for item in self.decollate_fn(outputs):
                 row = []
                 for key in self.meta_dict_info:
@@ -86,7 +83,7 @@ class IterationMetricSaver(Callback):
                 for key in self.meta_dict_info:
                     row.append(item[self.meta_dict_key][key])
                 if self.save_preds:
-                    preds = ensure_python_value(batch["preds"][idx])
+                    preds = ensure_python_value(outputs["preds"][idx])
                     row.append(preds)
                 for m in self.metrics:
                     metric = ensure_python_value(item[m])

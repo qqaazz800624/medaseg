@@ -135,12 +135,14 @@ class SupervisedLearning(LightningModule):
                 # Calculate iteration metrics
                 m = self.valid_metrics.apply(item)
                 # Save meta data and results
+                # m["preds"] = item["preds"]
                 m["image_meta_dict"] = item.get("image_meta_dict", {})
                 m["label_meta_dict"] = item.get("label_meta_dict", {})
                 metrics.append(m)
         else:
             batch = self.post_transforms["validation"](batch)
             m = self.valid_metrics.apply(batch)
+            # m["preds"] = batch["preds"]
             m["image_meta_dict"] = batch.get("image_meta_dict")
             m["label_meta_dict"] = batch.get("label_meta_dict")
             metrics.append(m)

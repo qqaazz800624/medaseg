@@ -21,6 +21,9 @@ class AbortTraining(Callback):
     def on_sanity_check_end(self, trainer, pl_module):
         self._handle_signal(trainer)
 
-    def on_batch_end(self, trainer, pl_module):
+    def on_train_batch_end(self, trainer, pl_module, outputs, batch, batch_idx):
+        self._handle_signal(trainer)
+
+    def on_validation_batch_end(self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx):
         self._handle_signal(trainer)
 
