@@ -1,8 +1,22 @@
 import traceback
+from typing import Any, Dict
+
+import torch
+import numpy as np
 from nvflare.apis.dxo import DataKind, from_bytes
 from nvflare.apis.fl_context import FLContext
 from nvflare.app_common.abstract.formatter import Formatter
 from nvflare.app_common.app_constant import AppConstants
+
+def extract_tensor(data: Any) -> Any:
+    if isinstance(data, torch.Tensor):
+        return data.tolist()
+    if isinstance(data, np.ndarray):
+        return data.tolist()
+    return data
+
+def simplify_metrics(metrics: Dict[str, Any]) -> Dict[str, Any]:
+    return {k: extract_tensor(v) for k, v in metrics}
 
 class SimpleFormatter(Formatter):
     def __init__(self) -> None:
@@ -32,7 +46,7 @@ class SimpleFormatter(Formatter):
 
                         # Get metrics from shareable
                         if metric_dxo and metric_dxo.data_kind == DataKind.METRICS:
-                            metrics = metric_dxo.data
+                            metrics = simplify_metrics(metric_dxo.data)
                             res[data_client][model_name] = metrics
             # add any results
             self.results.update(res)
