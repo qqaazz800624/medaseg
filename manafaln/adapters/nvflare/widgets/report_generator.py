@@ -77,7 +77,7 @@ class ReportGenerator(Widget):
             ws = fl_ctx.get_engine().get_workspace()
             run_dir = Path(ws.get_run_dir(fl_ctx.get_job_id()))
 
-            output_dir = run_dir / self.result_sdir
+            output_dir = run_dir / self.results_dir
             if not output_dir.exists():
                 output_dir.mkdir(parents=True)
 

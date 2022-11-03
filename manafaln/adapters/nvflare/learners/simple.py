@@ -10,7 +10,7 @@ from nvflare.apis.fl_constant import FLContextKey
 from nvflare.apis.shareable import ReturnCode, Shareable, make_reply
 from nvflare.apis.signal import Signal
 from nvflare.app_common.abstract.learner_spec import Learner
-from nvflare.app_common.app_constant import AppConstants
+from nvflare.app_common.app_constant import AppConstants, ValidateType
 from pytorch_lightning import Trainer
 from pytorch_lightning.loggers import TensorBoardLogger
 from ruamel.yaml import YAML
@@ -155,10 +155,10 @@ class SimpleLearner(Learner):
         valid_callbacks = self.build_callbacks(config_valid["trainer"].get("callbacks", []))
         valid_callbacks.append(self.signal_handler)
         # Skip logger for validation
-        self.validator = Trainer(
-            callbacks=valid_callbacks,
-            **config_valid["trainer"].get("settings", {})
-        )
+        # self.validator = Trainer(
+        #     callbacks=valid_callbacks,
+        #     **config_valid["trainer"].get("settings", {})
+        # )
 
     def local_train(self, fl_ctx: FLContext):
         # Manually set training length
@@ -176,13 +176,13 @@ class SimpleLearner(Learner):
         self.log_info(fl_ctx, "Start Lightning Trainer fit.")
         self.trainer.fit(self.workflow, self.train_datamodule)
 
-        # Get number of steps 
+        # Get number of steps
         self.num_steps_current_round = self.trainer.global_step - init_steps
 
     def update_key_metric(self):
         metrics = self.trainer.callback_metrics
         if self.key_metric is not None and self.key_metric in metrics.keys():
-            self.current_metric = metrics[self.key_metric]
+            self.current_metric = metrics[self.key_metric].item()
 
     def local_validate(self, fl_ctx: FLContext):
         self.trainer.validate(self.workflow, self.train_datamodule)
@@ -208,23 +208,14 @@ class SimpleLearner(Learner):
             )
         self.train_datamodule.setup(stage="fit")
 
-        # 2. Log status 
+        # 2. Log status
         current_round = data.get_header(AppConstants.CURRENT_ROUND)
         total_rounds = data.get_header(AppConstants.NUM_ROUNDS)
         self.log_info(fl_ctx, f"Current/Total Round: {current_round + 1}/{total_rounds}")
         self.log_info(fl_ctx, f"Client identity: {fl_ctx.get_identity_name()}")
 
-        # 3. Update model weight
-        dxo = from_shareable(data)
-        load_weights(self.train_workflow.model, dxo.data)
-
         # Attach signal to handler callback
         self.signal_handler.attach_signal(abort_signal)
-
-        # 4. Evaluate global model
-        self.local_validate(fl_ctx)
-        if abort_signal.triggered:
-            return make_reply(ReturnCode.TASK_ABORTED)
 
         # 5. Run local training
         self.local_train(fl_ctx)
@@ -277,18 +268,20 @@ class SimpleLearner(Learner):
             raise ValueError(f"Unknown model_type {model_name}")
 
     def validate(self, data: Shareable, fl_ctx: FLContext, abort_signal: Signal) -> Shareable:
-        # 1. Prepare dataset (validation)
-        if self.valid_datamodule is None:
-            raise RuntimeError(
-                "Missing validation datamodule, please make sure to call initialize."
-            )
-        self.valid_datamodule.setup(stage="fit")
+        # 1. Extract data from shareable
+        model_owner = data.get_header(AppConstants.MODEL_OWNER, "?")
+        validate_type = data.get_header(AppConstants.VALIDATE_TYPE)
+
+        # 2. Prepare dataset
+        if validate_type == ValidateType.BEFORE_TRAIN_VALIDATE:
+            self.train_datamodule.setup(stage="fit")
+            dm = self.train_datamodule
+        elif validate_type == ValidateType.MODEL_VALIDATE:
+            self.valid_datamodule.setup(stage="fit")
+            dm = self.valid_datamodule
 
         if abort_signal.triggered:
             return make_reply(ReturnCode.TASK_ABORTED)
-
-        # 2. Get validation info
-        model_owner = data.get_header(AppConstants.MODEL_OWNER, "?")
 
         # 3. Update model weight
         try:
@@ -307,16 +300,21 @@ class SimpleLearner(Learner):
 
         # 4. Run validation
         self.signal_handler.attach_signal(abort_signal)
-        self.validator.validate(
+        # self.validator.validate(
+        self.trainer.validate(
             self.workflow,
-            self.valid_datamodule.val_dataloader()
+            dm.val_dataloader()
         )
         self.signal_handler.detach_signal()
 
         if abort_signal.triggered:
             return make_reply(ReturnCode.TASK_ABORTED)
 
-        metrics = self.validator.callback_metrics
+        # metrics = self.validator.callback_metrics
+        metrics = self.trainer.callback_metrics
+        for k, v in metrics.items():
+            if isinstance(v, torch.Tensor):
+                metrics[k] = v.tolist()
 
         self.log_info(
             fl_ctx,
