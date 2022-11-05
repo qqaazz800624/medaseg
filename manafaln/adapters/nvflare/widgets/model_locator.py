@@ -44,7 +44,7 @@ class SimpleModelLocator(ModelLocator):
             model_path = os.path.join(run_dir, self.model_dir)
 
             # Generate model path
-            if model_name == LightningModelLocator.SERVER_BEST_MODEL_NAME:
+            if model_name == SimpleModelLocator.SERVER_BEST_MODEL_NAME:
                 model_load_path = os.path.join(
                     model_path, self.best_model_file_name
                 )
