@@ -10,7 +10,7 @@ from nvflare.apis.fl_constant import FLContextKey
 from nvflare.apis.shareable import ReturnCode, Shareable, make_reply
 from nvflare.apis.signal import Signal
 from nvflare.app_common.abstract.learner_spec import Learner
-from nvflare.app_common.app_constant import AppConstants, ValidateType
+from nvflare.app_common.app_constant import AppConstants, ModelName, ValidateType
 from pytorch_lightning import Trainer
 from pytorch_lightning.loggers import TensorBoardLogger
 from ruamel.yaml import YAML
@@ -251,11 +251,19 @@ class SimpleLearner(Learner):
                     self.checkpoint_saver.best_model_path,
                     map_location="cpu"
                 )
+                self.log_info(fl_ctx, f"Load best model from {self.checkpoint_saver.best_model_path}")
             except Exception as e:
                 self.log_error(fl_ctx, f"Unable to load best model: {e}")
 
             if model_data:
-                dxo = DXO(data_kind=DataKind.WEIGHTS, data=model_data["state_dict"])
+                # Convert tensor to numpy and remove duplicated prefix
+                data = {}
+                for var_name in model_data["state_dict"]:
+                    if var_name.startswith("model.model"):
+                        data[var_name[6:]] = model_data["state_dict"][var_name].numpy()
+                    else:
+                        data[var_name] = model_data["state_dict"][var_name].numpy()
+                dxo = DXO(data_kind=DataKind.WEIGHTS, data=data)
                 return dxo.to_shareable()
             else:
                 # Set return code.

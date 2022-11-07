@@ -58,6 +58,10 @@ class SimpleModelLocator(ModelLocator):
             try:
                 checkpoint = torch.load(model_load_path, map_location="cpu")
                 model_data = checkpoint["model"]
+                for var_name in model_data:
+                    w = model_data[var_name]
+                    if isinstance(w, torch.Tensor):
+                        model_data[var_name] = w.numpy()
             except:
                 self.log_error(fl_ctx, traceback.format_exc())
 
