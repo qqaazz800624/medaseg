@@ -1,0 +1,32 @@
+{
+  "format_version": 2,
+
+  "executors": [
+    {
+      "tasks": ["train", "validate"],
+      "executor": {
+        "id": "Executor",
+        "name": "LearnerExecutor",
+        "args": {
+          "learner_id": "simple-learner"
+        }
+      }
+    }
+  ],
+  "task_result_filters": [
+  ],
+  "task_data_filters": [
+  ],
+  "components": [
+    {
+      "id": "simple-learner",
+      "path": "manafaln.adapters.nvflare.learners.SimpleLearner",
+      "args": {
+        "config_train": "config/config_train.json",
+        "config_valid": "config/config_test.json",
+        "aggregation_interval": "step",
+        "aggregation_frequency": 500
+      }
+    }
+  ]
+}

@@ -1,0 +1,524 @@
+{
+  "trainer": {
+    "settings": {
+      "accelerator": "auto",
+      "devices": 1,
+      "strategy": "dp",
+
+      "max_steps": 30000,
+
+      "benchmark": true,
+      "amp_backend": "apex",
+      "amp_level": "O1",
+
+      "check_val_every_n_epoch": 5,
+      "detect_anomaly": true,
+
+      "log_every_n_steps": 10,
+      "resume_from_checkpoint": null,
+
+      "gradient_clip_val": 1.0,
+      "gradient_clip_algorithm": "norm"
+    },
+
+    "callbacks": [
+      {
+          "name": "LearningRateMonitor"
+      },
+      {
+          "name": "ModelCheckpoint",
+          "args": {
+            "filename": "best_model",
+            "monitor": "val_meandice",
+            "mode": "max",
+            "save_last": true,
+            "save_top_k": 1,
+            "verbose": true
+          }
+      }
+    ]
+  },
+
+  "workflow": {
+    "name": "SupervisedSegmentation",
+
+    "settings": {
+      "scheduler": {
+        "interval": "step",
+        "frequency": 1
+      },
+      "decollate": true,
+      "decollate_phases": ["validation", "test"]
+    },
+
+    "components": {
+      "model": {
+        "name": "UNet",
+        "args": {
+          "dimensions": 3,
+          "in_channels": 1,
+          "out_channels": 8,
+          "channels": [16, 32, 64, 128, 256],
+          "strides": [2, 2, 2, 2],
+          "num_res_units": 2
+        }
+      },
+      "inferer": {
+        "name": "SlidingWindowInferer",
+        "args": {
+          "roi_size": [160, 160, 64],
+          "sw_batch_size": 4,
+          "overlap": 0.5
+        }
+      },
+      "loss": {
+        "name": "MultipleBackgroundDiceCELoss",
+        "args": {
+          "background_channels": [0, 1, 2, 3, 6, 7],
+          "to_onehot_y": true,
+          "softmax": true
+        }
+      },
+      "optimizer": {
+        "name": "AdamW",
+        "args": {
+          "lr": 1e-3,
+          "weight_decay": 1e-5
+        }
+      },
+      "scheduler": {
+        "name": "CosineAnnealingLR",
+        "args": {
+          "T_max": 30000,
+          "eta_min": 1e-5
+        }
+      },
+      "post_transforms": {
+        "training": [
+          {
+            "name": "AsDiscreted",
+            "path": "manafaln.transforms",
+            "args": {
+              "keys": ["preds", "label"],
+              "argmax": [true, false],
+              "to_onehot": [8, 8],
+              "channel_dim": 1
+            }
+          }
+        ],
+        "validation": [
+          {
+            "name": "AsDiscreted",
+            "args": {
+              "keys": ["preds", "label"],
+              "argmax": [true, false],
+              "to_onehot": [8, 8]
+            }
+          },
+          {
+            "name": "SplitChanneld",
+            "args": {
+              "keys": ["preds", "label"],
+              "output_postfixes": [
+                "background",
+                "liver",
+                "liver_tumor",
+                "spleen",
+                "pancreas",
+                "pancreas_tumor",
+                "kidney",
+                "kidney_tumor"
+              ],
+              "channel_dim": 0
+            }
+          },
+          {
+            "name": "Unsqueezed",
+            "path": "manafaln.transforms",
+            "args": {
+              "keys": [
+                "preds", "preds_pancreas", "preds_pancreas_tumor",
+                "label", "label_pancreas", "label_pancreas_tumor"
+              ],
+              "dim": 0
+            }
+          }
+        ],
+        "test": [
+          {
+            "name": "AsDiscreted",
+            "args": {
+              "keys": "preds",
+              "argmax": true,
+              "to_onehot": 8
+            }
+          },
+          {
+            "name": "EnsureTyped",
+            "args": {
+              "keys": ["preds", "image_meta_dict"],
+              "data_type": "numpy"
+            }
+          },
+          {
+            "name": "SaveImaged",
+            "args": {
+              "keys": ["preds"],
+              "meta_keys": ["image_meta_dict"],
+              "output_dir": "results",
+              "output_postfix": "preds",
+              "output_ext": ".nii.gz",
+              "mode": "nearest",
+              "squeeze_end_dims": true,
+              "separate_folder": false,
+              "print_log": false
+            }
+          }
+        ]
+      },
+      "training_metrics": [
+        {
+          "name": "DiceMetric",
+          "log_label": "train_meandice",
+          "output_transform": "lambda x: (x['preds'], x['label'])",
+          "args": {
+            "include_background": false,
+            "reduction": "mean",
+            "get_not_nans": false
+          }
+        }
+      ],
+      "validation_metrics": [
+        {
+          "name": "DiceMetric",
+          "log_label": "val_meandice",
+          "output_transform": "lambda x: (x['preds'], x['label'])",
+          "args": {
+            "include_background": false,
+            "reduction": "mean",
+            "get_not_nans": false
+          }
+        },
+        {
+          "name": "DiceMetric",
+          "log_label": "val_meandice_pancreas",
+          "output_transform": "lambda x: (x['preds_pancreas'], x['label_pancreas'])",
+          "args": {
+            "include_background": false,
+            "reduction": "mean",
+            "get_not_nans": false
+          }
+        },
+        {
+          "name": "DiceMetric",
+          "log_label": "val_meandice_pancreas_tumor",
+          "output_transform": "lambda x: (x['preds_pancreas_tumor'], x['label_pancreas_tumor'])",
+          "args": {
+            "include_background": false,
+            "reduction": "mean",
+            "get_not_nans": false
+          }
+        }
+      ]
+    }
+  },
+
+  "data": {
+    "name": "DecathlonDataModule",
+
+    "settings": {
+      "data_root": "/work/pancreas/nvidia-tlt/dataset/model/multiorgan/Pancreas",
+      "data_list": "/work/pancreas/nvidia-tlt/dataset/model/multiorgan/Pancreas/datalist.json",
+      "is_segmentation": true,
+
+      "use_shm_cache": false,
+      "shm_cache_path": "/dev/shm"
+    },
+
+    "training": {
+      "data_list_key": "training",
+      "transforms": [
+        {
+          "name": "LoadImaged",
+          "args": {
+            "keys": ["image", "label"]
+          }
+        },
+        {
+          "name": "EnsureChannelFirstd",
+          "args": {
+            "keys": ["image", "label"]
+          }
+        },
+        {
+          "name": "Orientationd",
+          "args": {
+            "keys": ["image", "label"],
+            "as_closest_canonical": true
+          }
+        },
+        {
+          "name": "Spacingd",
+          "args": {
+            "keys": ["image", "label"],
+            "pixdim": [1.44423774, 1.44423774, 2.87368553],
+            "mode": ["bilinear", "nearest"]
+          }
+        },
+        {
+          "name": "RandRotated",
+          "args": {
+            "keys": ["image", "label"],
+            "range_x": 0.5236,
+            "range_y": 0.5236,
+            "range_z": 0.5236,
+            "prob": 0.2,
+            "mode": ["bilinear", "nearest"]
+          }
+        },
+        {
+          "name": "RandZoomd",
+          "args": {
+            "keys": ["image", "label"],
+            "prob": 0.20,
+            "min_zoom": 0.7,
+            "max_zoom": 1.4,
+            "mode": ["trilinear", "nearest"],
+            "keep_size": true
+          }
+        },
+        {
+          "name": "NormalizeIntensityRanged",
+          "args": {
+            "keys": ["image"],
+            "a_min":      -54.0,
+            "a_max":      258.0,
+            "subtrahend": 100.0,
+            "divisor":     50.0
+          }
+        },
+        {
+          "name": "SpatialPadd",
+          "args": {
+            "keys": ["image", "label"],
+            "spatial_size": [160, 160, 64]
+          }
+        },
+        {
+          "name": "RandCropByPosNegLabeld",
+          "args": {
+            "keys": ["image", "label"],
+            "label_key": "label",
+            "spatial_size": [160, 160, 64],
+            "pos": 1.0,
+            "neg": 1.0,
+            "num_samples": 4,
+            "image_key": "image",
+            "image_threshold": 0.0
+          }
+        },
+        {
+          "name": "RandGaussianNoised",
+          "args": {
+            "keys": ["image"],
+            "prob": 0.15,
+            "mean": 0.0,
+            "std": 0.1
+          }
+        },
+        {
+          "name": "RandGaussianSmoothd",
+          "args": {
+            "keys": ["image"],
+            "sigma_x": [0.5, 1.5],
+            "sigma_y": [0.5, 1.5],
+            "sigma_z": [0.5, 1.5],
+            "prob": 0.15
+          }
+        },
+        {
+          "name": "RandAdjustBrightnessAndContrastd",
+          "args": {
+            "keys": ["image"],
+            "probs": [0.15, 0.15],
+            "brightness_range": [0.7, 1.3],
+            "contrast_range": [0.65, 1.5]
+          }
+        },
+        {
+          "name": "SimulateLowResolutiond",
+          "args": {
+            "keys": ["image"],
+            "prob": 0.125,
+            "zoom_range": [0.5, 1.0]
+          }
+        },
+        {
+          "name": "RandAdjustContrastd",
+          "args": {
+            "keys": ["image"],
+            "prob": 0.15,
+            "gamma": [0.8, 1.2]
+          }
+        },
+        {
+          "name": "RandFlipAxes3Dd",
+          "args": {
+            "keys": ["image", "label"],
+            "prob_x": 0.00,
+            "prob_y": 0.25,
+            "prob_z": 0.25
+          }
+        },
+        {
+          "name": "EnsureTyped",
+          "args": {
+            "keys": ["image", "label"]
+          }
+        }
+      ],
+      "dataset": {
+        "name": "CacheDataset",
+        "args": {
+          "cache_rate": 1.0,
+          "num_workers": 8
+        }
+      },
+      "dataloader": {
+        "name": "DataLoader",
+        "args": {
+          "batch_size": 4,
+          "shuffle": true,
+          "pin_memory": false,
+          "num_workers": 8
+        }
+      }
+    },
+
+    "validation": {
+      "data_list_key": "validation",
+      "transforms": [
+        {
+          "name": "LoadImaged",
+          "args": {
+            "keys": ["image", "label"]
+          }
+        },
+        {
+          "name": "EnsureChannelFirstd",
+          "args": {
+            "keys": ["image", "label"]
+          }
+        },
+        {
+          "name": "Orientationd",
+          "args": {
+            "keys": ["image", "label"],
+            "as_closest_canonical": true
+          }
+        },
+        {
+          "name": "Spacingd",
+          "args": {
+            "keys": ["image", "label"],
+            "pixdim": [1.44423774, 1.44423774, 2.87368553],
+            "mode": ["bilinear", "nearest"]
+          }
+        },
+        {
+          "name": "NormalizeIntensityRanged",
+          "args": {
+            "keys": ["image"],
+            "a_min":      -54.0,
+            "a_max":      258.0,
+            "subtrahend": 100.0,
+            "divisor":     50.0
+          }
+        },
+        {
+          "name": "EnsureTyped",
+          "args": {
+            "keys": ["image", "label"]
+          }
+        }
+      ],
+      "dataset": {
+        "name": "CacheDataset",
+        "args": {
+          "cache_rate": 1.0,
+          "num_workers": 4
+        }
+      },
+      "dataloader": {
+        "name": "DataLoader",
+        "args": {
+          "batch_size": 1,
+          "shuffle": false,
+          "pin_memory": false,
+          "num_workers": 4
+        }
+      }
+    },
+
+    "test": {
+      "data_list_key": ["training", "validation", "testing"],
+      "transforms": [
+        {
+          "name": "LoadImaged",
+          "args": {
+            "keys": "image"
+          }
+        },
+        {
+          "name": "EnsureChannelFirstd",
+          "args": {
+            "keys": "image"
+          }
+        },
+        {
+          "name": "Orientationd",
+          "args": {
+            "keys": "image",
+            "as_closest_canonical": true
+          }
+        },
+        {
+          "name": "Spacingd",
+          "args": {
+            "keys": "image",
+            "pixdim": [1.44423774, 1.44423774, 2.87368553],
+            "mode": "bilinear"
+          }
+        },
+        {
+          "name": "NormalizeIntensityRanged",
+          "args": {
+            "keys": ["image"],
+            "a_min":      -54.0,
+            "a_max":      258.0,
+            "subtrahend": 100.0,
+            "divisor":     50.0
+          }
+        },
+        {
+          "name": "EnsureTyped",
+          "args": {
+            "keys": "image"
+          }
+        }
+      ],
+      "dataset": {
+        "name": "Dataset"
+      },
+      "dataloader": {
+        "name": "DataLoader",
+        "args": {
+          "batch_size": 1,
+          "shuffle": false,
+          "pin_memory": true,
+          "num_workers": 4
+        }
+      }
+    }
+  }
+}
