@@ -1,3 +1,4 @@
+import logging
 from collections import OrderedDict
 
 import torch
@@ -9,11 +10,21 @@ class FedProxLoss(Callback):
 
         self.mu = mu
         self.global_state = OrderedDict()
+        self.logger = logging.getLogger(__name__)
 
     def on_train_start(self, trainer: Trainer, pl_module: LightningModule):
         self.global_state = OrderedDict(
             (name, param.clone().detach()) for name, param in pl_module.model.named_parameters()
         )
+
+        weight_norm = torch.norm(
+            torch.stack([torch.norm(p, 2.0) for p in self.global_state.values()]),
+            2.0
+        )
+        for logger in trainer.loggers:
+            logger.log_metrics({"global_weight_norm": weight_norm}, step=trainer.global_step)
+
+        self.logger.info(f"FedProx global model updated.")
 
     def on_before_backward(
         self,
@@ -24,6 +35,15 @@ class FedProxLoss(Callback):
         fedprox_loss = 0.0
         for name, param in pl_module.model.named_parameters():
             fedprox_loss += torch.sum((param - self.global_state[name]) ** 2)
+        fedprox_loss *= self.mu / 2.0
 
-        loss.assign(loss + self.mu * fedprox_loss)
+        loss += fedprox_loss
+
+        for logger in trainer.loggers:
+            logger.log_metrics({
+                "fedprox_loss": fedprox_loss,
+                "fedprox_total_loss": loss
+            },
+            step=trainer.global_step
+        )
 
