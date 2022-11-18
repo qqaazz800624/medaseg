@@ -3,11 +3,11 @@ from typing import List, Union, Optional
 import torch
 import torch.nn as nn
 from torch.nn.modules.loss import _Loss
-from monai.losses import DiceLoss
+from monai.losses import DiceLoss, FocalLoss
 from monai.networks import one_hot
 from monai.utils import DiceCEReduction, Weight, look_up_option
 
-class MultipleBackgroundDiceCELoss(_Loss):
+class MultipleBackgroundDiceFocalLoss(_Loss):
     def __init__(
         self,
         background_channels: List[int],
@@ -19,9 +19,10 @@ class MultipleBackgroundDiceCELoss(_Loss):
         reduction: str = "mean",
         smooth_nr: float = 1e-5,
         smooth_dr: float = 1e-5,
-        ce_weight: Optional[torch.Tensor] = None,
+        gamma: float = 1.0,
+        focal_weight: Optional[torch.Tensor] = None,
         lambda_dice: float = 1.0,
-        lambda_ce: float = 1.0
+        lambda_focal: float = 1.0
     ) -> None:
         super().__init__()
         reduction = look_up_option(reduction, DiceCEReduction).value
@@ -45,14 +46,20 @@ class MultipleBackgroundDiceCELoss(_Loss):
             smooth_dr=smooth_dr,
             batch=False
         )
-        self.cross_entropy = nn.CrossEntropyLoss(weight=ce_weight, reduction=reduction)
+        self.focal = FocalLoss(
+            include_background=True,
+            to_onehot_y=False,
+            gamma=1.0,
+            weight=focal_weight,
+            reduction=reduction
+        )
 
         if lambda_dice < 0.0:
             raise ValueError("lambda_dice should be no less than 0.0.")
-        if lambda_ce < 0.0:
+        if lambda_focal < 0.0:
             raise ValueError("lambda_ce should be no less than 0.0.")
         self.lambda_dice = lambda_dice
-        self.lambda_ce = lambda_ce
+        self.lambda_focal = lambda_focal
 
     def reduce_background_channels(self, tensor: torch.Tensor) -> torch.Tensor:
         n_chs = tensor.shape[1]
@@ -72,7 +79,7 @@ class MultipleBackgroundDiceCELoss(_Loss):
         else:
             target = torch.squeeze(target, dim=1)
         target = target.long()
-        return self.cross_entropy(input, target)
+        return self.focal(input, target)
 
     def forward(self, input: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
         # Sigmoid
@@ -99,8 +106,45 @@ class MultipleBackgroundDiceCELoss(_Loss):
         target = self.reduce_background_channels(target)
 
         dice_loss = self.dice(input, target)
-        ce_loss = self.ce(input, target)
-        total_loss: torch.Tensor = self.lambda_dice * dice_loss + self.lambda_ce * ce_loss
+        focal_loss = self.ce(input, target)
+        total_loss: torch.Tensor = self.lambda_dice * dice_loss + self.lambda_focal * focal_loss
 
         return total_loss
+
+class MultipleBackgroundDiceCELoss(_Loss):
+    def __init__(
+        self,
+        background_channels: List[int],
+        to_onehot_y: bool = False,
+        sigmoid: bool = False,
+        softmax: bool = False,
+        squared_pred: bool = False,
+        jaccard: bool = False,
+        reduction: str = "mean",
+        smooth_nr: float = 1e-5,
+        smooth_dr: float = 1e-5,
+        ce_weight: Optional[torch.Tensor] = None,
+        lambda_dice: float = 1.0,
+        lambda_ce: float = 1.0
+    ) -> None:
+        super().__init__()
+
+        self.loss = MultipleBackgroundDiceFocalLoss(
+            background_channels=background_channels,
+            to_onehot_y=to_onehot_y,
+            sigmoid=sigmoid,
+            softmax=softmax,
+            squared_pred=squared_pred,
+            jaccard=jaccard,
+            reduction=reduction,
+            smooth_nr=smooth_nr,
+            smooth_dr=smooth_dr,
+            gamma=1.0,
+            focal_weight=ce_weight,
+            lambda_dice=lambda_dice,
+            lambda_focal=lambda_ce
+        )
+
+    def forward(self, input: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
+        return self.loss(input, target)
 
