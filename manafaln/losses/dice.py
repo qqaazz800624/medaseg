@@ -7,6 +7,8 @@ from monai.losses import DiceLoss, FocalLoss
 from monai.networks import one_hot
 from monai.utils import DiceCEReduction, Weight, look_up_option
 
+from .mcc import MCCLoss
+
 class MultipleBackgroundDiceFocalLoss(_Loss):
     def __init__(
         self,
@@ -49,7 +51,7 @@ class MultipleBackgroundDiceFocalLoss(_Loss):
         self.focal = FocalLoss(
             include_background=True,
             to_onehot_y=False,
-            gamma=1.0,
+            gamma=gamma,
             weight=focal_weight,
             reduction=reduction
         )
@@ -70,16 +72,6 @@ class MultipleBackgroundDiceFocalLoss(_Loss):
 
         output = torch.cat([bg] + fg, dim=1)
         return output
-
-    def ce(self, input: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
-        n_pred_ch, n_target_ch = input.shape[1], target.shape[1]
-        if n_pred_ch == n_target_ch:
-            # target is in the one-hot format, convert to BH[WD] format to calculate ce loss
-            target = torch.argmax(target, dim=1)
-        else:
-            target = torch.squeeze(target, dim=1)
-        target = target.long()
-        return self.focal(input, target)
 
     def forward(self, input: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
         # Sigmoid
@@ -106,7 +98,7 @@ class MultipleBackgroundDiceFocalLoss(_Loss):
         target = self.reduce_background_channels(target)
 
         dice_loss = self.dice(input, target)
-        focal_loss = self.ce(input, target)
+        focal_loss = self.focal(input, target)
         total_loss: torch.Tensor = self.lambda_dice * dice_loss + self.lambda_focal * focal_loss
 
         return total_loss

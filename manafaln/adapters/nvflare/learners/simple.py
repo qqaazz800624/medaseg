@@ -59,19 +59,22 @@ class SimpleLearner(Learner):
         self.num_steps_current_round = 0
 
         self.key_metric = None
-        self.current_metric = -np.inf
         self.signal_handler = AbortTraining()
 
     def process_train_config(self, config: Dict):
         # Disable training limits
-        if config["trainer"].get("settings", None):
-            config["trainer"]["settings"]["max_steps"] = -1
-            config["trainer"]["settings"]["max_epochs"] = -1
+        settings = config["trainer"].get("settings", {})
+        settings["max_steps"] = -1
+        settings["max_epochs"] = -1
+
+        if self.aggregation_interval == "step":
+            settings["val_check_interval"] = self.aggregation_frequency
+            settings["check_val_every_n_epoch"] = None
         else:
-            config["trainer"]["settings"] = {
-                "max_steps": -1,
-                "max_epochs": -1
-            }
+            settings["val_check_interval"] = None
+            settings["check_val_every_n_epoch"] = self.aggregation_frequency
+
+        config["trainer"]["settings"] = settings
 
         # Overwrite some settings for correct behavior
         config["trainer"]["settings"]["default_root_dir"] = self.app_root
@@ -155,10 +158,10 @@ class SimpleLearner(Learner):
         valid_callbacks = self.build_callbacks(config_valid["trainer"].get("callbacks", []))
         valid_callbacks.append(self.signal_handler)
         # Skip logger for validation
-        # self.validator = Trainer(
-        #     callbacks=valid_callbacks,
-        #     **config_valid["trainer"].get("settings", {})
-        # )
+        self.validator = Trainer(
+            callbacks=valid_callbacks,
+            **config_valid["trainer"].get("settings", {})
+        )
 
     def local_train(self, fl_ctx: FLContext):
         # Manually set training length
@@ -178,27 +181,6 @@ class SimpleLearner(Learner):
 
         # Get number of steps
         self.num_steps_current_round = self.trainer.global_step - init_steps
-
-    def update_key_metric(self):
-        metrics = self.trainer.callback_metrics
-        if self.key_metric is not None and self.key_metric in metrics.keys():
-            self.current_metric = metrics[self.key_metric].item()
-
-    def local_validate(self, fl_ctx: FLContext):
-        self.trainer.validate(self.workflow, self.train_datamodule)
-        self.update_key_metric()
-
-        if self.checkpoint_saver.current_score is not None:
-            device = self.checkpoint_saver.current_score.device
-            metrics = {}
-            for key, value in self.trainer.callback_metrics.items():
-                if isinstance(value, torch.Tensor):
-                    metrics[key] = value.to(device)
-                else:
-                    metrics[key] = value
-            self.trainer._logger_connector._callback_metrics = metrics
-        else:
-            self.log_info(fl_ctx, "Checkpoint saver doesn't update metrics yet.")
 
     def train(self, data: Shareable, fl_ctx: FLContext, abort_signal: Signal) -> Shareable:
         # 1. Prepare datasets (training & validation)
@@ -222,18 +204,12 @@ class SimpleLearner(Learner):
         if abort_signal.triggered:
             return make_reply(ReturnCode.TASK_ABORTED)
 
-        # 6. Local validation
-        self.local_validate(fl_ctx)
-        if abort_signal.triggered:
-            return make_reply(ReturnCode.TASK_ABORTED)
-
         # Detach signal from handler callback
         self.signal_handler.detach_signal()
 
-        # 7. Generate Shareable
+        # 6. Generate Shareable
         local_weights = extract_weights(self.train_workflow.model)
         meta = {
-            MetaKey.INITIAL_METRICS: self.current_metric,
             MetaKey.NUM_STEPS_CURRENT_ROUND: self.num_steps_current_round
         }
         dxo = DXO(
@@ -259,7 +235,7 @@ class SimpleLearner(Learner):
                 # Convert tensor to numpy and remove duplicated prefix
                 data = {}
                 for var_name in model_data["state_dict"]:
-                    if var_name.startswith("model.model"):
+                    if var_name.startswith("model."):
                         data[var_name[6:]] = model_data["state_dict"][var_name].numpy()
                     else:
                         data[var_name] = model_data["state_dict"][var_name].numpy()
@@ -309,7 +285,7 @@ class SimpleLearner(Learner):
         # 4. Run validation
         self.signal_handler.attach_signal(abort_signal)
         # self.validator.validate(
-        self.trainer.validate(
+        self.validator.validate(
             self.workflow,
             dm.val_dataloader()
         )
@@ -318,8 +294,8 @@ class SimpleLearner(Learner):
         if abort_signal.triggered:
             return make_reply(ReturnCode.TASK_ABORTED)
 
-        # metrics = self.validator.callback_metrics
-        metrics = self.trainer.callback_metrics
+        # Convert metrics from torch Tensor to Python type
+        metrics = self.validator.callback_metrics
         for k, v in metrics.items():
             if isinstance(v, torch.Tensor):
                 metrics[k] = v.tolist()
@@ -330,8 +306,15 @@ class SimpleLearner(Learner):
             f" {fl_ctx.get_identity_name()}'s data: {metrics}"
         )
 
+        # For validation before training, only key metric is needed
+        if validate_type == ValidateType.BEFORE_TRAIN_VALIDATE:
+            metrics = { MetaKey.INIT_METRICS: metrics[self.key_metric] }
+
         # 5. Return results
-        dxo = DXO(data_kind=DataKind.METRICS, data=metrics)
+        dxo = DXO(
+            data_kind=DataKind.METRICS,
+            data=metrics
+        )
         return dxo.to_shareable()
 
     def finalize(self, fl_ctx: FLContext):

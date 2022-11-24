@@ -1,5 +1,6 @@
 from .dice import (
-    MultipleBackgroundDiceCELoss
+    MultipleBackgroundDiceCELoss,
+    MultipleBackgroundDiceFocalLoss
 )
 from .mcc import (
     MCCLoss,
