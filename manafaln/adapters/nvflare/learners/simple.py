@@ -308,7 +308,7 @@ class SimpleLearner(Learner):
 
         # For validation before training, only key metric is needed
         if validate_type == ValidateType.BEFORE_TRAIN_VALIDATE:
-            metrics = { MetaKey.INIT_METRICS: metrics[self.key_metric] }
+            metrics = { MetaKey.INITIAL_METRICS: metrics[self.key_metric] }
 
         # 5. Return results
         dxo = DXO(
