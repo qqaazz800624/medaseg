@@ -12,7 +12,7 @@ def run(config_train, config_data, config_workflow, ckpt):
     data = build_data_module(config_data)
 
     # Restore workflow
-    workflow = build_workflow(config_workflow, ckpt=ckpt)
+    workflow = build_workflow(config_workflow)
 
     # NO LOGGING FOR VALIDATION
     config_train["settings"]["logger"] = False
@@ -31,7 +31,7 @@ def run(config_train, config_data, config_workflow, ckpt):
     )
 
     # Start inference
-    trainer.test(workflow, data.test_dataloader())
+    trainer.test(workflow, data.test_dataloader(), ckpt_path=ckpt)
 
 if __name__ == "__main__":
     c = InferenceConfigurator()

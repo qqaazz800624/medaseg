@@ -6,6 +6,12 @@ from typing import Dict
 
 from ruamel.yaml import YAML
 
+def load_config(config_path: str) -> Dict:
+    loader = YAML()
+    with open(config_path) as f:
+        config = loader.load(f)
+    return config
+
 class Configurator(ABC):
     def __init__(self, app_name=None, description=None):
         self.app_parser = ArgumentParser(
@@ -66,12 +72,6 @@ class Configurator(ABC):
     def get_workflow_config(self) -> Dict:
         return self.config_workflow
 
-def load_config(config_path: str) -> Dict:
-    loader = YAML()
-    with open(config_path) as f:
-        config = loader.load(f)
-    return config
-
 class DefaultConfigurator(Configurator):
     def __init__(self, app_name=None, description=None):
         super().__init__(app_name=app_name, description=description)
@@ -87,6 +87,9 @@ class DefaultConfigurator(Configurator):
         )
         self.app_parser.add_argument(
             "--workflow", "-w", type=str, default=None, help="Path to workflow config file."
+        )
+        self.app_parser.add_argument(
+            "--ckpt", "-f", type=str, default=None, help="Path to checkpoint file."
         )
 
     def process_args(self, args) -> None:
@@ -110,6 +113,7 @@ class DefaultConfigurator(Configurator):
                 self.logger.info(f"Load {c} configuration from {f}.")
 
         self.raw_config = config
+        self.ckpt_path = args.ckpt
 
     def configure_trainer(self) -> Dict:
         return self.raw_config["trainer"]
@@ -122,4 +126,7 @@ class DefaultConfigurator(Configurator):
 
     def validate_config(self) -> None:
         super().validate_config()
+
+    def get_ckpt_path(self) -> str:
+        return self.ckpt_path
 

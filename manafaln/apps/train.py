@@ -1,4 +1,7 @@
+from typing import Dict, Optional
+
 from pytorch_lightning import Trainer
+from monai.utils import set_determinism
 
 from manafaln.core.configurators import TrainConfigurator
 from manafaln.apps.utils import (
@@ -7,7 +10,13 @@ from manafaln.apps.utils import (
     build_callbacks
 )
 
-def run(config_train, config_data, config_workflow):
+def run(
+    config_train: Dict,
+    config_data: Dict,
+    config_workflow: Dict,
+    seed: Optional[int] = None,
+    ckpt_path: Optional[str] = None
+):
     # Configure data first
     data = build_data_module(config_data)
 
@@ -17,6 +26,15 @@ def run(config_train, config_data, config_workflow):
     # Create callbacks
     callbacks = config_train.get("callbacks", [])
     callbacks = build_callbacks(callbacks)
+
+    # Set seed for deterministic
+    if seed is not None:
+        # Don't touch algorithm settings here
+        set_determinism(seed=seed)
+        # If deterministic is not set, then set deterministic
+        # If deterministic is set, then don't touch it
+        if "deterministic" not in config_train["settings"].keys():
+            config_train["settings"]["deterministic"] = True
 
     # Create trainer
     trainer = Trainer(
@@ -28,7 +46,7 @@ def run(config_train, config_data, config_workflow):
         trainer.tune()
 
     # Start training
-    trainer.fit(workflow, data)
+    trainer.fit(workflow, data, ckpt_path=ckpt_path)
 
 if __name__ == "__main__":
     # Use configurator for argument parsing & loading config files
@@ -40,6 +58,15 @@ if __name__ == "__main__":
     train    = c.get_trainer_config()
     workflow = c.get_workflow_config()
 
+    seed      = c.get_random_seed()
+    ckpt_path = c.get_ckpt_path()
+
     # Run
-    run(config_train=train, config_data=data, config_workflow=workflow)
+    run(
+        config_train=train,
+        config_data=data,
+        config_workflow=workflow,
+        seed=seed,
+        ckpt_path=ckpt_path
+    )
 
