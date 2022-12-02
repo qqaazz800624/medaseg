@@ -1,7 +1,7 @@
 {
   "format_version": 2,
   "min_clients": 4,
-  "num_rounds": 60,
+  "num_rounds": 300,
 
   "server": {
     "heart_beat_timeout": 600
@@ -20,14 +20,11 @@
     },
     {
       "id": "model",
-      "path": "monai.networks.nets.UNet",
+      "path": "manafaln.models.C2FNAS",
       "args": {
-        "dimensions": 3,
         "in_channels": 1,
-        "out_channels": 8,
-        "channels": [16, 32, 64, 128, 256],
-        "strides": [2, 2, 2, 2],
-        "num_res_units": 2
+        "num_classes": 8,
+        "final_activation": "none"
       }
     },
     {
@@ -39,14 +36,27 @@
       "id": "aggregator",
       "name": "InTimeAccumulateWeightedAggregator",
       "args": {
+        "exclude_vars": null,
+        "aggregation_weights": {
+          "liver": 1.0,
+          "spleen": 1.0,
+          "pancreas": 1.0,
+          "kidney": 1.0
+        },
         "expected_data_kind": "WEIGHTS"
       }
     },
     {
       "id": "model_selector",
-      "name": "IntimeModelSelectionHandler",
+      "name": "IntimeModelSelector",
       "args": {
-        "weigh_by_local_iter": true
+        "weigh_by_local_iter": false,
+        "aggregation_weights": {
+          "liver": 2.0,
+          "spleen": 1.0,
+          "pancreas": 2.0,
+          "kidney": 2.0
+        }
       }
     },
     {
@@ -74,12 +84,13 @@
         "min_clients": "{min_clients}",
         "num_rounds": "{num_rounds}",
         "start_round": 0,
-        "wait_time_after_min_received": 180,
+        "wait_time_after_min_received": 10,
         "aggregator_id": "aggregator",
         "persistor_id": "persistor",
         "shareable_generator_id": "shareable_generator",
         "train_task_name": "train",
-        "train_timeout": 0
+        "train_timeout": 0,
+        "task_check_period": 1
       }
     },
     {

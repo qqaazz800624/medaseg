@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 import torch
 import monai
 from monai.transforms import Decollated
@@ -120,6 +122,8 @@ class SupervisedLearning(LightningModule):
         self.train_metrics.reset()
 
     def validation_step(self, batch, batch_idx):
+        batch = deepcopy(batch)
+
         image = batch["image"]
         label = batch["label"]
 

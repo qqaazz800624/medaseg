@@ -3,7 +3,7 @@
 
   "executors": [
     {
-      "tasks": ["train", "validate"],
+      "tasks": ["train", "submit_model", "validate"],
       "executor": {
         "id": "Executor",
         "name": "LearnerExecutor",
@@ -25,7 +25,7 @@
         "config_train": "config/config_train.json",
         "config_valid": "config/config_test.json",
         "aggregation_interval": "step",
-        "aggregation_frequency": 500
+        "aggregation_frequency": 100
       }
     }
   ]

@@ -50,10 +50,14 @@
 
     "components": {
       "model": {
-        "name": "BasicUNet",
+        "name": "UNet",
         "args": {
+          "dimensions": 3,
           "in_channels": 1,
-          "out_channels": 8
+          "out_channels": 8,
+          "channels": [16, 32, 64, 128, 256],
+          "strides": [2, 2, 2, 2],
+          "num_res_units": 2
         }
       },
       "inferer": {
@@ -143,21 +147,13 @@
             "args": {
               "keys": "preds",
               "argmax": true,
-              "to_onehot": 8
-            }
-          },
-          {
-            "name": "EnsureTyped",
-            "args": {
-              "keys": ["preds", "image_meta_dict"],
-              "data_type": "numpy"
+              "to_onehot": false
             }
           },
           {
             "name": "SaveImaged",
             "args": {
               "keys": ["preds"],
-              "meta_keys": ["image_meta_dict"],
               "output_dir": "results",
               "output_postfix": "preds",
               "output_ext": ".nii.gz",
@@ -383,7 +379,8 @@
           "batch_size": 2,
           "shuffle": true,
           "pin_memory": false,
-          "num_workers": 4
+          "num_workers": 4,
+          "persistent_workers": true
         }
       }
     },
@@ -448,7 +445,7 @@
           "batch_size": 1,
           "shuffle": false,
           "pin_memory": false,
-          "num_workers": 4
+          "num_workers": 0
         }
       }
     },
@@ -509,7 +506,7 @@
           "batch_size": 1,
           "shuffle": false,
           "pin_memory": true,
-          "num_workers": 4
+          "num_workers": 0
         }
       }
     }

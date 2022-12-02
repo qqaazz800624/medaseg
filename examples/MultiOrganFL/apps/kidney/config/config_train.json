@@ -53,14 +53,11 @@
 
     "components": {
       "model": {
-        "name": "UNet",
+        "name": "C2FNAS",
         "args": {
-          "dimensions": 3,
           "in_channels": 1,
-          "out_channels": 8,
-          "channels": [16, 32, 64, 128, 256],
-          "strides": [2, 2, 2, 2],
-          "num_res_units": 2
+          "num_classes": 8,
+          "final_activation": "none"
         }
       },
       "inferer": {
@@ -150,21 +147,13 @@
             "args": {
               "keys": "preds",
               "argmax": true,
-              "to_onehot": 8
-            }
-          },
-          {
-            "name": "EnsureTyped",
-            "args": {
-              "keys": ["preds", "image_meta_dict"],
-              "data_type": "numpy"
+              "to_onehot": false
             }
           },
           {
             "name": "SaveImaged",
             "args": {
               "keys": ["preds"],
-              "meta_keys": ["image_meta_dict"],
               "output_dir": "results",
               "output_postfix": "preds",
               "output_ext": ".nii.gz",
@@ -312,7 +301,7 @@
             "spatial_size": [160, 160, 64],
             "pos": 1.0,
             "neg": 1.0,
-            "num_samples": 4,
+            "num_samples": 2,
             "image_key": "image",
             "image_threshold": 0.0
           }
@@ -387,10 +376,11 @@
       "dataloader": {
         "name": "DataLoader",
         "args": {
-          "batch_size": 4,
+          "batch_size": 2,
           "shuffle": true,
           "pin_memory": false,
-          "num_workers": 8
+          "num_workers": 4,
+          "persistent_workers": true
         }
       }
     },
@@ -455,7 +445,7 @@
           "batch_size": 1,
           "shuffle": false,
           "pin_memory": false,
-          "num_workers": 4
+          "num_workers": 0
         }
       }
     },
@@ -516,7 +506,7 @@
           "batch_size": 1,
           "shuffle": false,
           "pin_memory": true,
-          "num_workers": 4
+          "num_workers": 0
         }
       }
     }
