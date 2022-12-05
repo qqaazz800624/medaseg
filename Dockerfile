@@ -1,7 +1,7 @@
-from projectmonai/monai:latest
+from projectmonai:1.0.1
 
 RUN pip install -U pip && \
-    pip install pytorch-lightning>=1.5.0
+    pip install 'pytorch-lightning>=1.7.0'
 
 COPY . /opt/manafaln
 RUN cd /opt/manafaln && \
