@@ -58,7 +58,7 @@ class ComponentBuilder(object):
 
         out = self._build_instance(spec, name, path, [], args)
         if out is None:
-            raise RuntimeError(f"Could not found {name} in supported libraries.")
+            raise RuntimeError(f"Failed to build component: {name}.")
 
         if self.check_instance:
             self._check_instance(spec, out)
