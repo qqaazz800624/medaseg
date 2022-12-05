@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="manafaln",
-    version="0.3.0",
+    version="0.4.0",
     author="Pochuan Wang",
     author_email="d08922016@csie.ntu.edu.tw",
     packages=find_packages(),
