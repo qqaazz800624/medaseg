@@ -9,5 +9,6 @@ __all__ = [
     "metrics",
     "models",
     "losses",
+    "utils",
     "workflow"
 ]

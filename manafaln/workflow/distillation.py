@@ -1,69 +1,95 @@
 import warnings
 from copy import deepcopy
-from typing import Dict
+from typing import Dict, Optional
 
 import torch
 from monai.networks import one_hot
 
 from manafaln.core.builders import LossBuilder
+from manafaln.utils import DummyTorchModule
 from manafaln.workflow import SupervisedLearning
 
-warnings.simplefilter("once")
-
-class TeacherModel(object):
+class TeacherModel(DummyTorchModule):
     def __init__(
         self,
-        model: torch.nn.Module,
+        config: Dict,
+        temperature: float = 1.0,
         sigmoid: bool = False,
         softmax: bool = False,
-        temperature: float = 1.0
+        argmax: bool = False,
+        to_onehot: Optional[int] = None,
+        thredhold_value: Optional[float] = None
     ):
-        self.model = model.eval()
+        super().__init__(config=config)
+
+        if temperature <= 0:
+            raise ValueError("Temperature must be positive")
+
+        self.temperature = float(temperature)
 
         if sigmoid and softmax:
-            raise ValueError("Only one of sigmoid and softmax can be selected")
+            raise ValueError("Cannot use sigmoid and softmax at the same time")
 
         self.sigmoid = sigmoid
         self.softmax = softmax
+        self.argmax = argmax
+        self.to_onehot = int(to_onehot) if to_onehot is not None else None
+        self.thredhold_value = float(thredhold_value) if thredhold_value is not None else None
 
-        assert temperature > 0.0
-        self.temperature = temperature
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        logits = super().forward(x) / self.temperature
 
-    def forward(self, data: torch.Tensor) -> torch.Tensor:
-        with torch.no_grad():
-            out = self.model.forward(data).detach()
+        # For batch only or single channel output
+        if logits.dim() == 1 or logits.shape[1] == 1:
             if self.sigmoid:
-                out = torch.nn.functional.sigmoid(out / self.temperature)
-            if self.softmax:
-                out = torch.nn.functional.softmax(
-                    out / self.temperature, dim=1
-                )
-        return out
+                logits = torch.sigmoid(logits)
+            if self.thresold_value:
+                logits = (logits > self.thresold_value).float()
+            return logits
 
-    def __call__(self, data: torch.Tensor) -> torch.Tensor:
-        return self.forward(data)
+        # For multi-channel output
+        if self.sigmoid:
+            logits = torch.sigmoid(logits)
 
-    def load_state_dict(self, state_dict: Dict[str, torch.Tensor]) -> None:
-        self.model.load_state_dict(state_dict)
+        if self.softmax:
+            logits = torch.softmax(logits, dim=1)
+
+        if self.argmax:
+            logits = torch.argmax(logits, dim=1, keepdim=True)
+
+        if self.to_onehot:
+            logits = one_hot(logits, num_classes=self.to_onehot, dim=1)
+
+        if self.thresold_value:
+            logits = (logits > self.thresold_value).float()
+
+        return logits
 
 class DistillationLearning(SupervisedLearning):
     def __init__(self, config: dict):
         super().__init__(config)
 
-        # Setup teacher model
+        distill_config = config["settings"].get("distillation", {})
+
+        loss_builder = LossBuilder()
         try:
+            # Setup teacher model & inference
             self.teacher_model = TeacherModel(
-                torch.jit.load(config["settings"]["teacher_model"]),
-                sigmoid=False,
-                softmax=True,
-                temperature=config["settings"].get("kd_temperature", 1.0)
+                distill_config["model"],
+                temperature=distill_config.get("temperature", 1.0),
+                sigmoid=distill_config.get("sigmoid", False),
+                softmax=distill_config.get("softmax", False),
+                argmax=distill_config.get("argmax", False),
+                to_onehot=distill_config.get("to_onehot", None),
+                thredhold_value=distill_config.get("thredhold_value", None)
             )
+            # Setup knowledge distillation loss
+            self.kd_weight = distill_config.get("weight", 1.0)
+            self.kd_loss_fn = loss_builder(distill_config["loss"])
         except ValueError:
             self.teacher_model = None
-
-        # Setup knowledge distillation loss
-        loss_builder = LossBuilder()
-        self.kd_loss_fn = loss_builder(config["settings"]["kd_loss"])
+            self.kd_weight = 1.0
+            self.kd_loss_fn = lambda x, y: 0.0
 
     def training_step(self, batch, batch_idx):
         image = batch["image"]
@@ -72,19 +98,17 @@ class DistillationLearning(SupervisedLearning):
         # Model forward
         batch["preds"] = self.model(image)
 
-        # Teacher model forward
-        if self.teacher_model is not None:
-            kd_preds = self.teacher_model(image)
-        #endif
-
         # Compute losses
         gt_loss = self.loss_fn(batch["preds"], batch["label"])
 
+        # Teacher model forward
         if self.teacher_model is not None:
-            kd_loss = self.kd_loss_fn(batch["preds"], kd_preds)
-            loss = gt_loss + kd_loss
+            kd_preds = self.teacher_model(image)
         else:
-            loss = gt_loss
+            kd_preds = None
+
+        kd_loss = self.kd_loss_fn(batch["preds"], kd_preds)
+        loss = gt_loss + self.kd_weight * kd_loss
 
         if self.train_decollate is not None:
             # Decolloate batch before post transform
@@ -107,75 +131,4 @@ class DistillationLearning(SupervisedLearning):
         })
 
         return loss
-
-class PSKDLearning(SupervisedLearning):
-    def __init__(self, config: Dict):
-        super().__init__(config)
-
-        self.pskd_alpha       = config["settings"].get("pskd_alpha", 0.7)
-        self.pskd_epochs      = config["settings"].get("pskd_epochs", 1000)
-        self.pskd_sigmoid     = config["settings"].get("pskd_sigmoid", False)
-        self.pskd_softmax     = config["settings"].get("pskd_softmax", False)
-        self.pskd_temperature = config["settings"].get("pskd_temperature", 1.0)
-
-        self.teacher_model = None
-
-    def training_step(self, batch, batch_idx):
-        image = batch["image"]
-        label = batch["label"]
-
-        # Model forward
-        batch["preds"] = self.model(image)
-        batch["label"] = one_hot(
-            batch["label"], num_classes=batch["preds"].shape[1]
-        )
-
-        # Computer result for teacher model
-        alpha = 0.0
-        if self.teacher_model is not None:
-            teacher_preds = self.teacher_model(image)
-
-            alpha = self.pskd_alpha * min(self.current_epoch / self.pskd_epochs, 1.0)
-            target = alpha * teacher_preds + (1.0 - alpha) * batch["label"]
-
-            loss = self.loss_fn(batch["preds"], target)
-        else:
-            loss = self.loss_fn(batch["preds"], batch["label"])
-
-        if self.train_decollate is not None:
-            # Decolloate batch before post transform
-            for item in self.train_decollate(batch):
-                # Apply post transform on single item
-                item = self.post_transforms["training"](item)
-                # Compute metric for single item
-                self.train_metrics.apply(item)
-        else:
-            # Apply post transforms on the whole batch
-            batch = self.post_transforms["training"](batch)
-            # Add result of whole batch to metric
-            self.train_metrics.apply(batch)
-
-        # Log current loss value
-        self.log_dict({
-            "train_loss": loss,
-            "alpha": alpha
-        })
-
-        return loss
-
-    def training_epoch_end(self, train_epoch_output):
-        if self.teacher_model is None:
-            self.teacher_model = TeacherModel(
-                deepcopy(self.model),
-                sigmoid=self.pskd_sigmoid,
-                softmax=self.pskd_softmax,
-                temperature=self.pskd_temperature
-            )
-            device = next(self.teacher_model.model.parameters()).device
-        else:
-            self.teacher_model.load_state_dict(
-                deepcopy(self.model.state_dict())
-            )
-            device = next(self.teacher_model.model.parameters()).device
-        return None
 
