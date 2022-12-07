@@ -1,4 +1,4 @@
-from projectmonai:1.0.1
+from projectmonai/monai:1.0.1
 
 RUN pip install -U pip && \
     pip install 'pytorch-lightning>=1.7.0'
