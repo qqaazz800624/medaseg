@@ -319,7 +319,7 @@ class SimpleLearner(Learner):
 
     def finalize(self, fl_ctx: FLContext):
         if self.train_datamodule:
-            self.train_datamodule.teardown()
+            self.train_datamodule.teardown("fit")
         if self.valid_datamodule:
-            self.valid_datamodule.teardown()
+            self.valid_datamodule.teardown("fit")
 
