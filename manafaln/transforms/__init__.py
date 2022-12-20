@@ -2,7 +2,9 @@ from .intensity import (
     NormalizeIntensityRange,
     NormalizeIntensityRanged,
     RandAdjustBrightnessAndContrast,
-    RandAdjustBrightnessAndContrastd
+    RandAdjustBrightnessAndContrastd,
+    RandInverseIntensityGamma,
+    RandInverseIntensityGammad
 )
 from .spatial import (
     RandFlipAxes3D,

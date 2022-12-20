@@ -36,6 +36,7 @@ class SimpleLearner(Learner):
         config_valid: str,
         aggregation_interval: Literal["step", "epoch"] = "epoch",
         aggregation_frequency: int = 10,
+        restore_local_ckpt: str = None,
         train_task_name: str = AppConstants.TASK_TRAIN,
         submit_model_task_name: str = AppConstants.TASK_SUBMIT_MODEL
     ):
@@ -51,6 +52,8 @@ class SimpleLearner(Learner):
             raise ValueError("Aggregation interval must be one of 'step' or 'epoch'.")
         self.aggregation_interval = aggregation_interval
         self.aggregation_frequency = aggregation_frequency
+
+        self.restore_local_ckpt = restore_local_ckpt
 
         self.app_root = None
         self.train_datamodule = None
@@ -108,7 +111,7 @@ class SimpleLearner(Learner):
 
     def build_workflow(self, config_workflow: Dict):
         builder = WorkflowBuilder()
-        return builder(config_workflow, ckpt=None)
+        return builder(config_workflow)
 
     def build_callbacks(self, config_callbacks: List[Dict]):
         builder = CallbackBuilder()
@@ -132,7 +135,7 @@ class SimpleLearner(Learner):
 
         # Configure training callbacks & insert signal handler
         train_callbacks = self.build_callbacks(config_train["trainer"].get("callbacks", []))
-        train_callbacks.append(RestoreLR())
+        train_callbacks.append(RestoreLR(from_checkpoint=self.restore_local_ckpt))
         train_callbacks.append(self.signal_handler)
         # Configure logger
         train_logger = TensorBoardLogger(save_dir="logs", name="")

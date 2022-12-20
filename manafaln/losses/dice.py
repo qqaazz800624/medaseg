@@ -21,6 +21,7 @@ class MultipleBackgroundDiceFocalLoss(_Loss):
         reduction: str = "mean",
         smooth_nr: float = 1e-5,
         smooth_dr: float = 1e-5,
+        batch: bool = False,
         gamma: float = 1.0,
         focal_weight: Optional[torch.Tensor] = None,
         lambda_dice: float = 1.0,
@@ -46,7 +47,7 @@ class MultipleBackgroundDiceFocalLoss(_Loss):
             reduction=reduction,
             smooth_nr=smooth_nr,
             smooth_dr=smooth_dr,
-            batch=False
+            batch=batch
         )
         self.focal = FocalLoss(
             include_background=True,
@@ -115,6 +116,7 @@ class MultipleBackgroundDiceCELoss(_Loss):
         reduction: str = "mean",
         smooth_nr: float = 1e-5,
         smooth_dr: float = 1e-5,
+        batch: bool = False,
         ce_weight: Optional[torch.Tensor] = None,
         lambda_dice: float = 1.0,
         lambda_ce: float = 1.0
@@ -131,6 +133,7 @@ class MultipleBackgroundDiceCELoss(_Loss):
             reduction=reduction,
             smooth_nr=smooth_nr,
             smooth_dr=smooth_dr,
+            batch=batch,
             gamma=1.0,
             focal_weight=ce_weight,
             lambda_dice=lambda_dice,

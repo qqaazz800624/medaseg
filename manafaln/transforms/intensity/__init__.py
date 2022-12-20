@@ -1,6 +1,8 @@
 from .augmentations import (
     RandAdjustBrightnessAndContrast,
-    RandAdjustBrightnessAndContrastd
+    RandAdjustBrightnessAndContrastd,
+    RandInverseIntensityGamma,
+    RandInverseIntensityGammad
 )
 from .normalize import (
     NormalizeIntensityRange,

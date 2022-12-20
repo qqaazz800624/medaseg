@@ -44,7 +44,7 @@ class DummyTorchModule(object):
 
     def cuda(self):
         self.module = self.module.cuda()
-        return
+        return self
 
     def to(self, device):
         self.module = self.module.to(device)

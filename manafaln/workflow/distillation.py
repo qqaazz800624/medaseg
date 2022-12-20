@@ -12,15 +12,16 @@ from manafaln.workflow import SupervisedLearning
 class TeacherModel(DummyTorchModule):
     def __init__(
         self,
-        config: Dict,
+        config: Optional[Dict] = None,
+        module: Optional[torch.nn.Module] = None,
         temperature: float = 1.0,
         sigmoid: bool = False,
         softmax: bool = False,
         argmax: bool = False,
         to_onehot: Optional[int] = None,
-        thredhold_value: Optional[float] = None
+        threshold_value: Optional[float] = None
     ):
-        super().__init__(config=config)
+        super().__init__(config=config, module=module)
 
         if temperature <= 0:
             raise ValueError("Temperature must be positive")
@@ -34,7 +35,7 @@ class TeacherModel(DummyTorchModule):
         self.softmax = softmax
         self.argmax = argmax
         self.to_onehot = int(to_onehot) if to_onehot is not None else None
-        self.thredhold_value = float(thredhold_value) if thredhold_value is not None else None
+        self.threshold_value = float(threshold_value) if threshold_value is not None else None
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         logits = super().forward(x) / self.temperature
@@ -60,8 +61,8 @@ class TeacherModel(DummyTorchModule):
         if self.to_onehot:
             logits = one_hot(logits, num_classes=self.to_onehot, dim=1)
 
-        if self.thresold_value:
-            logits = (logits > self.thresold_value).float()
+        if self.threshold_value:
+            logits = (logits > self.threshold_value).float()
 
         return logits
 
