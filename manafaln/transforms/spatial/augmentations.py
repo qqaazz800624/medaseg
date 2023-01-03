@@ -31,7 +31,7 @@ class RandFlipAxes3D(RandomizableTransform):
         r = ensure_probability(prob_z, "prob_z")
 
         prob = 1.0 - (1.0 - p) * (1.0 - q) * (1.0 - r)
-        RandomizableTransform.__init__(self, prob)
+        RandomizableTransform.__init__(self, prob) # This is useless
 
         self.p = p
         self.q = q
@@ -45,15 +45,15 @@ class RandFlipAxes3D(RandomizableTransform):
 
     def randomize(self) -> None:
         p, q, r = self.R.rand(3)
-        if (1 - p) * (1 - q) * (1 - r) < self.R.rand():
-            self._do_transform = True
-        else:
-            self._do_transform = False
-            return
 
         self._flip_x = p < self.p
         self._flip_y = q < self.q
         self._flip_z = r < self.r
+
+        if self._flip_x or self._flip_y or self._flip_z:
+            self._do_transform = True
+        else:
+            self._do_transform = False
 
     def __call__(
         self,

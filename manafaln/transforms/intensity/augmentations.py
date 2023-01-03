@@ -56,29 +56,28 @@ class RandAdjustBrightnessAndContrast(RandomizableTransform):
 
         self.dtype = dtype
 
+    def clear(self):
+        self._brightness = None
+        self._contrast = None
+        self._do_transform = False
+
     def randomize(self, data: Any = None) -> None:
+        self.clear()
         p, q = self.R.rand(2)
-        if (1 - p) * (1 - q) < self.prob:
-            self._do_transform = True
-        else:
-            self._do_transform = False
-            return
 
         if p < self.prob_b:
             self._brightness = self.R.uniform(
                 low=self.brightness[0],
                 high=self.brightness[1]
             )
-        else:
-            self._brightness = None
+            self._do_transform = True
 
         if q < self.prob_c:
             self._contrast = self.R.uniform(
                 low=self.contrast[0],
                 high=self.contrast[1]
             )
-        else:
-            self._contrast = None
+            self._do_transform = True
 
     def __call__(
         self,
