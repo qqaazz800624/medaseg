@@ -5,6 +5,7 @@ import numpy as np
 from monai.config import DtypeLike, KeysCollection
 from monai.config.type_definitions import NdarrayOrTensor
 from monai.data.meta_obj import get_track_meta
+from monai.data.meta_tensor import MetaTensor
 from monai.transforms import Transform, MapTransform
 from monai.transforms.utils_pytorch_numpy_unification import clip
 from monai.utils.enums import TransformBackends

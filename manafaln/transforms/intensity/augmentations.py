@@ -48,23 +48,23 @@ class RandAdjustBrightnessAndContrast(RandomizableTransform):
         prob = (p + q) - p * q
         RandomizableTransform.__init__(self, prob)
 
-        if prob != 0.0:
-            self.prob_b = p / prob
-            self.prob_c = q / prob
-        else:
-            self.prob_b = 0.0
-            self.prob_c = 0.0
+        self.prob_b = p
+        self.prob_c = q
+
         self._brightness = None
         self._contrast = None
 
         self.dtype = dtype
 
-    def randomize(self) -> None:
-        super().randomize(None)
-        if not self._do_transform:
+    def randomize(self, data: Any = None) -> None:
+        p, q = self.R.rand(2)
+        if (1 - p) * (1 - q) < self.prob:
+            self._do_transform = True
+        else:
+            self._do_transform = False
             return
 
-        if self.R.rand() < self.prob_b:
+        if p < self.prob_b:
             self._brightness = self.R.uniform(
                 low=self.brightness[0],
                 high=self.brightness[1]
@@ -72,7 +72,7 @@ class RandAdjustBrightnessAndContrast(RandomizableTransform):
         else:
             self._brightness = None
 
-        if self.R.rand() < self.prob_c:
+        if q < self.prob_c:
             self._contrast = self.R.uniform(
                 low=self.contrast[0],
                 high=self.contrast[1]
