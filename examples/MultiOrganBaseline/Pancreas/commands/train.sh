@@ -1,6 +1,4 @@
 #!/bin/bash
 
-export CUDA_VISIBLE_DEVICES=0
-export PYTHONPATH=$PWD/custom:$PYTHONPATH
-
-python -m manafaln.apps.train -c config/config_train.json
+python -m manafaln.apps.train \
+  --config config/config_train.json

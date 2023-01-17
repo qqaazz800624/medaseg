@@ -3,15 +3,15 @@
     "settings": {
       "accelerator": "auto",
       "devices": 1,
-      "strategy": "dp",
+      "strategy": "ddp",
 
-      "max_steps": 120000,
+      "max_steps": 60000,
 
       "benchmark": true,
       "amp_backend": "apex",
       "amp_level": "O1",
 
-      "check_val_every_n_epoch": 10,
+      "check_val_every_n_epoch": 20,
       "detect_anomaly": true,
 
       "log_every_n_steps": 10,
@@ -78,7 +78,7 @@
       "loss": {
         "name": "MultipleBackgroundDiceCELoss",
         "args": {
-          "background_channels": [0, 1, 2, 4, 5, 6, 7],
+          "background_channels": [0, 3, 4, 5, 6, 7],
           "to_onehot_y": true,
           "softmax": true,
           "smooth_nr": 0.0,
@@ -97,7 +97,7 @@
       "scheduler": {
         "name": "CosineAnnealingLR",
         "args": {
-          "T_max": 120000,
+          "T_max": 60000,
           "eta_min": 1e-7
         }
       },
@@ -153,8 +153,8 @@
             "path": "manafaln.transforms",
             "args": {
               "keys": [
-                "preds", "preds_spleen",
-                "label", "label_spleen"
+                "preds", "preds_liver", "preds_liver_tumor",
+                "label", "label_liver", "label_liver_tumor"
               ],
               "dim": 0
             }
@@ -216,8 +216,18 @@
         },
         {
           "name": "DiceMetric",
-          "log_label": "val_meandice_spleen",
-          "output_transform": "lambda x: (x['preds_spleen'], x['label_spleen'])",
+          "log_label": "val_meandice_liver",
+          "output_transform": "lambda x: (x['preds_liver'], x['label_liver'])",
+          "args": {
+            "include_background": false,
+            "reduction": "mean",
+            "get_not_nans": false
+          }
+        },
+        {
+          "name": "DiceMetric",
+          "log_label": "val_meandice_liver_tumor",
+          "output_transform": "lambda x: (x['preds_liver_tumor'], x['label_liver_tumor'])",
           "args": {
             "include_background": false,
             "reduction": "mean",
@@ -232,7 +242,7 @@
     "name": "DecathlonDataModule",
 
     "settings": {
-      "data_root": "/work/pancreas/nvidia-tlt/dataset/model/multiorgan/Spleen",
+      "data_root": "/work/pancreas/nvidia-tlt/dataset/model/multiorgan/Liver",
       "data_list": "config/datalist.json",
       "is_segmentation": true,
 
@@ -272,6 +282,17 @@
           }
         },
         {
+          "name": "RandRotated",
+          "args": {
+            "keys": ["image", "label"],
+            "range_x": 0.5236,
+            "range_y": 0.5236,
+            "range_z": 0.5236,
+            "prob": 0.2,
+            "mode": ["bilinear", "nearest"]
+          }
+        },
+        {
           "name": "RandZoomd",
           "args": {
             "keys": ["image", "label"],
@@ -307,7 +328,9 @@
             "spatial_size": [224, 224, 64],
             "pos": 2.0,
             "neg": 1.0,
-            "num_samples": 1
+            "num_samples": 1,
+            "image_key": "image",
+            "image_threshold": 0.0
           }
         },
         {
@@ -366,7 +389,7 @@
           "name": "RandFlipAxes3Dd",
           "args": {
             "keys": ["image", "label"],
-            "prob_x": 0.00,
+            "prob_x": 0.50,
             "prob_y": 0.50,
             "prob_z": 0.50
           }
@@ -382,7 +405,7 @@
         "name": "CacheDataset",
         "args": {
           "cache_rate": 1.0,
-          "num_workers": 4
+          "num_workers": 8
         }
       },
       "dataloader": {
@@ -407,7 +430,7 @@
           }
         },
         {
-          "name": "AddChanneld",
+          "name": "EnsureChannelFirstd",
           "args": {
             "keys": ["image", "label"]
           }

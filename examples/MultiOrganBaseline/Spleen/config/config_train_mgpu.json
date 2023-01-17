@@ -2,16 +2,16 @@
   "trainer": {
     "settings": {
       "accelerator": "auto",
-      "devices": 1,
-      "strategy": "dp",
+      "devices": 2,
+      "strategy": "ddp",
 
-      "max_steps": 120000,
+      "max_steps": 60000,
 
       "benchmark": true,
       "amp_backend": "apex",
       "amp_level": "O1",
 
-      "check_val_every_n_epoch": 10,
+      "check_val_every_n_epoch": 20,
       "detect_anomaly": true,
 
       "log_every_n_steps": 10,
@@ -97,7 +97,7 @@
       "scheduler": {
         "name": "CosineAnnealingLR",
         "args": {
-          "T_max": 120000,
+          "T_max": 60000,
           "eta_min": 1e-7
         }
       },
