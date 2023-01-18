@@ -75,11 +75,7 @@ class DeepSupervision(SupervisedLearning):
         label = batch["label"]
 
         # Run inference
-        outputs = self.forward(image)
-        if isinstance(outputs, torch.Tensor):
-            batch["preds"] = self.forward(image)
-        else:
-            batch["preds"] = outputs[0]
+        batch["preds"] = self.forward(image)
 
         # Post transform & compute metrics
         metrics = []
@@ -90,7 +86,6 @@ class DeepSupervision(SupervisedLearning):
                 # Calculate iteration metrics
                 m = self.valid_metrics.apply(item)
                 # Save meta data and results
-                # m["preds"] = item["preds"]
                 m["image_meta_dict"] = item.get("image_meta_dict", {})
                 m["label_meta_dict"] = item.get("label_meta_dict", {})
                 metrics.append(m)
