@@ -30,10 +30,10 @@ class ComponentBuilder(object):
                     C = getattr(M, name)
                     out = C(*args, **kwargs)
                 except ModuleNotFoundError as e:
-                    self.logger.warning("Module {path} not found")
+                    self.logger.warning(f"Module {path} not found")
                     continue
                 except AttributeError:
-                    self.logger.debug("Unable to find {name} in {path}")
+                    self.logger.debug(f"Unable to find {name} in {path}")
                     continue
                 break
         else:
@@ -163,7 +163,7 @@ class DatasetBuilder(ComponentBuilder):
         _kwargs = config.get("args", {})
         for k in kwargs:
             if k in _kwargs:
-                self.logger.warning("Overwrite kwargs from {_kwargs[k]} to {kwargs[k]}")
+                self.logger.warning(f"Overwrite kwargs from {_kwargs[k]} to {kwargs[k]}")
             _kwargs[k] = kwargs[k]
 
         out = self._build_instance(spec, name, path, args, _kwargs)
@@ -262,10 +262,10 @@ class WorkflowBuilder(ComponentBuilder):
                         M = importlib.import_module(path)
                         C = getattr(M, name)
                     except ModuleNotFoundError as e:
-                        self.logger.warning("Module {path} not found")
+                        self.logger.warning(f"Module {path} not found")
                         continue
                     except AttributeError:
-                        self.logger.debug("Unable to find {name} in {path}")
+                        self.logger.debug(f"Unable to find {name} in {path}")
                         continue
                     break
             else:
