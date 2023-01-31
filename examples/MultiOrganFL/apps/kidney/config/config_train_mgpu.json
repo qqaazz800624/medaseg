@@ -2,17 +2,23 @@
   "trainer": {
     "settings": {
       "accelerator": "auto",
-      "devices": 1,
+      "devices": 2,
       "strategy": "ddp",
+
+      "max_steps": 60000,
 
       "benchmark": true,
       "amp_backend": "apex",
       "amp_level": "O1",
 
+      "check_val_every_n_epoch": 20,
       "detect_anomaly": true,
 
       "log_every_n_steps": 10,
-      "resume_from_checkpoint": null
+      "resume_from_checkpoint": null,
+
+      "gradient_clip_val": 1.0,
+      "gradient_clip_algorithm": "norm"
     },
 
     "callbacks": [
@@ -34,13 +40,13 @@
   },
 
   "workflow": {
-    "name": "SupervisedSegmentation",
+    "name": "DeepSupervision",
+    "path": "custom.deep_supervision",
 
     "settings": {
-      "num_classes": 8,
-      "learning_rate": 1e-3,
+      "ds_weights": [0.5333, 0.2667, 0.1333, 0.0667],
       "scheduler": {
-        "interval": "epoch",
+        "interval": "step",
         "frequency": 1
       },
       "decollate": true,
@@ -49,41 +55,50 @@
 
     "components": {
       "model": {
-        "name": "C2FNAS",
-        "path": "c2fnas",
+        "name": "DynUNet",
         "args": {
+          "spatial_dims": 3,
           "in_channels": 1,
-          "num_classes": 8,
-          "final_activation": "none"
+          "out_channels": 8,
+          "kernel_size": [[3, 3, 1], [3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3]],
+          "strides": [[1, 1, 1], [2, 2, 1], [2, 2, 2], [2, 2, 2], [2, 2, 2], [2, 2, 1]],
+          "upsample_kernel_size": [[2, 2, 1], [2, 2, 2], [2, 2, 2], [2, 2, 2], [2, 2, 1]],
+          "deep_supervision": true,
+          "deep_supr_num": 3
         }
       },
       "inferer": {
         "name": "SlidingWindowInferer",
         "args": {
-          "roi_size": [160, 160, 160],
+          "roi_size": [224, 224, 64],
           "sw_batch_size": 4,
-          "overlap": 0.25
+          "overlap": 0.5
         }
       },
       "loss": {
-        "name": "DiceLoss",
+        "name": "MultipleBackgroundDiceCELoss",
         "args": {
-          "include_background": true,
+          "background_channels": [0, 1, 2, 3, 4, 5],
           "to_onehot_y": true,
-          "sigmoid": true
+          "softmax": true,
+          "smooth_nr": 0.0,
+          "batch": true
         }
       },
       "optimizer": {
-        "name": "AdamW",
+        "name": "SGD",
         "args": {
-          "lr": 1e-4
+          "lr": 1e-2,
+          "momentum": 0.99,
+          "nesterov": true,
+          "weight_decay": 1e-5
         }
       },
       "scheduler": {
         "name": "CosineAnnealingLR",
         "args": {
-          "T_max": 600,
-          "eta_min": 1e-5
+          "T_max": 60000,
+          "eta_min": 1e-7
         }
       },
       "post_transforms": {
@@ -94,24 +109,30 @@
             "args": {
               "keys": ["preds", "label"],
               "argmax": [true, false],
-              "to_onehot": [true, true],
-              "num_classes": 8,
+              "to_onehot": [8, 8],
               "channel_dim": 1
             }
           }
         ],
         "validation": [
           {
+            "name": "RestoreMeta",
+            "path": "custom.meta",
+            "args": {
+              "keys": ["preds", "label"],
+              "meta_keys": ["image_meta_dict", "label_meta_dict"]
+            }
+          },
+          {
             "name": "AsDiscreted",
             "args": {
               "keys": ["preds", "label"],
               "argmax": [true, false],
-              "to_onehot": [true, true],
-              "num_classes": 8
+              "to_onehot": [8, 8]
             }
           },
           {
-            "name": "SplitChanneld",
+            "name": "SplitDimd",
             "args": {
               "keys": ["preds", "label"],
               "output_postfixes": [
@@ -124,7 +145,7 @@
                 "kidney",
                 "kidney_tumor"
               ],
-              "channel_dim": 0
+              "dim": 0
             }
           },
           {
@@ -132,8 +153,8 @@
             "path": "manafaln.transforms",
             "args": {
               "keys": [
-                "preds", "preds_pancreas", "preds_tumor",
-                "label", "label_pancreas", "label_tumor"
+                "preds", "preds_kidney", "preds_kidney_tumor",
+                "label", "label_kidney", "label_kidney_tumor"
               ],
               "dim": 0
             }
@@ -141,25 +162,24 @@
         ],
         "test": [
           {
-            "name": "AsDiscreted",
+            "name": "RestoreMeta",
+            "path": "custom.meta",
             "args": {
               "keys": "preds",
-              "argmax": true,
-              "num_classes": 8
+              "meta_keys": "image_meta_dict"
             }
           },
           {
-            "name": "EnsureTyped",
+            "name": "AsDiscreted",
             "args": {
-              "keys": ["preds", "image_meta_dict"],
-              "data_type": "numpy"
+              "keys": "preds",
+              "argmax": true
             }
           },
           {
             "name": "SaveImaged",
             "args": {
               "keys": ["preds"],
-              "meta_keys": ["image_meta_dict"],
               "output_dir": "results",
               "output_postfix": "preds",
               "output_ext": ".nii.gz",
@@ -181,18 +201,6 @@
             "reduction": "mean",
             "get_not_nans": false
           }
-        },
-        {
-          "name": "ConfusionMatrixMetric",
-          "log_label": ["train_sensitivity", "train_specificity", "train_accuracy"],
-          "output_transform": "lambda x: (x['preds'], x['label'])",
-          "args": {
-            "include_background": false,
-            "metric_name": ["sensitivity", "specificity", "accuracy"],
-            "compute_sample": true,
-            "reduction": "mean",
-            "get_not_nans": false
-          }
         }
       ],
       "validation_metrics": [
@@ -208,8 +216,8 @@
         },
         {
           "name": "DiceMetric",
-          "log_label": "val_meandice_pancreas",
-          "output_transform": "lambda x: (x['preds_pancreas'], x['label_pancreas'])",
+          "log_label": "val_meandice_kidney",
+          "output_transform": "lambda x: (x['preds_kidney'], x['label_kidney'])",
           "args": {
             "include_background": false,
             "reduction": "mean",
@@ -218,8 +226,8 @@
         },
         {
           "name": "DiceMetric",
-          "log_label": "val_meandice_tumor",
-          "output_transform": "lambda x: (x['preds_tumor'], x['label_tumor'])",
+          "log_label": "val_meandice_kidney_tumor",
+          "output_transform": "lambda x: (x['preds_kidney_tumor'], x['label_kidney_tumor'])",
           "args": {
             "include_background": false,
             "reduction": "mean",
@@ -234,8 +242,8 @@
     "name": "DecathlonDataModule",
 
     "settings": {
-      "data_root": "/data",
-      "data_list": "/data/datalist.json",
+      "data_root": "/work/pancreas/nvidia-tlt/dataset/model/multiorgan/KiTS19",
+      "data_list": "config/datalist.json",
       "is_segmentation": true,
 
       "use_shm_cache": false,
@@ -248,11 +256,12 @@
         {
           "name": "LoadImaged",
           "args": {
-            "keys": ["image", "label"]
+            "keys": ["image", "label"],
+            "image_only": true
           }
         },
         {
-          "name": "AddChanneld",
+          "name": "EnsureChannelFirstd",
           "args": {
             "keys": ["image", "label"]
           }
@@ -265,14 +274,50 @@
           }
         },
         {
-          "name": "ScaleIntensityRanged",
+          "name": "Spacingd",
+          "args": {
+            "keys": ["image", "label"],
+            "pixdim": [1.44423774, 1.44423774, 2.87368553],
+            "mode": ["bilinear", "nearest"]
+          }
+        },
+        {
+          "name": "RandRotated",
+          "args": {
+            "keys": ["image", "label"],
+            "range_x": 0.5236,
+            "range_y": 0.5236,
+            "range_z": 0.5236,
+            "prob": 0.2,
+            "mode": ["bilinear", "nearest"]
+          }
+        },
+        {
+          "name": "RandZoomd",
+          "args": {
+            "keys": ["image", "label"],
+            "prob": 0.20,
+            "min_zoom": 0.7,
+            "max_zoom": 1.4,
+            "mode": ["trilinear", "nearest"],
+            "keep_size": true
+          }
+        },
+        {
+          "name": "NormalizeIntensityRanged",
           "args": {
             "keys": ["image"],
-            "a_min": -500.0,
-            "a_max":  500.0,
-            "b_min":    0.0,
-            "b_max":    1.0,
-            "clip": true
+            "a_min":      -54.0,
+            "a_max":      258.0,
+            "subtrahend": 100.0,
+            "divisor":     50.0
+          }
+        },
+        {
+          "name": "SpatialPadd",
+          "args": {
+            "keys": ["image", "label"],
+            "spatial_size": [224, 224, 64]
           }
         },
         {
@@ -280,20 +325,73 @@
           "args": {
             "keys": ["image", "label"],
             "label_key": "label",
-            "spatial_size": [96, 96, 96],
-            "pos": 1.0,
+            "spatial_size": [224, 224, 64],
+            "pos": 2.0,
             "neg": 1.0,
-            "num_samples": 4,
+            "num_samples": 1,
             "image_key": "image",
             "image_threshold": 0.0
           }
         },
         {
-          "name": "RandShiftIntensityd",
+          "name": "RandGaussianNoised",
           "args": {
             "keys": ["image"],
-            "offsets": 0.1,
-            "prob": 0.8
+            "prob": 0.15,
+            "mean": 0.0,
+            "std": 0.1
+          }
+        },
+        {
+          "name": "RandGaussianSmoothd",
+          "args": {
+            "keys": ["image"],
+            "sigma_x": [0.5, 1.5],
+            "sigma_y": [0.5, 1.5],
+            "sigma_z": [0.5, 1.5],
+            "prob": 0.15
+          }
+        },
+        {
+          "name": "RandAdjustBrightnessAndContrastd",
+          "args": {
+            "keys": ["image"],
+            "probs": [0.15, 0.15],
+            "brightness_range": [0.7, 1.3],
+            "contrast_range": [0.65, 1.5]
+          }
+        },
+        {
+          "name": "SimulateLowResolutiond",
+          "args": {
+            "keys": ["image"],
+            "prob": 0.25,
+            "zoom_range": [0.5, 1.0]
+          }
+        },
+        {
+          "name": "RandAdjustContrastd",
+          "args": {
+            "keys": ["image"],
+            "prob": 0.15,
+            "gamma": [0.8, 1.2]
+          }
+        },
+        {
+          "name": "RandInverseIntensityGammad",
+          "args": {
+            "keys": ["image"],
+            "prob": 0.15,
+            "gamma": [0.8, 1.2]
+          }
+        },
+        {
+          "name": "RandFlipAxes3Dd",
+          "args": {
+            "keys": ["image", "label"],
+            "prob_x": 0.50,
+            "prob_y": 0.50,
+            "prob_z": 0.50
           }
         },
         {
@@ -306,7 +404,7 @@
       "dataset": {
         "name": "CacheDataset",
         "args": {
-          "cache_num": 50,
+          "cache_rate": 1.0,
           "num_workers": 8
         }
       },
@@ -315,8 +413,8 @@
         "args": {
           "batch_size": 2,
           "shuffle": true,
-          "pin_memory": true,
-          "num_workers": 8
+          "pin_memory": false,
+          "num_workers": 4
         }
       }
     },
@@ -327,11 +425,12 @@
         {
           "name": "LoadImaged",
           "args": {
-            "keys": ["image", "label"]
+            "keys": ["image", "label"],
+            "image_only": true
           }
         },
         {
-          "name": "AddChanneld",
+          "name": "EnsureChannelFirstd",
           "args": {
             "keys": ["image", "label"]
           }
@@ -344,14 +443,29 @@
           }
         },
         {
-          "name": "ScaleIntensityRanged",
+          "name": "Spacingd",
+          "args": {
+            "keys": ["image", "label"],
+            "pixdim": [1.44423774, 1.44423774, 2.87368553],
+            "mode": ["bilinear", "nearest"]
+          }
+        },
+        {
+          "name": "NormalizeIntensityRanged",
           "args": {
             "keys": ["image"],
-            "a_min": -500.0,
-            "a_max":  500.0,
-            "b_min":    0.0,
-            "b_max":    1.0,
-            "clip": true
+            "a_min":      -54.0,
+            "a_max":      258.0,
+            "subtrahend": 100.0,
+            "divisor":     50.0
+          }
+        },
+        {
+          "name": "SaveMeta",
+          "path": "custom.meta",
+          "args": {
+            "keys": ["image", "label"],
+            "meta_keys": ["image_meta_dict", "label_meta_dict"]
           }
         },
         {
@@ -362,30 +476,35 @@
         }
       ],
       "dataset": {
-        "name": "Dataset"
+        "name": "CacheDataset",
+        "args": {
+          "cache_rate": 1.0,
+          "num_workers": 4
+        }
       },
       "dataloader": {
         "name": "DataLoader",
         "args": {
           "batch_size": 1,
           "shuffle": false,
-          "pin_memory": true,
+          "pin_memory": false,
           "num_workers": 4
         }
       }
     },
 
     "test": {
-      "data_list_key": ["training", "validation", "testing"],
+      "data_list_key": "testing",
       "transforms": [
         {
           "name": "LoadImaged",
           "args": {
-            "keys": "image"
+            "keys": "image",
+            "image_only": true
           }
         },
         {
-          "name": "AddChanneld",
+          "name": "EnsureChannelFirstd",
           "args": {
             "keys": "image"
           }
@@ -398,14 +517,29 @@
           }
         },
         {
-          "name": "ScaleIntensityRanged",
+          "name": "Spacingd",
           "args": {
             "keys": "image",
-            "a_min": -500.0,
-            "a_max":  500.0,
-            "b_min":    0.0,
-            "b_max":    1.0,
-            "clip": true
+            "pixdim": [1.44423774, 1.44423774, 2.87368553],
+            "mode": "bilinear"
+          }
+        },
+        {
+          "name": "NormalizeIntensityRanged",
+          "args": {
+            "keys": ["image"],
+            "a_min":      -54.0,
+            "a_max":      258.0,
+            "subtrahend": 100.0,
+            "divisor":     50.0
+          }
+        },
+        {
+          "name": "SaveMeta",
+          "path": "custom.meta",
+          "args": {
+            "keys": "image",
+            "meta_keys": "image_meta_dict"
           }
         },
         {

@@ -118,7 +118,7 @@ class SupervisedLearning(LightningModule):
 
     def training_epoch_end(self, outputs):
         m = self.train_metrics.aggregate()
-        self.log_dict(m)
+        self.log_dict(m, sync_dist=True)
         self.train_metrics.reset()
 
     def validation_step(self, batch, batch_idx):
@@ -156,7 +156,7 @@ class SupervisedLearning(LightningModule):
 
     def validation_epoch_end(self, validation_step_outputs):
         m = self.valid_metrics.aggregate()
-        self.log_dict(m)
+        self.log_dict(m, sync_dist=True)
         self.valid_metrics.reset()
 
     def test_step(self, batch, batch_idx):

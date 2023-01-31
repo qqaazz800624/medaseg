@@ -3,15 +3,15 @@
     "settings": {
       "accelerator": "auto",
       "devices": 1,
-      "strategy": "dp",
+      "strategy": "ddp",
 
-      "max_steps": 120000,
+      "max_steps": 60000,
 
       "benchmark": true,
       "amp_backend": "apex",
       "amp_level": "O1",
 
-      "check_val_every_n_epoch": 10,
+      "check_val_every_n_epoch": 20,
       "detect_anomaly": true,
 
       "log_every_n_steps": 10,
@@ -78,7 +78,7 @@
       "loss": {
         "name": "MultipleBackgroundDiceCELoss",
         "args": {
-          "background_channels": [0, 1, 2, 3, 6, 7],
+          "background_channels": [0, 3, 4, 5, 6, 7],
           "to_onehot_y": true,
           "softmax": true,
           "smooth_nr": 0.0,
@@ -97,7 +97,7 @@
       "scheduler": {
         "name": "CosineAnnealingLR",
         "args": {
-          "T_max": 120000,
+          "T_max": 60000,
           "eta_min": 1e-7
         }
       },
@@ -153,8 +153,8 @@
             "path": "manafaln.transforms",
             "args": {
               "keys": [
-                "preds", "preds_pancreas", "preds_pancreas_tumor",
-                "label", "label_pancreas", "label_pancreas_tumor"
+                "preds", "preds_liver", "preds_liver_tumor",
+                "label", "label_liver", "label_liver_tumor"
               ],
               "dim": 0
             }
@@ -216,8 +216,8 @@
         },
         {
           "name": "DiceMetric",
-          "log_label": "val_meandice_pancreas",
-          "output_transform": "lambda x: (x['preds_pancreas'], x['label_pancreas'])",
+          "log_label": "val_meandice_liver",
+          "output_transform": "lambda x: (x['preds_liver'], x['label_liver'])",
           "args": {
             "include_background": false,
             "reduction": "mean",
@@ -226,8 +226,8 @@
         },
         {
           "name": "DiceMetric",
-          "log_label": "val_meandice_pancreas_tumor",
-          "output_transform": "lambda x: (x['preds_pancreas_tumor'], x['label_pancreas_tumor'])",
+          "log_label": "val_meandice_liver_tumor",
+          "output_transform": "lambda x: (x['preds_liver_tumor'], x['label_liver_tumor'])",
           "args": {
             "include_background": false,
             "reduction": "mean",
@@ -242,7 +242,7 @@
     "name": "DecathlonDataModule",
 
     "settings": {
-      "data_root": "/work/pancreas/nvidia-tlt/dataset/model/multiorgan/Pancreas",
+      "data_root": "/work/pancreas/nvidia-tlt/dataset/model/multiorgan/Liver",
       "data_list": "config/datalist.json",
       "is_segmentation": true,
 
@@ -296,7 +296,7 @@
           "name": "RandZoomd",
           "args": {
             "keys": ["image", "label"],
-            "prob": 0.20,
+            "prob": 0.2,
             "min_zoom": 0.7,
             "max_zoom": 1.4,
             "mode": ["trilinear", "nearest"],
@@ -420,7 +420,7 @@
     },
 
     "validation": {
-      "data_list_key": "testing",
+      "data_list_key": "validation",
       "transforms": [
         {
           "name": "LoadImaged",
@@ -494,7 +494,7 @@
     },
 
     "test": {
-      "data_list_key": ["training", "validation", "testing"],
+      "data_list_key": "testing",
       "transforms": [
         {
           "name": "LoadImaged",
@@ -519,9 +519,9 @@
         {
           "name": "Spacingd",
           "args": {
-            "keys": "image",
+            "keys": ["image", "label"],
             "pixdim": [1.44423774, 1.44423774, 2.87368553],
-            "mode": "bilinear"
+            "mode": ["bilinear", "nearest"]
           }
         },
         {

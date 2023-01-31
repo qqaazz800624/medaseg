@@ -2,16 +2,16 @@
   "trainer": {
     "settings": {
       "accelerator": "auto",
-      "devices": 1,
-      "strategy": "dp",
+      "devices": 2,
+      "strategy": "ddp",
 
-      "max_steps": 120000,
+      "max_steps": 60000,
 
       "benchmark": true,
       "amp_backend": "apex",
       "amp_level": "O1",
 
-      "check_val_every_n_epoch": 10,
+      "check_val_every_n_epoch": 20,
       "detect_anomaly": true,
 
       "log_every_n_steps": 10,
@@ -78,7 +78,7 @@
       "loss": {
         "name": "MultipleBackgroundDiceCELoss",
         "args": {
-          "background_channels": [0, 1, 2, 3, 6, 7],
+          "background_channels": [0, 1, 2, 4, 5, 6, 7],
           "to_onehot_y": true,
           "softmax": true,
           "smooth_nr": 0.0,
@@ -97,7 +97,7 @@
       "scheduler": {
         "name": "CosineAnnealingLR",
         "args": {
-          "T_max": 120000,
+          "T_max": 60000,
           "eta_min": 1e-7
         }
       },
@@ -153,8 +153,8 @@
             "path": "manafaln.transforms",
             "args": {
               "keys": [
-                "preds", "preds_pancreas", "preds_pancreas_tumor",
-                "label", "label_pancreas", "label_pancreas_tumor"
+                "preds", "preds_spleen",
+                "label", "label_spleen"
               ],
               "dim": 0
             }
@@ -216,18 +216,8 @@
         },
         {
           "name": "DiceMetric",
-          "log_label": "val_meandice_pancreas",
-          "output_transform": "lambda x: (x['preds_pancreas'], x['label_pancreas'])",
-          "args": {
-            "include_background": false,
-            "reduction": "mean",
-            "get_not_nans": false
-          }
-        },
-        {
-          "name": "DiceMetric",
-          "log_label": "val_meandice_pancreas_tumor",
-          "output_transform": "lambda x: (x['preds_pancreas_tumor'], x['label_pancreas_tumor'])",
+          "log_label": "val_meandice_spleen",
+          "output_transform": "lambda x: (x['preds_spleen'], x['label_spleen'])",
           "args": {
             "include_background": false,
             "reduction": "mean",
@@ -242,7 +232,7 @@
     "name": "DecathlonDataModule",
 
     "settings": {
-      "data_root": "/work/pancreas/nvidia-tlt/dataset/model/multiorgan/Pancreas",
+      "data_root": "/work/pancreas/nvidia-tlt/dataset/model/multiorgan/Spleen",
       "data_list": "config/datalist.json",
       "is_segmentation": true,
 
@@ -282,21 +272,10 @@
           }
         },
         {
-          "name": "RandRotated",
-          "args": {
-            "keys": ["image", "label"],
-            "range_x": 0.5236,
-            "range_y": 0.5236,
-            "range_z": 0.5236,
-            "prob": 0.2,
-            "mode": ["bilinear", "nearest"]
-          }
-        },
-        {
           "name": "RandZoomd",
           "args": {
             "keys": ["image", "label"],
-            "prob": 0.20,
+            "prob": 0.2,
             "min_zoom": 0.7,
             "max_zoom": 1.4,
             "mode": ["trilinear", "nearest"],
@@ -328,9 +307,7 @@
             "spatial_size": [224, 224, 64],
             "pos": 2.0,
             "neg": 1.0,
-            "num_samples": 1,
-            "image_key": "image",
-            "image_threshold": 0.0
+            "num_samples": 1
           }
         },
         {
@@ -389,7 +366,7 @@
           "name": "RandFlipAxes3Dd",
           "args": {
             "keys": ["image", "label"],
-            "prob_x": 0.50,
+            "prob_x": 0.00,
             "prob_y": 0.50,
             "prob_z": 0.50
           }
@@ -405,7 +382,7 @@
         "name": "CacheDataset",
         "args": {
           "cache_rate": 1.0,
-          "num_workers": 8
+          "num_workers": 4
         }
       },
       "dataloader": {
@@ -420,7 +397,7 @@
     },
 
     "validation": {
-      "data_list_key": "testing",
+      "data_list_key": "validation",
       "transforms": [
         {
           "name": "LoadImaged",
@@ -430,7 +407,7 @@
           }
         },
         {
-          "name": "EnsureChannelFirstd",
+          "name": "AddChanneld",
           "args": {
             "keys": ["image", "label"]
           }
@@ -494,7 +471,7 @@
     },
 
     "test": {
-      "data_list_key": ["training", "validation", "testing"],
+      "data_list_key": "testing",
       "transforms": [
         {
           "name": "LoadImaged",
@@ -519,9 +496,9 @@
         {
           "name": "Spacingd",
           "args": {
-            "keys": "image",
+            "keys": ["image", "label"],
             "pixdim": [1.44423774, 1.44423774, 2.87368553],
-            "mode": "bilinear"
+            "mode": ["bilinear", "nearest"]
           }
         },
         {

@@ -3,9 +3,9 @@
     "settings": {
       "accelerator": "auto",
       "devices": 1,
-      "strategy": "ddp",
+      "strategy": "dp",
 
-      "max_epochs": 600,
+      "max_steps": 120000,
 
       "benchmark": true,
       "amp_backend": "apex",
@@ -15,7 +15,10 @@
       "detect_anomaly": true,
 
       "log_every_n_steps": 10,
-      "resume_from_checkpoint": null
+      "resume_from_checkpoint": null,
+
+      "gradient_clip_val": 1.0,
+      "gradient_clip_algorithm": "norm"
     },
 
     "callbacks": [
@@ -37,13 +40,13 @@
   },
 
   "workflow": {
-    "name": "SupervisedSegmentation",
+    "name": "DeepSupervision",
+    "path": "custom.deep_supervision",
 
     "settings": {
-      "num_classes": 8,
-      "learning_rate": 1e-3,
+      "ds_weights": [0.5333, 0.2667, 0.1333, 0.0667],
       "scheduler": {
-        "interval": "epoch",
+        "interval": "step",
         "frequency": 1
       },
       "decollate": true,
@@ -52,18 +55,24 @@
 
     "components": {
       "model": {
-        "name": "BasicUNet",
+        "name": "DynUNet",
         "args": {
+          "spatial_dims": 3,
           "in_channels": 1,
-          "out_channels": 8
+          "out_channels": 8,
+          "kernel_size": [[3, 3, 1], [3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3]],
+          "strides": [[1, 1, 1], [2, 2, 1], [2, 2, 2], [2, 2, 2], [2, 2, 2], [2, 2, 1]],
+          "upsample_kernel_size": [[2, 2, 1], [2, 2, 2], [2, 2, 2], [2, 2, 2], [2, 2, 1]],
+          "deep_supervision": true,
+          "deep_supr_num": 3
         }
       },
       "inferer": {
         "name": "SlidingWindowInferer",
         "args": {
-          "roi_size": [160, 160, 64],
+          "roi_size": [224, 224, 64],
           "sw_batch_size": 4,
-          "overlap": 0.25
+          "overlap": 0.5
         }
       },
       "loss": {
@@ -71,20 +80,25 @@
         "args": {
           "background_channels": [0, 3, 4, 5, 6, 7],
           "to_onehot_y": true,
-          "softmax": true
+          "softmax": true,
+          "smooth_nr": 0.0,
+          "batch": true
         }
       },
       "optimizer": {
-        "name": "AdamW",
+        "name": "SGD",
         "args": {
-          "lr": 1e-3
+          "lr": 1e-2,
+          "momentum": 0.99,
+          "nesterov": true,
+          "weight_decay": 1e-5
         }
       },
       "scheduler": {
         "name": "CosineAnnealingLR",
         "args": {
-          "T_max": 600,
-          "eta_min": 1e-5
+          "T_max": 120000,
+          "eta_min": 1e-7
         }
       },
       "post_transforms": {
@@ -102,6 +116,14 @@
         ],
         "validation": [
           {
+            "name": "RestoreMeta",
+            "path": "custom.meta",
+            "args": {
+              "keys": ["preds", "label"],
+              "meta_keys": ["image_meta_dict", "label_meta_dict"]
+            }
+          },
+          {
             "name": "AsDiscreted",
             "args": {
               "keys": ["preds", "label"],
@@ -110,7 +132,7 @@
             }
           },
           {
-            "name": "SplitChanneld",
+            "name": "SplitDimd",
             "args": {
               "keys": ["preds", "label"],
               "output_postfixes": [
@@ -123,7 +145,7 @@
                 "kidney",
                 "kidney_tumor"
               ],
-              "channel_dim": 0
+              "dim": 0
             }
           },
           {
@@ -140,11 +162,18 @@
         ],
         "test": [
           {
+            "name": "RestoreMeta",
+            "path": "custom.meta",
+            "args": {
+              "keys": "preds",
+              "meta_keys": "image_meta_dict"
+            }
+          },
+          {
             "name": "AsDiscreted",
             "args": {
               "keys": "preds",
-              "argmax": true,
-              "to_onehot": false
+              "argmax": true
             }
           },
           {
@@ -214,7 +243,7 @@
 
     "settings": {
       "data_root": "/work/pancreas/nvidia-tlt/dataset/model/multiorgan/Liver",
-      "data_list": "/work/pancreas/nvidia-tlt/dataset/model/multiorgan/Liver/datalist.json",
+      "data_list": "config/datalist.json",
       "is_segmentation": true,
 
       "use_shm_cache": false,
@@ -227,7 +256,8 @@
         {
           "name": "LoadImaged",
           "args": {
-            "keys": ["image", "label"]
+            "keys": ["image", "label"],
+            "image_only": true
           }
         },
         {
@@ -287,7 +317,7 @@
           "name": "SpatialPadd",
           "args": {
             "keys": ["image", "label"],
-            "spatial_size": [160, 160, 64]
+            "spatial_size": [224, 224, 64]
           }
         },
         {
@@ -295,10 +325,10 @@
           "args": {
             "keys": ["image", "label"],
             "label_key": "label",
-            "spatial_size": [160, 160, 64],
-            "pos": 1.0,
+            "spatial_size": [224, 224, 64],
+            "pos": 2.0,
             "neg": 1.0,
-            "num_samples": 4,
+            "num_samples": 1,
             "image_key": "image",
             "image_threshold": 0.0
           }
@@ -335,7 +365,7 @@
           "name": "SimulateLowResolutiond",
           "args": {
             "keys": ["image"],
-            "prob": 0.125,
+            "prob": 0.25,
             "zoom_range": [0.5, 1.0]
           }
         },
@@ -348,12 +378,20 @@
           }
         },
         {
+          "name": "RandInverseIntensityGammad",
+          "args": {
+            "keys": ["image"],
+            "prob": 0.15,
+            "gamma": [0.8, 1.2]
+          }
+        },
+        {
           "name": "RandFlipAxes3Dd",
           "args": {
             "keys": ["image", "label"],
-            "prob_x": 0.0,
-            "prob_y": 0.25,
-            "prob_z": 0.25
+            "prob_x": 0.50,
+            "prob_y": 0.50,
+            "prob_z": 0.50
           }
         },
         {
@@ -376,8 +414,7 @@
           "batch_size": 2,
           "shuffle": true,
           "pin_memory": false,
-          "num_workers": 4,
-          "persistent_workers": true
+          "num_workers": 4
         }
       }
     },
@@ -388,7 +425,8 @@
         {
           "name": "LoadImaged",
           "args": {
-            "keys": ["image", "label"]
+            "keys": ["image", "label"],
+            "image_only": true
           }
         },
         {
@@ -423,6 +461,14 @@
           }
         },
         {
+          "name": "SaveMeta",
+          "path": "custom.meta",
+          "args": {
+            "keys": ["image", "label"],
+            "meta_keys": ["image_meta_dict", "label_meta_dict"]
+          }
+        },
+        {
           "name": "EnsureTyped",
           "args": {
             "keys": ["image", "label"]
@@ -442,7 +488,7 @@
           "batch_size": 1,
           "shuffle": false,
           "pin_memory": false,
-          "num_workers": 0
+          "num_workers": 4
         }
       }
     },
@@ -453,11 +499,12 @@
         {
           "name": "LoadImaged",
           "args": {
-            "keys": "image"
+            "keys": "image",
+            "image_only": true
           }
         },
         {
-          "name": "AddChanneld",
+          "name": "EnsureChannelFirstd",
           "args": {
             "keys": "image"
           }
@@ -488,6 +535,14 @@
           }
         },
         {
+          "name": "SaveMeta",
+          "path": "custom.meta",
+          "args": {
+            "keys": "image",
+            "meta_keys": "image_meta_dict"
+          }
+        },
+        {
           "name": "EnsureTyped",
           "args": {
             "keys": "image"
@@ -503,7 +558,7 @@
           "batch_size": 1,
           "shuffle": false,
           "pin_memory": true,
-          "num_workers": 0
+          "num_workers": 4
         }
       }
     }
