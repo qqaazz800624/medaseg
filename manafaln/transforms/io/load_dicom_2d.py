@@ -131,7 +131,7 @@ class LoadDicom2Dd(MapTransform):
             normalization = normalization,
             apply_window = apply_window,
             fix_monochrome = fix_monochrome,
-            )
+        )
         self.meta_key_postfix = meta_key_postfix
 
     def __call__(

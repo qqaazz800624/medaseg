@@ -1,9 +1,8 @@
-
 from typing import Sequence, Optional
 
+import numpy as np
 from monai.config import KeysCollection
 from monai.transforms import Transform, MapTransform
-import numpy as np
 from scipy.ndimage import binary_fill_holes
 from skimage.morphology import binary_closing, square, disk
 

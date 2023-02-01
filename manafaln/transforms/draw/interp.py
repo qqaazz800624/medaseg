@@ -37,7 +37,7 @@ class Interpolate(DrawPoints):
             footprint_shape=footprint_shape,
             footprint_size=footprint_size,
             mask_only=mask_only
-            )
+        )
 
     def extract_points(
         self,
@@ -127,4 +127,4 @@ class Interpolated(DrawPointsd):
             footprint_shape=footprint_shape,
             footprint_size=footprint_size,
             mask_only=False
-            )
+        )

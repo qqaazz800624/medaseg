@@ -26,7 +26,7 @@ class DrawLowest(DrawPoints):
             footprint_shape=footprint_shape,
             footprint_size=footprint_size,
             mask_only=mask_only
-            )
+        )
 
     def extract_points(
         self,
@@ -68,7 +68,7 @@ class DrawLowestd(DrawPointsd):
             footprint_shape=footprint_shape,
             footprint_size=footprint_size,
             mask_only=False
-            )
+        )
 
 class DrawLast(DrawPoints):
     def __init__(
@@ -87,7 +87,7 @@ class DrawLast(DrawPoints):
             footprint_shape=footprint_shape,
             footprint_size=footprint_size,
             mask_only=mask_only
-            )
+        )
 
     def extract_points(
         self,
@@ -129,7 +129,7 @@ class DrawLastd(DrawPointsd):
             footprint_shape=footprint_shape,
             footprint_size=footprint_size,
             mask_only=False
-            )
+        )
 
 class DrawBottom(DrawPoints):
     def __init__(
@@ -148,7 +148,7 @@ class DrawBottom(DrawPoints):
             footprint_shape=footprint_shape,
             footprint_size=footprint_size,
             mask_only=mask_only
-            )
+        )
 
     def extract_points(
         self,
@@ -207,4 +207,4 @@ class DrawBottomd(DrawPointsd):
             footprint_shape=footprint_shape,
             footprint_size=footprint_size,
             mask_only=False
-            )
+        )

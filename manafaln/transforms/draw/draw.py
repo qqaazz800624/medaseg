@@ -103,7 +103,7 @@ class DrawPoints(Transform):
             MetaKeys.SPATIAL_SHAPE: self.spatial_size,
             MetaKeys.ORIGINAL_CHANNEL_DIM: self.channel_dim,
             META_POINTS_KEY: meta_points
-            }
+        }
 
         return masks, meta_data
 
@@ -163,3 +163,4 @@ class DrawPointsd(MapTransform):
                 d[key] = masks
                 d[meta_key] = {**d.get(meta_key, {}), **meta_data}
         return d
+
