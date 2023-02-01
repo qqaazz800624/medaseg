@@ -1,0 +1,99 @@
+data:
+  name: DecathlonDataModule
+
+  settings:
+    data_list: data/catheter_datalist.json
+
+  validation:
+    data_list_key:
+      - NTUH-20
+      - NTUH-YB
+    transforms:
+      - name: LoadDicom2Dd
+        args:
+          keys: img
+      - name: EnsureChannelFirstd
+        args:
+          keys: img
+          channel_dim: no_channel
+      - name: Resized
+        args:
+          keys: img
+          spatial_size: [512, 512]
+      - name: CLAHEd
+        path: manafaln.transforms
+        args:
+          keys: img
+          kernel_sizes: [0.02, 0.05, 0.10]
+          clip_limits: [0.05, 0.1, 0.5]
+      - name: SaveSplitImaged
+        args:
+          keys: img
+          output_postfixes: [ker0.02_clip0.05, ker0.02_clip0.1, ker0.02_clip0.5, ker0.05_clip0.05, ker0.05_clip0.1, ker0.05_clip0.5, ker0.1_clip0.05, ker0.1_clip0.1, ker0.1_clip0.5]
+          meta_keys: img_meta_dict
+          output_dir: /work/oxr/visual/img/test
+          print_log: false
+          output_ext: png
+          output_dtype: uint8
+          scale: 255
+          resample: true
+      - name: LoadJSONd
+        args:
+          keys: seg
+          json_keys: [ETT, Trachea, NGT, Lung, Diaphragm]
+      - name: Interpolated
+        args:
+          keys: seg
+          spatial_size: [512, 512]
+      - name: Filld
+        args:
+          keys: seg
+          mask_idx: [1, 3]
+      - name: FillHorizontald
+        args:
+          keys: seg
+          mask_idx: [0]
+      - name: DrawLowestd
+        args:
+          keys: seg
+          spatial_size: [512, 512]
+          apply_index: 0
+      - name: DrawLastd
+        args:
+          keys: seg
+          spatial_size: [512, 512]
+          apply_index: 2
+      - name: DrawBottomd
+        args:
+          keys: seg
+          spatial_size: [512, 512]
+          apply_index: 1
+      - name: SaveSplitImaged
+        args:
+          keys: seg
+          output_postfixes: [ETT, Trachea, NGT, Lung, Diaphragm, ETT_tip, NGT_tip, Carina]
+          meta_keys: img_meta_dict
+          output_dir: /work/oxr/visual/seg/test
+          print_log: false
+          output_ext: png
+          output_dtype: uint8
+          scale: 255
+          resample: true
+      - name: DeleteItemsd
+        args:
+          keys: seg_meta_dict.meta_points
+      - name: EnsureTyped
+        args:
+          keys: [img, seg, img_meta_dict, seg_meta_dict, clf_ett, clf_ngt]
+          dtype: float32
+    dataset:
+      name: CacheNTransDataset
+      args:
+        cache_n_trans: 14
+        cache_dir: /work/oxr/cache/test
+    dataloader:
+      name: DataLoader
+      args:
+        batch_size: 32
+        shuffle: false
+        num_workers: 8

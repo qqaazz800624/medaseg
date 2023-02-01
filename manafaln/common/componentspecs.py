@@ -4,12 +4,14 @@ import torch
 import torch.nn as nn
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import _LRScheduler
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset, DataLoader, Sampler
+from torchmetrics import Metric as MetricV2
 from pytorch_lightning import (
     Callback,
     LightningDataModule,
     LightningModule
 )
+from pytorch_lightning.loggers.logger import Logger
 from monai.metrics import Metric
 from monai.transforms import Transform
 
@@ -19,15 +21,17 @@ from manafaln.common.libspecs import (
     LibSpecMONAI,
     LibSpecPyTorch,
     LibSpecPyTorchLightning,
+    LibSpecTorchMetrics,
     LibSpecTorchVision
 )
 
 # Aliases for libraries
-_Native      = LibSpecNative
-_MONAI       = LibSpecMONAI
-_PyTorch     = LibSpecPyTorch
-_Lightning   = LibSpecPyTorchLightning
-_TorchVision = LibSpecTorchVision
+_Native       = LibSpecNative
+_MONAI        = LibSpecMONAI
+_PyTorch      = LibSpecPyTorch
+_Lightning    = LibSpecPyTorchLightning
+_TorchMetrics = LibSpecTorchMetrics
+_TorchVision  = LibSpecTorchVision
 
 class ComponetSpecMeta(type):
     def __new__(mcls, name, base, attrs):
@@ -104,6 +108,21 @@ class CallbackSpec(metaclass=ComponetSpecMeta):
     PROVIDERS = [_Native, _Lightning]
     INSTANCE_TYPE = Callback
 
+class LoggerSpec(metaclass=ComponetSpecMeta):
+    TYPE = ComponentType.LOGGER
+    PROVIDERS = [_Native, _Lightning]
+    INSTANCE_TYPE = Logger
+
+class MetricV2Spec(metaclass=ComponetSpecMeta):
+    TYPE = ComponentType.METRICV2
+    PROVIDERS = [_Native, _TorchMetrics]
+    INSTANCE_TYPE = MetricV2
+
+class SamplerSpec(metaclass=ComponetSpecMeta):
+    TYPE = ComponentType.SAMPLER
+    PROVIDERS = [_Native, _PyTorch]
+    INSTANCE_TYPE = Sampler
+
 ComponentSpecs = {
     "UNKNOWN": ComponentSpec,
     "MODEL": ModelSpec,
@@ -117,6 +136,8 @@ ComponentSpecs = {
     "TRANSFORM": TransformSpec,
     "DATAMODULE": DataModuleSpec,
     "WORKFLOW": WorkflowSpec,
-    "CALLBACK": CallbackSpec
+    "CALLBACK": CallbackSpec,
+    "LOGGER": LoggerSpec,
+    "SAMPLER": SamplerSpec,
+    "METRICV2": MetricV2Spec
 }
-

@@ -1,5 +1,6 @@
 __all__ = [
     "train",
     "validate",
-    "inference"
+    "inference",
+    "predict"
 ]

@@ -1,0 +1,865 @@
+trainer: &trainer
+  settings:
+    accelerator: gpu
+    devices:
+      - 0
+
+    amp_backend: apex
+    amp_level: O1
+    benchmark: True
+
+    accumulate_grad_batches: 6
+    max_epochs: 32
+
+    multiple_trainloader_mode: min_size
+
+    # num_sanity_val_steps: 0
+    # fast_dev_run: 2
+    # limit_train_batches: 1
+    # limit_val_batches: 1
+
+  callbacks:
+    - name: SharingStrategySetter
+      args:
+        strategy: file_system
+    - name: LearningRateMonitor
+    - name: MetricsAverager
+      args:
+        validation_prog_bar: True
+        training:
+          AP/train:
+            - AP/train_ett
+            - AP/train_ngt
+          Dice/train:
+            - Dice/train_Carina
+            - Dice/train_Diaphragm
+            - Dice/train_ETT
+            - Dice/train_ETT_tip
+            - Dice/train_Lung
+            - Dice/train_NGT
+            - Dice/train_NGT_tip
+            - Dice/train_Trachea
+        validation:
+          AP/val:
+            - AP/val_ett
+            - AP/val_ngt
+          Dice/val:
+            - Dice/val_Carina
+            - Dice/val_Diaphragm
+            - Dice/val_ETT
+            - Dice/val_ETT_tip
+            - Dice/val_Lung
+            - Dice/val_NGT
+            - Dice/val_NGT_tip
+            - Dice/val_Trachea
+    - name: CheckpointMetricSaver
+    - name: ModelCheckpoint
+      args:
+        filename: best_model
+        monitor: AP/val
+        mode: max
+        save_last: true
+        save_top_k: 1
+    - name: ModelSummary
+      args:
+        max_depth: 2
+    - name: LossScheduler
+      args:
+        loss_module: loss_fn.labeled
+        scalings:
+          topo_loss: [2, 0]
+          focal_loss/ett: [0, 2]
+          focal_loss/ngt: [0, 2]
+          sw_dice_loss: [2, 1]
+    - name: CSVPredictionWriter
+      args:
+        output_file: data/clf_pred.csv
+        uid_key: uid
+        pred_keys: [
+          pred_clf_ett_na,
+          pred_clf_ett_normal,
+          pred_clf_ett_abnormal,
+          pred_clf_ngt_na,
+          pred_clf_ngt_normal,
+          pred_clf_ngt_abnormal,
+        ]
+
+workflow:
+  trainer: *trainer
+  name: SemiSupervisedLearning
+  settings:
+    scheduler:
+      interval: epoch
+      frequency: 1
+    decollate:
+      training: [
+        img, img_meta_dict, img_transforms,
+        seg, seg_meta_dict, seg_transforms,
+        clf_ett, clf_ngt,
+        pred_seg,
+        pred_clf_ett, pred_clf_ngt
+        ]
+      validation: [
+        img, img_meta_dict, img_transforms,
+        seg, seg_meta_dict, seg_transforms,
+        clf_ett, clf_ngt,
+        pred_seg,
+        pred_clf
+        ]
+      predict: [
+        img, img_meta_dict, img_transforms,
+        pred_seg,
+        pred_clf
+        ]
+
+  components:
+    model:
+      name: ContrastiveUNet
+      path: manafaln.models.contrastive_unet
+      input_keys: img
+      output_keys: [pred_seg, features, pred_clf]
+      args:
+        encoder_name: timm-resnest50d
+
+    post_processing:
+      - name: Reshaped
+        args:
+          keys: pred_clf
+          shape: [-1, 2, 3]
+      - name: SplitDimd   # (B, 2, 3) -> (B, 3), (B, 3)
+        args:
+          keys: pred_clf
+          keepdim: false
+          dim: 1
+          output_postfixes: [ett, ngt]
+          update_meta: False
+      - name: Dilationd
+        args:
+          keys: [pred_seg, seg]
+          dilate: [3, 3]
+          mode: max
+          batched: true
+          allow_missing_keys: true
+
+    loss:
+      labeled:
+        - name: TopologyLoss
+          log_label: topo_loss
+          input_keys: pred_seg
+          args:
+            betti: [1, 1, 1, 2, 1, 1, 1, 1]
+            weights: [1, 0, 1, 0, 0, 0, 0, 0]
+        - name: ClassificationFocalLoss
+          log_label: focal_loss/ett
+          input_keys: [pred_clf_ett, clf_ett]
+          factor: 0.5
+          args:
+            gamma: 2
+            alpha: [1, 1, 3]
+            smooth: 0.1
+        - name: ClassificationFocalLoss
+          log_label: focal_loss/ngt
+          input_keys: [pred_clf_ngt, clf_ngt]
+          factor: 0.5
+          args:
+            gamma: 2
+            alpha: [1, 1, 5]
+            smooth: 0.1
+        - name: SWDiceLoss
+          log_label: sw_dice_loss
+          input_keys: [pred_seg, seg]
+          args:
+            sigmoid: true
+            # 0 ETT, 1 Trachea, 2 NGT, 3 Lung, 4 Diaphragm, 5 ETT_tip, 6 NGT_tip, 7 Carina
+            weight: [1, 2, 2, 0.25, 1, 8, 8, 8]
+            poi: [5, 7, 6, -1, -1, -1, -1, -1]
+            sigma: 0.0833333333 # 1/12
+      unlabeled:
+        - name: TopologyLoss
+          log_label: topo_loss_unlabeled
+          input_keys: pred_seg
+          args:
+            betti: [1, 1, 1, 2, 1, 1, 1, 1]
+            weights: [1, 0, 1, 0, 0, 0, 0, 0]
+
+    optimizer:
+      name: AdamW
+      args:
+        lr: 3.0e-4
+        weight_decay: 1.0e-5
+        amsgrad: true
+
+    scheduler:
+      name: CosineAnnealingWarmRestarts
+      args:
+        T_0: 4
+        T_mult: 1
+
+    post_transforms:
+      #####################################
+      # Training Post Transforms
+      #####################################
+      training:
+        #####################################
+        # Segmentation
+        #####################################
+        - name: Activationsd
+          args:
+            keys: pred_seg
+            sigmoid: true
+        - name: AsDiscreted
+          args:
+            keys: pred_seg
+            threshold: 0.5
+        - name: Unsqueezed
+          args:
+            keys: [seg, pred_seg]
+            dim: 0
+        - name: EnsureTyped
+          args:
+            keys: seg
+            dtype: int
+        - name: SplitDimd
+          args:
+            keys: [seg, pred_seg]
+            keepdim: true
+            dim: 1
+            output_postfixes: [ETT, Trachea, NGT, Lung, Diaphragm, ETT_tip, NGT_tip, Carina]
+
+        #####################################
+        # Classification Label
+        #####################################
+        - name: AsDiscreted       # clf_xxx: (3, ) -> (1, )
+          args:
+            keys: [clf_ett, clf_ngt]
+            argmax: true
+        - name: CopyItemsd
+          args:
+            keys: [clf_ett, clf_ngt]
+            names: [clf_ett_abnormal, clf_ngt_abnormal]
+        - name: MapLabelValued
+          args:
+            keys: [clf_ett_abnormal, clf_ngt_abnormal]
+            orig_labels: [0, 1, 2]
+            target_labels: [0, 0, 1]
+        - name: EnsureTyped
+          args:
+            keys: [clf_ett, clf_ngt, clf_ett_abnormal, clf_ngt_abnormal]
+            dtype: int
+
+        #####################################
+        # Classification Prediction
+        #####################################
+        - name: Activationsd      # pred_clf_xxx: (3, ) -> (3, )
+          args:
+            keys: [pred_clf_ett, pred_clf_ngt]
+            softmax: true
+        - name: SplitDimd         # pred_clf_xxx: (3, ) -> pred_clf_xxx_xxxxx: (1, )
+          args:
+            keys: [pred_clf_ett, pred_clf_ngt]
+            keepdim: True
+            dim: 0
+            output_postfixes: [na, normal, abnormal]
+
+
+      #####################################
+      # Validation Post Transforms
+      #####################################
+      validation:
+        #####################################
+        # Postprocessing
+        #####################################
+        - name: Reshaped
+          args:
+            keys: pred_clf
+            shape: [2, 3]
+        - name: SplitDimd   # pred_clf: (2, 3) -> pred_clf_xxx: (3, )
+          args:
+            keys: pred_clf
+            keepdim: false
+            dim: 0
+            output_postfixes: [ett, ngt]
+            update_meta: False
+        - name: Dilationd
+          args:
+            keys: [pred_seg, seg]
+            dilate: [3, 3]
+            mode: max
+
+        #####################################
+        # Segmentation
+        #####################################
+        - name: Activationsd
+          args:
+            keys: pred_seg
+            sigmoid: true
+        - name: AsDiscreted
+          args:
+            keys: pred_seg
+            threshold: 0.5
+        - name: Unsqueezed
+          args:
+            keys: [seg, pred_seg]
+            dim: 0
+        - name: EnsureTyped
+          args:
+            keys: seg
+            dtype: int
+        - name: SplitDimd
+          args:
+            keys: [seg, pred_seg]
+            keepdim: true
+            dim: 1
+            output_postfixes: [ETT, Trachea, NGT, Lung, Diaphragm, ETT_tip, NGT_tip, Carina]
+
+        #####################################
+        # Classification Label
+        #####################################
+        - name: AsDiscreted       # clf_xxx: (3, ) -> (1, )
+          args:
+            keys: [clf_ett, clf_ngt]
+            argmax: true
+        - name: CopyItemsd
+          args:
+            keys: [clf_ett, clf_ngt]
+            names: [clf_ett_abnormal, clf_ngt_abnormal]
+        - name: MapLabelValued
+          args:
+            keys: [clf_ett_abnormal, clf_ngt_abnormal]
+            orig_labels: [0, 1, 2]
+            target_labels: [0, 0, 1]
+        - name: EnsureTyped
+          args:
+            keys: [clf_ett, clf_ngt, clf_ett_abnormal, clf_ngt_abnormal]
+            dtype: int
+
+        #####################################
+        # Classification Prediction
+        #####################################
+        - name: Activationsd      # pred_clf_xxx: (3, ) -> (3, )
+          args:
+            keys: [pred_clf_ett, pred_clf_ngt]
+            softmax: true
+        - name: SplitDimd         # pred_clf_xxx: (3, ) -> pred_clf_xxx_xxxxx: (1, )
+          args:
+            keys: [pred_clf_ett, pred_clf_ngt]
+            keepdim: True
+            dim: 0
+            output_postfixes: [na, normal, abnormal]
+
+      predict:
+        # Postprocessing
+        - name: Reshaped
+          args:
+            keys: pred_clf
+            shape: [2, 3]
+        - name: SplitDimd   # pred_clf: (2, 3) -> pred_clf_xxx: (3, )
+          args:
+            keys: pred_clf
+            keepdim: false
+            dim: 0
+            output_postfixes: [ett, ngt]
+        - name: Dilationd
+          args:
+            keys: pred_seg
+            mode: max
+            dilate: [3, 3]
+
+        #####################################
+        # Segmentation
+        #####################################
+        - name: Activationsd
+          args:
+            keys: pred_seg
+            sigmoid: true
+        - name: AsDiscreted
+          args:
+            keys: pred_seg
+            threshold: 0.5
+        - name: EnsureTyped
+          args:
+            keys: [pred_seg, img_meta_dict]
+            data_type: numpy
+        - name: SaveSplitImaged
+          args:
+            keys: pred_seg
+            output_postfixes: [ETT, Trachea, NGT, Lung, Diaphragm, ETT_tip, NGT_tip, Carina]
+            channel_dim: 0
+            meta_keys: img_meta_dict
+            output_dir: /work/oxr/predict
+            print_log: false
+            output_ext: png
+            output_dtype: uint8
+            scale: 255
+            resample: true
+
+        #####################################
+        # Classification Prediction
+        #####################################
+        - name: Activationsd
+          args:
+            keys: [pred_clf_ett, pred_clf_ngt]
+            softmax: true
+        - name: EnsureTyped
+          args:
+            keys: [pred_clf_ett, pred_clf_ngt]
+            data_type: numpy
+        - name: SplitDimd
+          args:
+            keys: [pred_clf_ett, pred_clf_ngt]
+            keepdim: false
+            dim: 0
+            output_postfixes: [na, normal, abnormal]
+
+    metrics:
+      training:
+        - name: BinaryAveragePrecision
+          path: torchmetrics.classification
+          log_label: AP/train_ett
+          input_keys: [pred_clf_ett_abnormal, clf_ett_abnormal]
+        - name: BinaryAveragePrecision
+          path: torchmetrics.classification
+          log_label: AP/train_ngt
+          input_keys: [pred_clf_ngt_abnormal, clf_ngt_abnormal]
+        - name: MONAI
+          log_label: Dice/train_ETT
+          input_keys: [pred_seg_ETT, seg_ETT]
+          args:
+            name: DiceMetric
+        - name: MONAI
+          log_label: Dice/train_NGT
+          input_keys: [pred_seg_NGT, seg_NGT]
+          args:
+            name: DiceMetric
+        - name: MONAI
+          log_label: Dice/train_Trachea
+          input_keys: [pred_seg_Trachea, seg_Trachea]
+          args:
+            name: DiceMetric
+        - name: MONAI
+          log_label: Dice/train_Lung
+          input_keys: [pred_seg_Lung, seg_Lung]
+          args:
+            name: DiceMetric
+        - name: MONAI
+          log_label: Dice/train_Diaphragm
+          input_keys: [pred_seg_Diaphragm, seg_Diaphragm]
+          args:
+            name: DiceMetric
+        - name: MONAI
+          log_label: Dice/train_ETT_tip
+          input_keys: [pred_seg_ETT_tip, seg_ETT_tip]
+          args:
+            name: DiceMetric
+        - name: MONAI
+          log_label: Dice/train_NGT_tip
+          input_keys: [pred_seg_NGT_tip, seg_NGT_tip]
+          args:
+            name: DiceMetric
+        - name: MONAI
+          log_label: Dice/train_Carina
+          input_keys: [pred_seg_Carina, seg_Carina]
+          args:
+            name: DiceMetric
+      validation:
+        - name: BinaryAveragePrecision
+          path: torchmetrics.classification
+          log_label: AP/val_ett
+          input_keys: [pred_clf_ett_abnormal, clf_ett_abnormal]
+        - name: BinaryAveragePrecision
+          path: torchmetrics.classification
+          log_label: AP/val_ngt
+          input_keys: [pred_clf_ngt_abnormal, clf_ngt_abnormal]
+        - name: MONAI
+          log_label: Dice/val_ETT
+          input_keys: [pred_seg_ETT, seg_ETT]
+          args:
+            name: DiceMetric
+        - name: MONAI
+          log_label: Dice/val_NGT
+          input_keys: [pred_seg_NGT, seg_NGT]
+          args:
+            name: DiceMetric
+        - name: MONAI
+          log_label: Dice/val_Trachea
+          input_keys: [pred_seg_Trachea, seg_Trachea]
+          args:
+            name: DiceMetric
+        - name: MONAI
+          log_label: Dice/val_Lung
+          input_keys: [pred_seg_Lung, seg_Lung]
+          args:
+            name: DiceMetric
+        - name: MONAI
+          log_label: Dice/val_Diaphragm
+          input_keys: [pred_seg_Diaphragm, seg_Diaphragm]
+          args:
+            name: DiceMetric
+        - name: MONAI
+          log_label: Dice/val_ETT_tip
+          input_keys: [pred_seg_ETT_tip, seg_ETT_tip]
+          args:
+            name: DiceMetric
+        - name: MONAI
+          log_label: Dice/val_NGT_tip
+          input_keys: [pred_seg_NGT_tip, seg_NGT_tip]
+          args:
+            name: DiceMetric
+        - name: MONAI
+          log_label: Dice/val_Carina
+          input_keys: [pred_seg_Carina, seg_Carina]
+          args:
+            name: DiceMetric
+        - name: CentroidDistance
+          path: manafaln.metrics
+          log_label: Dist/val_ETT_tip
+          input_keys: [pred_seg_ETT_tip, seg_ETT_tip, img_meta_dict]
+        - name: CentroidDistance
+          path: manafaln.metrics
+          log_label: Dist/val_NGT_tip
+          input_keys: [pred_seg_NGT_tip, seg_NGT_tip, img_meta_dict]
+        - name: CentroidDistance
+          path: manafaln.metrics
+          log_label: Dist/val_Carina
+          input_keys: [pred_seg_Carina, seg_Carina, img_meta_dict]
+
+data:
+  name: SemiSupervisedDataModule
+
+  settings:
+    data_list: data/catheter_datalist.json
+
+  training:
+    labeled:
+      data_list_key:
+        - fold_0
+        - fold_1
+        - fold_2
+        - fold_3
+      transforms:
+        - name: LoadDicom2Dd
+          args:
+            keys: img
+        - name: EnsureChannelFirstd
+          args:
+            keys: img
+            channel_dim: no_channel
+        - name: Resized
+          args:
+            keys: img
+            spatial_size: [512, 512]
+        - name: CLAHEd
+          path: manafaln.transforms
+          args:
+            keys: img
+            kernel_sizes: [0.02, 0.05, 0.10]
+            clip_limits: [0.05, 0.1, 0.5]
+        - name: SaveSplitImaged
+          args:
+            keys: img
+            output_postfixes: [ker0.02_clip0.05, ker0.02_clip0.1, ker0.02_clip0.5, ker0.05_clip0.05, ker0.05_clip0.1, ker0.05_clip0.5, ker0.1_clip0.05, ker0.1_clip0.1, ker0.1_clip0.5]
+            meta_keys: img_meta_dict
+            output_dir: /work/oxr/visual/img/train
+            print_log: false
+            output_ext: png
+            output_dtype: uint8
+            scale: 255
+            resample: true
+        - name: LoadJSONd
+          args:
+            keys: seg
+            json_keys: [ETT, Trachea, NGT, Lung, Diaphragm]
+        - name: Interpolated
+          args:
+            keys: seg
+            spatial_size: [512, 512]
+        - name: Filld
+          args:
+            keys: seg
+            mask_idx: [1, 3]
+        - name: FillHorizontald
+          args:
+            keys: seg
+            mask_idx: [0]
+        - name: DrawLowestd
+          args:
+            keys: seg
+            spatial_size: [512, 512]
+            apply_index: 0
+        - name: DrawLastd
+          args:
+            keys: seg
+            spatial_size: [512, 512]
+            apply_index: 2
+        - name: DrawBottomd
+          args:
+            keys: seg
+            spatial_size: [512, 512]
+            apply_index: 1
+        - name: DeleteItemsd
+          args:
+            keys: seg_meta_dict.meta_points
+        - name: SaveSplitImaged
+          args:
+            keys: seg
+            output_postfixes: [ETT, Trachea, NGT, Lung, Diaphragm, ETT_tip, NGT_tip, Carina]
+            meta_keys: img_meta_dict
+            output_dir: /work/oxr/visual/seg/train
+            print_log: false
+            output_ext: png
+            output_dtype: uint8
+            scale: 255
+            resample: true
+        - name: RandAdjustContrastd
+          args:
+            keys: img
+            prob: 1.0
+            gamma: [0.5, 2.0]
+        - name: RandGaussianNoised
+          args:
+            keys: img
+            prob: 1.0
+            mean: 0
+            std: 0.05
+        - name: RandCoarseDropoutd
+          args:
+            keys: [img, seg]
+            prob: 0.5
+            holes: 1
+            max_holes: 3
+            spatial_size: [8, 32]
+            max_spatial_size: [32, 128]
+            fill_value: null
+        - name: RandGridDistortiond
+          args:
+            keys: [img, seg]
+            prob: 0.2
+            distort_limit: [-0.1, 0.1]
+            padding_mode: zeros
+        - name: RandAffined
+          args:
+            keys: [img, seg]
+            prob: 1.0
+            rotate_range: 0.25
+            shear_range: 0.2
+            translate_range: 0.1
+            scale_range: 0.2
+            padding_mode: zeros
+        - name: EnsureTyped
+          args:
+            keys: [img, seg, img_meta_dict, seg_meta_dict, clf_ett, clf_ngt]
+            dtype: float32
+      dataset:
+        name: CacheNTransDataset
+        args:
+          cache_n_trans: 14
+          cache_dir: /work/oxr/cache/training
+      dataloader:
+        name: DataLoader
+        args:
+          batch_size: 4
+          shuffle: false
+          num_workers: 3
+          drop_last: True
+          sampler:
+            name: MultiLabelRatioSampler
+            path: manafaln.data
+            args:
+              key: [clf_ett, clf_ngt]
+              include_indices: 2
+              ratio: 1
+              channel_dim: 0
+    unlabeled:
+      data_list_key:
+        - CLiP_with_seg
+        - CLiP_without_seg
+      transforms:
+        - name: LoadImaged
+          args:
+            keys: img
+        - name: EnsureChannelFirstd
+          args:
+            keys: img
+            channel_dim: no_channel
+        - name: Resized
+          args:
+            keys: img
+            spatial_size: [512, 512]
+        - name: CLAHEd
+          path: manafaln.transforms
+          args:
+            keys: img
+            kernel_sizes: [0.02, 0.05, 0.10]
+            clip_limits: [0.05, 0.1, 0.5]
+        - name: SaveSplitImaged
+          args:
+            keys: img
+            output_postfixes: [ker0.02_clip0.05, ker0.02_clip0.1, ker0.02_clip0.5, ker0.05_clip0.05, ker0.05_clip0.1, ker0.05_clip0.5, ker0.1_clip0.05, ker0.1_clip0.1, ker0.1_clip0.5]
+            meta_keys: img_meta_dict
+            output_dir: /work/oxr/visual/img/clip
+            print_log: false
+            output_ext: png
+            output_dtype: uint8
+            scale: 255
+            resample: true
+        - name: EnsureTyped
+          args:
+            keys: [img, img_meta_dict]
+            dtype: float32
+        - name: DeleteItemsd
+          args:
+            keys: seg
+      dataset:
+        name: CacheNTransDataset
+        args:
+          cache_n_trans: 5
+          cache_dir: /work/oxr/cache/training
+      dataloader:
+        name: DataLoader
+        args:
+          batch_size: 2
+          shuffle: True
+          num_workers: 2
+          drop_last: True
+  validation:
+    data_list_key:
+      - fold_4
+    transforms:
+      - name: LoadDicom2Dd
+        args:
+          keys: img
+      - name: EnsureChannelFirstd
+        args:
+          keys: img
+          channel_dim: no_channel
+      - name: Resized
+        args:
+          keys: img
+          spatial_size: [512, 512]
+      - name: CLAHEd
+        path: manafaln.transforms
+        args:
+          keys: img
+          kernel_sizes: [0.02, 0.05, 0.10]
+          clip_limits: [0.05, 0.1, 0.5]
+      - name: SaveSplitImaged
+        args:
+          keys: img
+          output_postfixes: [ker0.02_clip0.05, ker0.02_clip0.1, ker0.02_clip0.5, ker0.05_clip0.05, ker0.05_clip0.1, ker0.05_clip0.5, ker0.1_clip0.05, ker0.1_clip0.1, ker0.1_clip0.5]
+          meta_keys: img_meta_dict
+          output_dir: /work/oxr/visual/img/train
+          print_log: false
+          output_ext: png
+          output_dtype: uint8
+          scale: 255
+          resample: true
+      - name: LoadJSONd
+        args:
+          keys: seg
+          json_keys: [ETT, Trachea, NGT, Lung, Diaphragm]
+      - name: Interpolated
+        args:
+          keys: seg
+          spatial_size: [512, 512]
+      - name: Filld
+        args:
+          keys: seg
+          mask_idx: [1, 3]
+      - name: FillHorizontald
+        args:
+          keys: seg
+          mask_idx: [0]
+      - name: DrawLowestd
+        args:
+          keys: seg
+          spatial_size: [512, 512]
+          apply_index: 0
+      - name: DrawLastd
+        args:
+          keys: seg
+          spatial_size: [512, 512]
+          apply_index: 2
+      - name: DrawBottomd
+        args:
+          keys: seg
+          spatial_size: [512, 512]
+          apply_index: 1
+      - name: SaveSplitImaged
+        args:
+          keys: seg
+          output_postfixes: [ETT, Trachea, NGT, Lung, Diaphragm, ETT_tip, NGT_tip, Carina]
+          meta_keys: img_meta_dict
+          output_dir: /work/oxr/visual/seg/train
+          print_log: false
+          output_ext: png
+          output_dtype: uint8
+          scale: 255
+          resample: true
+      - name: DeleteItemsd
+        args:
+          keys: seg_meta_dict.meta_points
+      - name: EnsureTyped
+        args:
+          keys: [img, seg, img_meta_dict, seg_meta_dict, clf_ett, clf_ngt]
+          dtype: float32
+    dataset:
+      name: CacheNTransDataset
+      args:
+        cache_n_trans: 14
+        cache_dir: /work/oxr/cache/training
+    dataloader:
+      name: DataLoader
+      args:
+        batch_size: 32
+        shuffle: false
+        num_workers: 8
+
+  predict:
+    data_list_key:
+      - NTUH-20
+      - NTUH-YB
+    transforms:
+      - name: LoadDicom2Dd
+        args:
+          keys: img
+      - name: EnsureChannelFirstd
+        args:
+          keys: img
+          channel_dim: no_channel
+      - name: Resized
+        args:
+          keys: img
+          spatial_size: [512, 512]
+      - name: CLAHEd
+        path: manafaln.transforms
+        args:
+          keys: img
+          kernel_sizes: [0.02, 0.05, 0.10]
+          clip_limits: [0.05, 0.1, 0.5]
+      - name: SaveSplitImaged
+        args:
+          keys: img
+          output_postfixes: [ker0.02_clip0.05, ker0.02_clip0.1, ker0.02_clip0.5, ker0.05_clip0.05, ker0.05_clip0.1, ker0.05_clip0.5, ker0.1_clip0.05, ker0.1_clip0.1, ker0.1_clip0.5]
+          meta_keys: img_meta_dict
+          output_dir: /work/oxr/visual/img/test
+          print_log: false
+          output_ext: png
+          output_dtype: uint8
+          scale: 255
+          resample: true
+      - name: EnsureTyped
+        args:
+          keys: [img, img_meta_dict]
+          dtype: float32
+
+    dataset:
+      name: CacheNTransDataset
+      args:
+        cache_n_trans: 5
+        cache_dir: /work/oxr/cache/testing
+    dataloader:
+      name: DataLoader
+      args:
+        batch_size: 1
+        shuffle: false
+        num_workers: 1

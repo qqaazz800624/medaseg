@@ -8,6 +8,7 @@ __all__ = [
     "transforms",
     "metrics",
     "models",
+    "loggers",
     "losses",
     "utils",
     "workflow"

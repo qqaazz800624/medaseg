@@ -1,3 +1,5 @@
+from typing import Dict, List
+
 from torch import Tensor
 from pytorch_lightning import Trainer
 
@@ -8,7 +10,11 @@ from manafaln.apps.utils import (
     build_callbacks
 )
 
-def run(config_train, config_data, config_workflow, ckpt):
+def run(config_train, config_data, config_workflow, ckpt) -> List[Dict[str, float]]:
+    """
+    Returns:
+        List[Dict[str, float]]: Computed metrics of different dataloaders.
+    """
     # Configure data module (only val_dataloader will be used)
     data = build_data_module(config_data)
 
@@ -33,6 +39,9 @@ def run(config_train, config_data, config_workflow, ckpt):
 
     # Start validation
     metrics = trainer.validate(workflow, data.val_dataloader(), ckpt_path=ckpt)
+
+    # Return metrics
+    return metrics
 
 if __name__ == "__main__":
     c = ValidateConfigurator()

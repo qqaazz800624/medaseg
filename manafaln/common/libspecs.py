@@ -16,10 +16,13 @@ class LibSpecNative(metaclass=LibSpecMeta):
     MODEL      = "manafaln.models"
     LOSS       = "manafaln.losses"
     METRIC     = "manafaln.metrics"
+    METRICV2   = "manafaln.metrics"
     TRANSFORM  = "manafaln.transforms"
     DATAMODULE = "manafaln.data"
     WORKFLOW   = "manafaln.workflow"
     CALLBACK   = "manafaln.callbacks"
+    LOGGER     = "manafaln.loggers"
+    SAMPLER    = "manafaln.data"
 
 class LibSpecMONAI(metaclass=LibSpecMeta):
     MODEL      = "monai.networks.nets"
@@ -36,11 +39,15 @@ class LibSpecPyTorch(metaclass=LibSpecMeta):
     LOSS      = "torch.nn"
     OPTIMIZER = "torch.optim"
     SCHEDULER = "torch.optim.lr_scheduler"
+    SAMPLER   = "torch.utils.data"
 
 class LibSpecPyTorchLightning(metaclass=LibSpecMeta):
     CALLBACK = "pytorch_lightning.callbacks"
+    LOGGER   = "pytorch_lightining.loggers"
 
 class LibSpecTorchVision(metaclass=LibSpecMeta):
     MODEL   = "torchvision.models"
     DATASET = "torchvision.datasets"
 
+class LibSpecTorchMetrics(metaclass=LibSpecMeta):
+    METRICV2 = "torchmetrics"

@@ -121,4 +121,3 @@ class AsDiscreted(MapTransform):
         ):
             d[key] = self.converter(d[key], argmax, to_onehot, threshold, rounding)
         return d
-

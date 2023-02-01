@@ -26,9 +26,9 @@ class DecathlonDataModule(LightningDataModule):
         settings = config["settings"]
 
         # Must get configurations
-        self.data_root       = settings["data_root"]
         self.data_list       = settings["data_list"]
-        self.is_segmentation = settings["is_segmentation"]
+        self.data_root       = settings.get("data_root", None)
+        self.is_segmentation = settings.get("is_segmentation", True)
 
         # Optional configurations
         # Use SHM if you have large size ram disk
@@ -94,11 +94,19 @@ class DecathlonDataModule(LightningDataModule):
             self.test_dataset = self.build_dataset(config)
         return self.test_dataset
 
+    def get_predict_dataset(self):
+        dataset = getattr(self, "predict_dataset", None)
+        if dataset is None:
+            config = self.hparams.data["predict"]
+            self.predict_dataset = self.build_dataset(config)
+        return self.predict_dataset
+
     def build_loader(self, phase: str):
         phase_to_dataset = {
             "training": self.get_train_dataset,
             "validation": self.get_val_dataset,
-            "test": self.get_test_dataset
+            "test": self.get_test_dataset,
+            "predict": self.get_predict_dataset
         }
 
         if not phase in phase_to_dataset.keys():
@@ -125,3 +133,5 @@ class DecathlonDataModule(LightningDataModule):
     def test_dataloader(self):
         return self.build_loader(phase="test")
 
+    def predict_dataloader(self):
+        return self.build_loader(phase="predict")

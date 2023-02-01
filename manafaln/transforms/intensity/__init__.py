@@ -8,3 +8,8 @@ from .normalize import (
     NormalizeIntensityRange,
     NormalizeIntensityRanged
 )
+
+from .clahe import (
+    CLAHE,
+    CLAHEd
+)

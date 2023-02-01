@@ -4,7 +4,7 @@ import torch
 import monai
 from monai.transforms import Decollated
 from pytorch_lightning import LightningModule
-from pytorch_lightning.utilities.distributed import rank_zero_only
+from pytorch_lightning.utilities import rank_zero_only
 
 from manafaln.core.metric import MetricCollection
 from manafaln.core.builders import (

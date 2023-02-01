@@ -1,12 +1,14 @@
-from typing import List, Union, Optional
+from typing import List, Union, Optional, Sequence
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from torch.nn.modules.loss import _Loss
 from monai.losses import DiceLoss, FocalLoss
 from monai.networks import one_hot
 from monai.utils import DiceCEReduction, Weight, look_up_option
 
+from manafaln.utils import SpatialWeightedMixin
 from .mcc import MCCLoss
 
 class MultipleBackgroundDiceFocalLoss(_Loss):
@@ -142,4 +144,104 @@ class MultipleBackgroundDiceCELoss(_Loss):
 
     def forward(self, input: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
         return self.loss(input, target)
+
+class SWDiceLoss(_Loss, SpatialWeightedMixin):
+    """
+    Compute Spatial-weighted Dice loss between two tensors.
+    Spatial-weight is designed such that the weight is higher if closer to POI.
+    It only supports multi-labels tasks of 2D inputs.
+    The data `output` (B, C, H, W) is compared with ground truth `target` (B, C, H, W).
+    Note that `output` is expected to be logits.
+
+    $$
+    \sum_{n=1}^{W\times H} w_n = W\times H \nonumber
+    SW-Dice(\hat{y}, y) = 1 - \frac{2\sum_{n=1}^{W\times H} w_n \cdot y_n \cdot\hat{y}_n}
+        {\sum_{n=1}^{W\times H} w_n \cdot y_n +\sum_{n=1}^{W\times H} w_n \cdot \hat{y}_n}
+    $$
+    """
+    def __init__(self,
+            sigmoid: bool=True,
+            weight: Sequence[float]=None,
+            poi: Optional[Sequence[int]]=None,
+            sigma: float = 1/12,
+            gamma: Optional[float]=None,
+            log: bool=False,
+            smooth: float = 1e-5,
+        ):
+        _Loss.__init__(self)
+        SpatialWeightedMixin.__init__(self, poi=poi, sigma=sigma)
+        self.weight = weight
+        self.sigmoid = sigmoid
+        self.smooth = smooth
+        self.log = log
+        self.gamma = gamma
+
+    def forward(self,
+            input: torch.Tensor,    # Input logit or probability mask, shape: (B, C, H, W)
+            target: torch.Tensor    # Target probability mask, shape: (B, C, H, W)
+        ) -> torch.Tensor:
+
+        if input.size() != target.size():
+            raise ValueError(
+                f"input and target needs to be have shape, got input {input.size()} and target {target.size()}"
+            )
+
+        # If input is logit
+        if self.sigmoid:
+            # Read output logit mask and apply sigmoid to probability, shape: (B, C, H, W)
+            input = torch.sigmoid(input)
+
+        # Get shape of output, shape: ()
+        B, C, H, W = input.size()
+
+        # Get spatial weights, shape: (B, C, H, W)
+        spatial_weight = self.get_spatial_weights(target)
+
+        # Reshape to spatial dims over instances and channels, shape: (B*C, H*W)
+        input = input.view(B*C, H*W)
+        target = target.view(B*C, H*W)
+        spatial_weight = spatial_weight.view(B*C, H*W)
+
+        # Compute dice score, shape: (B*C, )
+        numerator = 2 * (spatial_weight * input * target).sum(dim=1) + self.smooth
+        denominator = (spatial_weight * input).sum(dim=1) + (spatial_weight * target).sum(dim=1) + self.smooth
+        dice = numerator / denominator
+
+        # Compute dice loss, shape: (B*C, )
+        # Use log variation if self.log is True
+        if self.log:
+            loss = -1 * dice.log()
+        # Else use standard dice loss
+        else:
+            loss = 1 - dice
+
+        # Gamma for focal weight, shape: (B*C, )
+        if self.gamma is not None:
+            loss = loss**self.gamma
+
+        # Reshape loss (B*C, ) => (B, C)
+        loss = loss.view(B, C)
+
+        # Compute loss over channels for each instance, shape: (B, )
+        # If channel weights are given
+        if self.weight is not None:
+            # Get channel weights, shape: (C, )
+            weight = torch.tensor(self.weight).to(loss.device)
+            # Normalize to sum 1, shape: (C,)
+            weight = F.normalize(weight, p=1, dim=0)
+            # Compute the weighted average over channels, shape: (B, )
+            loss = (weight*loss).sum(-1)
+        # Else if channel weights are not given
+        else:
+            # Simply average over channelsm shape: (B, )
+            loss = loss.mean(-1)
+
+        # Mean of loss over instances, shape: ()
+        loss = loss.mean()
+
+        if loss < 0:
+            raise RuntimeError(f"Invalid Dice loss value: {loss}")
+
+        # Return loss, shape: ()
+        return loss
 

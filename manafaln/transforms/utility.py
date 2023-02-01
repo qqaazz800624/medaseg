@@ -1,5 +1,6 @@
 from typing import Dict, Hashable, Mapping, Optional, Sequence, Union
 from numbers import Real
+import os
 
 import torch
 import numpy as np
@@ -40,7 +41,7 @@ class Unsqueezed(MapTransform):
     ) -> Dict[Hashable, NdarrayOrTensor]:
         d = dict(data)
         for key, dim in self.key_iterator(d, self.dim):
-            d[key] = self.converter(d[key])
+            d[key] = self.converter(d[key], dim)
         return d
 
 class ScalarToNumpyArrayd(MapTransform):
@@ -59,3 +60,10 @@ class ScalarToNumpyArrayd(MapTransform):
             if isinstance(d[key], Real):
                 d[key] = np.array([d[key]])
         return d
+
+class Exit(Transform):
+    def __init__(self, *args, **kwargs):
+        pass
+
+    def __call__(self, *args, **kwargs):
+        os._exit(os.EX_OK)

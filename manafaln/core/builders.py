@@ -2,11 +2,11 @@ import abc
 import inspect
 import importlib
 import logging
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Sized
 
 import torch
 from torch.optim import Optimizer
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset, Sampler
 from manafaln.common.constants import ComponentType
 from manafaln.common.componentspecs import ComponentSpecs
 
@@ -190,6 +190,13 @@ class DataLoaderBuilder(ComponentBuilder):
         args = [dataset]
         kwargs = config.get("args", {})
 
+        sampler_config = kwargs.get("sampler", None)
+        if sampler_config is not None:
+            sampler_builder = SamplerBuilder()
+            data_source = dataset.data
+            sampler: Sampler = sampler_builder(sampler_config, data_source)
+            kwargs["sampler"] = sampler
+
         out = self._build_instance(spec, name, path, args, kwargs)
         if out is None:
             raise RuntimeError(f"Could not found {name} in supported libraries.")
@@ -304,3 +311,42 @@ class CallbackBuilder(ComponentBuilder):
     ):
         super().__init__(component_type, check_instance)
 
+class LoggerBuilder(ComponentBuilder):
+    def __init__(
+        self,
+        component_type: ComponentType = ComponentType.LOGGER,
+        check_instance: bool = True
+    ):
+        super().__init__(component_type, check_instance)
+
+class MetricV2Builder(ComponentBuilder):
+    def __init__(
+        self,
+        component_type: ComponentType = ComponentType.METRICV2,
+        check_instance: bool = True
+    ):
+        super().__init__(component_type, check_instance)
+
+class SamplerBuilder(ComponentBuilder):
+    def __init__(
+        self,
+        component_type: ComponentType = ComponentType.SAMPLER,
+        check_instance: bool = True
+    ):
+        super().__init__(component_type, check_instance)
+
+    def __call__(self, config: Dict, data_source: Sized) -> Sampler:
+        name = config["name"]
+        path = config.get("path", None)
+        spec = ComponentSpecs[self.component_type.name]
+        args = [data_source]
+        kwargs = config.get("args", {})
+
+        out = self._build_instance(spec, name, path, args, kwargs)
+        if out is None:
+            raise RuntimeError(f"Could not found {name} in supported libraries.")
+
+        if self.check_instance:
+            self._check_instance(spec, out)
+
+        return out

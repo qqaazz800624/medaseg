@@ -4,9 +4,9 @@ from setuptools import setup, find_packages
 
 setup(
     name="manafaln",
-    version="0.4.0",
-    author="Pochuan Wang",
-    author_email="d08922016@csie.ntu.edu.tw",
+    version="0.5.0",
+    author=["Pochuan Wang", "Tianyu Hwang"],
+    author_email=["d08922016@csie.ntu.edu.tw", "tyhwang@ncts.ntu.edu.tw"],
     packages=find_packages(),
     include_package_data=True,
     install_requires=[

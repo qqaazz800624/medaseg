@@ -81,4 +81,3 @@ class MetricCollection:
     def reset(self) -> None:
         for m in self.metrics:
             m.reset()
-

@@ -1,13 +1,15 @@
 from typing import Dict, Optional
 
-from pytorch_lightning import Trainer
+import monai
 from monai.utils import set_determinism
+from pytorch_lightning import Trainer
 
 from manafaln.core.configurators import TrainConfigurator
 from manafaln.apps.utils import (
     build_data_module,
     build_workflow,
-    build_callbacks
+    build_callbacks,
+    build_logger,
 )
 
 def run(
@@ -22,6 +24,10 @@ def run(
 
     # Configure workflow
     workflow = build_workflow(config_workflow, ckpt=None)
+
+    # Create logger, defaults to TensorBoardLogger with ruamel saver
+    logger = config_train.get("logger", {"name": "TensorBoardLogger"})
+    logger = build_logger(logger)
 
     # Create callbacks
     callbacks = config_train.get("callbacks", [])
@@ -39,6 +45,7 @@ def run(
     # Create trainer
     trainer = Trainer(
         callbacks=callbacks,
+        logger=logger,
         **config_train["settings"]
     )
 
@@ -57,6 +64,9 @@ if __name__ == "__main__":
     data     = c.get_data_config()
     train    = c.get_trainer_config()
     workflow = c.get_workflow_config()
+
+    # Get random seed for deterministic training
+    seed     = c.get_random_seed()
 
     seed      = c.get_random_seed()
     ckpt_path = c.get_ckpt_path()

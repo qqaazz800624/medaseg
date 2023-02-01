@@ -1,7 +1,12 @@
 from enum import Enum
 
-# This enumerate types of componets
+from monai.utils.enums import StrEnum
+
+
 class ComponentType(Enum):
+    """
+    Enumerate types of components
+    """
     UNKNOWN    = 0
     MODEL      = 1
     LOSS       = 2
@@ -15,9 +20,14 @@ class ComponentType(Enum):
     DATAMODULE = 10
     WORKFLOW   = 11
     CALLBACK   = 12
+    LOGGER     = 13
+    SAMPLER    = 14
+    METRICV2   = 15
 
-# The default paths for each component are for the dynamic modeue loader
-class ComponentPaths:
+class ComponentPaths(StrEnum):
+    """
+    The default paths for each component are for the dynamic module loader
+    """
     DEFAULT_MODEL_PATH      = "monai.networks.nets"
     DEFAULT_LOSS_PATH       = "monai.losses"
     DEFAULT_INFERER_PATH    = "monai.inferers"
@@ -30,4 +40,14 @@ class ComponentPaths:
     DEFAULT_DATAMODULE_PATH = "manafaln.data"
     DEFAULT_WORKFLOW_PATH   = "manafaln.workflow"
     DEFAULT_CALLBACK_PATH   = "pytorch_lightning.callbacks"
+    DEFAULT_LOGGER_PATH     = "pytorch_lightining.loggers"
+    DEFAULT_SAMPLER_PATH    = "torch.utils.data.sampler"
+    DEFAULT_METRICV2_PATH   = "torchmetrics"
 
+class DefaultKeys(StrEnum):
+    """
+    The default keys for passing data in workflow
+    """
+    INPUT_KEY = "image"
+    OUTPUT_KEY = "preds"
+    LABEL_KEY = "label"

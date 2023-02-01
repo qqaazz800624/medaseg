@@ -4,3 +4,7 @@ from .augmentations import (
     SimulateLowResolution,
     SimulateLowResolutiond
 )
+from .reshape import (
+    Reshape,
+    Reshaped
+)

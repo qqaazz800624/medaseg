@@ -111,3 +111,6 @@ class IterationMetricSaver(Callback):
             # Cleanup
             self.buffer = []
 
+class CheckpointMetricSaver(Callback):
+    def on_save_checkpoint(self, trainer, pl_module, checkpoint):
+        checkpoint["logged_metrics"] = trainer.logged_metrics
