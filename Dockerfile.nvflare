@@ -1,11 +1,10 @@
 from projectmonai/monai:1.0.1
 
 RUN pip install -U pip && \
-    pip install 'pytorch-lightning>=1.7.0' && \
+    pip install 'pytorch-lightning==1.8.3' && \
     pip install 'nvflare>=2.2.1'
 
 COPY . /opt/manafaln
-RUN cd /opt/manafaln && \
-    python setup.py install && \
+RUN pip install /opt/manafaln && \
     rm -rf /workspace/* && \
     cp -r /opt/manafaln/examples /workspace/examples
