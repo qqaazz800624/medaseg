@@ -1,4 +1,5 @@
 import os
+import copy
 from typing import Dict, List, Literal
 
 import numpy as np
@@ -36,6 +37,7 @@ class SimpleLearner(Learner):
         config_valid: str,
         aggregation_interval: Literal["step", "epoch"] = "epoch",
         aggregation_frequency: int = 10,
+        update_data_kind: Literal["WEIGHTS", "WEIGHT_DIFF"] = "WEIGHTS",
         restore_local_ckpt: str = None,
         train_task_name: str = AppConstants.TASK_TRAIN,
         submit_model_task_name: str = AppConstants.TASK_SUBMIT_MODEL
@@ -52,6 +54,13 @@ class SimpleLearner(Learner):
             raise ValueError("Aggregation interval must be one of 'step' or 'epoch'.")
         self.aggregation_interval = aggregation_interval
         self.aggregation_frequency = aggregation_frequency
+
+        if update_data_kind not in ["WEIGHTS", "WEIGHT_DIFF"]:
+            raise ValueError("Update DataKind must be 'WEIGHTS' or 'WEIGHT_DIFF'")
+        elif update_data_kind == "WEIGHTS":
+            self.update_data_kind = DataKind.WEIGHTS
+        else:
+            self.update_data_kind = DataKind.WEIGHT_DIFF
 
         self.restore_local_ckpt = restore_local_ckpt
 
@@ -199,6 +208,10 @@ class SimpleLearner(Learner):
         self.log_info(fl_ctx, f"Current/Total Round: {current_round + 1}/{total_rounds}")
         self.log_info(fl_ctx, f"Client identity: {fl_ctx.get_identity_name()}")
 
+        # Make a copy of global weight for weight diff
+        dxo = from_shareable(data)
+        global_weights = dxo.data
+
         # Attach signal to handler callback
         self.signal_handler.attach_signal(abort_signal)
 
@@ -215,11 +228,25 @@ class SimpleLearner(Learner):
         meta = {
             MetaKey.NUM_STEPS_CURRENT_ROUND: self.num_steps_current_round
         }
-        dxo = DXO(
-            data_kind=DataKind.WEIGHTS,
-            data=local_weights,
-            meta=meta
-        )
+
+        if self.update_data_kind == DataKind.WEIGHTS:
+            dxo = DXO(
+                data_kind=DataKind.WEIGHTS,
+                data=local_weights,
+                meta=meta
+            )
+        else:
+            weight_diff = {}
+            for var_name in local_weights:
+                weight_diff[var_name] = local_weights[var_name] - global_weights[var_name]
+                if np.any(np.isnan(weight_diff[var_name])):
+                    self.system_panic(f"{var_name} weights became NaN...", fl_ctx)
+                    return make_reply(ReturnCode.EXECUTION_EXCEPTION)
+            dxo = DXO(
+                data_kind=DataKind.WEIGHT_DIFF,
+                data=weight_diff,
+                meta=meta
+            )
         return dxo.to_shareable()
 
     def get_model_for_validation(self, model_name: str, fl_ctx: FLContext) -> Shareable:
@@ -256,7 +283,7 @@ class SimpleLearner(Learner):
 
     def validate(self, data: Shareable, fl_ctx: FLContext, abort_signal: Signal) -> Shareable:
         # 1. Extract data from shareable
-        model_owner = data.get_header(AppConstants.MODEL_OWNER, "?")
+        model_owner = data.get_header(AppConstants.MODEL_OWNER, "global_model")
         validate_type = data.get_header(AppConstants.VALIDATE_TYPE)
 
         # 2. Prepare dataset
