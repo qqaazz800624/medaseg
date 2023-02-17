@@ -19,6 +19,16 @@ def run(
     seed: Optional[int] = None,
     ckpt_path: Optional[str] = None
 ):
+
+    # Set seed for deterministic
+    if seed is not None:
+        # Don't touch algorithm settings here
+        set_determinism(seed=seed)
+        # If deterministic is not set, then set deterministic
+        # If deterministic is set, then don't touch it
+        if "deterministic" not in config_train["settings"].keys():
+            config_train["settings"]["deterministic"] = True
+
     # Configure data first
     data = build_data_module(config_data)
 
@@ -32,15 +42,6 @@ def run(
     # Create callbacks
     callbacks = config_train.get("callbacks", [])
     callbacks = build_callbacks(callbacks)
-
-    # Set seed for deterministic
-    if seed is not None:
-        # Don't touch algorithm settings here
-        set_determinism(seed=seed)
-        # If deterministic is not set, then set deterministic
-        # If deterministic is set, then don't touch it
-        if "deterministic" not in config_train["settings"].keys():
-            config_train["settings"]["deterministic"] = True
 
     # Create trainer
     trainer = Trainer(
