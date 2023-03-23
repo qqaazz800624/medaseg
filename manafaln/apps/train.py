@@ -3,6 +3,7 @@ from typing import Dict, Optional
 import monai
 from monai.utils import set_determinism
 from pytorch_lightning import Trainer
+import monai
 
 from manafaln.core.configurators import TrainConfigurator
 from manafaln.apps.utils import (
@@ -27,7 +28,7 @@ def run(
         # If deterministic is not set, then set deterministic
         # If deterministic is set, then don't touch it
         if "deterministic" not in config_train["settings"].keys():
-            config_train["settings"]["deterministic"] = True
+            config_train["settings"]["deterministic"] = "warn"
 
     # Configure data first
     data = build_data_module(config_data)
@@ -80,4 +81,3 @@ if __name__ == "__main__":
         seed=seed,
         ckpt_path=ckpt_path
     )
-

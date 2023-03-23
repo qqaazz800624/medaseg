@@ -7,6 +7,7 @@ from torch.nn.modules.loss import _Loss
 
 from manafaln.common.constants import DefaultKeys
 from manafaln.core.builders import LossBuilder
+from manafaln.utils import get_items
 
 # The key for loss required by Pytorch Lightning
 PYTORCH_LIGHTNING_LOSS_KEY = "loss"
@@ -87,7 +88,7 @@ class LossHelper(ModuleDict, _Loss):
         # For each loss module
         for log_label, loss_fn in self.items():
             # Get the input with specified input keys
-            input = (kwargs[input_key] for input_key in self.input_keys[log_label])
+            input = get_items(kwargs, self.input_keys[log_label])
 
             # Compute the loss
             loss = loss_fn(*input)

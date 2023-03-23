@@ -68,32 +68,3 @@ class RatioSampler(Sampler):
             for data in data_list
             ]
         return labels
-
-class MultiLabelRatioSampler(RatioSampler):
-    def __init__(self,
-        data_list: List[Dict[str, Any]],
-        include_indices: Union[int, Sequence[int]] = 0,
-        key: Union[str, Sequence[str]] = DEFAULT_LABEL_KEY,
-        ratio: float = 1.0,
-        channel_dim: int = 0,
-    ):
-        self.channel_dim = channel_dim
-        self.include_indices = torch.tensor(ensure_tuple(include_indices), dtype=int)
-        super().__init__(data_list, key, ratio)
-
-    def get_labels(
-        self,
-        data_list: List[Dict[str, torch.Tensor]]
-    ) -> List[bool]:
-
-        keys = ensure_tuple(self.key)
-        labels = []
-        for data in data_list:
-            combined_label = False
-            for key in keys:
-                label = torch.tensor(data[key])
-                label = label.index_select(self.channel_dim, self.include_indices)
-                label = label.any()
-                combined_label = combined_label or label
-            labels.append(combined_label)
-        return labels

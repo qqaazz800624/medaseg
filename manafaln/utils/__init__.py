@@ -5,7 +5,7 @@ from .io import (
     save_yaml,
     load_yaml
 )
-from .losses import(
-    label_smoothing,
-    SpatialWeightedMixin,
+from .misc import (
+    get_items,
+    update_items
 )

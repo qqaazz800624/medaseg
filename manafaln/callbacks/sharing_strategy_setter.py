@@ -32,4 +32,3 @@ class SharingStrategySetter(Callback):
         if current_strategy != self.ori_strategy:
             torch.multiprocessing.set_sharing_strategy(self.ori_strategy)
             logger.info(f"Sharing strategy changed from {current_strategy} to {self.ori_strategy}")
-

@@ -56,4 +56,3 @@ if __name__ == "__main__":
 
     # Run
     run(train, data, workflow, ckpt_path)
-

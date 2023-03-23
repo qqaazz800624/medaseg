@@ -1,15 +1,11 @@
 from .dice import (
     MultipleBackgroundDiceCELoss,
-    MultipleBackgroundDiceFocalLoss,
-    SWDiceLoss
+    MultipleBackgroundDiceFocalLoss
 )
-from .focal import(
-    ClassificationFocalLoss
+from .focal import (
+    MulticlassFocalLoss
 )
 from .mcc import (
     MCCLoss,
     MCCFocalLoss
-)
-from .topo import(
-    TopologyLoss
 )

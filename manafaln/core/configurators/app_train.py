@@ -17,4 +17,3 @@ class TrainConfigurator(DefaultConfigurator):
 
     def get_random_seed(self):
         return self.random_seed
-

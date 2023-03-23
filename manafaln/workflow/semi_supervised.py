@@ -1,7 +1,7 @@
 from torch.nn import ModuleDict
-from monai.utils import ensure_tuple
 
 from manafaln.core.loss import LossHelper
+from manafaln.utils import get_items, update_items
 from manafaln.workflow.basev2 import SupervisedLearningV2
 
 class SemiSupervisedLearning(SupervisedLearningV2):
@@ -14,24 +14,16 @@ class SemiSupervisedLearning(SupervisedLearningV2):
         loss_fn["unlabeled"] = LossHelper(config.get("unlabeled", {}))
         self.loss_fn = ModuleDict(loss_fn)
 
+    def _training_step(self, batch):
+        model_input = get_items(batch, self.model_input_keys)
+        preds = self.model(*model_input)
+        batch = update_items(batch, self.model_output_keys, preds)
+        batch = self.post_processing(batch)
+        return batch
+
     def training_step(self, batch: dict, batch_idx):
-        # Get model input
-        labeled_model_input = (batch["labeled"][k] for k in self.model_input_keys)
-        unlabeled_model_input = (batch["unlabeled"][k] for k in self.model_input_keys)
-
-        # Get model output
-        labeled_preds = self.model(*labeled_model_input)
-        unlabeled_preds = self.model(*unlabeled_model_input)
-
-        # Update model output to batch
-        labeled_preds = ensure_tuple(labeled_preds, wrap_array=True)
-        batch["labeled"].update(zip(self.model_output_keys, labeled_preds))
-        unlabeled_preds = ensure_tuple(unlabeled_preds, wrap_array=True)
-        batch["unlabeled"].update(zip(self.model_output_keys, unlabeled_preds))
-
-        # Apply post processing
-        batch["labeled"] = self.post_processing(batch["labeled"])
-        batch["unlabeled"] = self.post_processing(batch["unlabeled"])
+        batch["labeled"] = self._training_step(batch["labeled"])
+        batch["unlabeled"] = self._training_step(batch["unlabeled"])
 
         # Compute loss
         labeled_loss = self.loss_fn["labeled"](**batch["labeled"])

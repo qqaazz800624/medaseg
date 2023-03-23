@@ -1,25 +1,14 @@
-from .point import (
-    DrawLowest,
-    DrawLowestd,
-    DrawLast,
-    DrawLastd,
-    DrawBottom,
-    DrawBottomd,
-)
-
-from .interp import (
+from .draw import (
+    DrawPoints,
+    DrawPointsd,
     Interpolate,
     Interpolated,
 )
-
 from .fill import (
     Fill,
-    Filld,
-    FillHorizontal,
-    FillHorizontald
+    Filld
 )
-
-from .draw import (
-    DrawPoints,
-    DrawPointsd
+from .overlay import (
+    OverlayMask,
+    OverlayMaskd
 )

@@ -5,6 +5,7 @@ from .fit_control import (
 from .gradient_norm_monitor import GradientNormMonitor
 from .metric_saver import (
     IterationMetricSaver,
+    IterativeMetricSaver,
     CheckpointMetricSaver
 )
 from .metrics_aggregator import MetricsAverager

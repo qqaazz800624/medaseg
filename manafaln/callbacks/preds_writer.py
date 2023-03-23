@@ -7,56 +7,47 @@ from monai.utils.misc import ImageMetaKey
 from pytorch_lightning.callbacks import BasePredictionWriter
 
 from manafaln.common.constants import DefaultKeys
+from manafaln.utils.misc import get_item, get_items
 
 DEFAULT_UID_KEY = PostFix.meta(DefaultKeys.INPUT_KEY) + "." + ImageMetaKey.FILENAME_OR_OBJ
 DEFAULT_OUTPUT_KEYS = DefaultKeys.OUTPUT_KEY
 
 class ClassificationPredictionWriter(BasePredictionWriter):
-    def __init__(self,
-            output_file: os.PathLike,
-            uid_key: str=DEFAULT_UID_KEY,
-            pred_keys: Union[Sequence[str], str]=DEFAULT_OUTPUT_KEYS,
-            sep: str=".",
-            write_interval: Literal["batch", "epoch", "batch_and_epoch"] = "batch",
+    def __init__(
+        self,
+        output_file: os.PathLike,
+        uid_key: str=DEFAULT_UID_KEY,
+        pred_keys: Union[Sequence[str], str]=DEFAULT_OUTPUT_KEYS,
+        sep: str=".",
+        write_interval: Literal["batch", "epoch", "batch_and_epoch"] = "batch",
     ):
         super().__init__(write_interval)
         self.output_file = output_file
+        os.makedirs(os.path.dirname(self.output_file), exist_ok=True)
         self.uid_key = uid_key
         self.pred_keys = ensure_tuple(pred_keys)
         self.sep = sep
         self.preds = []
 
-    def get_item(self, data, key: list):
-        if len(key) > 1:
-            return self.get_item(data[key[0]], key[1:])
-        return data[key[0]]
-
     def on_predict_batch_end(
         self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx
     ):
-        uids = self.get_item(batch, self.uid_key.split(self.sep))
+        uids = get_item(batch, self.uid_key, self.sep)
         if isinstance(outputs, list):
             for uid, output in zip(uids, outputs):
-                pred = []
-                for key in self.pred_keys:
-                    item_key = key.split(self.sep)
-                    item = self.get_item(output, item_key)
-                    pred.append(item)
+                pred = get_items(output, self.pred_keys, self.sep)
                 self.preds.append((uid, *pred))
         else:
-            preds = []
-            for key in self.pred_keys:
-                item_key = key.split(self.sep)
-                item = self.get_item(outputs, item_key)
-                preds.append(item)
+            preds = get_items(outputs, self.pred_keys, self.sep)
             self.preds.extend(zip(uids, *preds))
 
 class CSVPredictionWriter(ClassificationPredictionWriter):
-    def __init__(self,
-            output_file: os.PathLike,
-            uid_key: str=DEFAULT_UID_KEY,
-            pred_keys: Union[Sequence[str], str]=DEFAULT_OUTPUT_KEYS,
-            sep: str=".",
+    def __init__(
+        self,
+        output_file: os.PathLike,
+        uid_key: str=DEFAULT_UID_KEY,
+        pred_keys: Union[Sequence[str], str]=DEFAULT_OUTPUT_KEYS,
+        sep: str=".",
     ):
         super().__init__(output_file, uid_key, pred_keys, sep, write_interval="epoch")
 
@@ -67,7 +58,6 @@ class CSVPredictionWriter(ClassificationPredictionWriter):
         predictions,
         batch_indices,
     ) -> None:
-
         df = pd.DataFrame(self.preds, columns=[self.uid_key, *self.pred_keys])
         df = df.set_index(self.uid_key)
         df.to_csv(self.output_file)

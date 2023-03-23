@@ -1,3 +1,3 @@
-from .dist import CentroidDistance
-from .mse import MeanSquareError
+from .bootstrapper import CumulativeBootstrapper, IterativeBootstrapper
 from .from_monai import MONAI
+from .mse import MeanSquareError

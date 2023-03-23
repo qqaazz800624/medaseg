@@ -3,7 +3,9 @@ from typing import Any, Literal, Optional, Sequence, Tuple, Union
 import numpy as np
 from monai.config import KeysCollection
 from monai.transforms import MapTransform, Transform
-from monai.utils import PostFix, MetaKeys
+from monai.utils import MetaKeys, PostFix
+from monai.utils.enums import PostFix
+from scipy.interpolate import interp1d
 from skimage.morphology import binary_dilation
 from skimage.morphology.footprints import disk, rectangle
 
@@ -27,8 +29,8 @@ class DrawPoints(Transform):
         """
         Args:
             spatial_size (Sequence[int], optional): Mask shape to be interpolated
-            channel_dim (int, optional): Dimension to stack masks. Defaults to 0.
             apply_index (Sequence[int], optional): Which index to read data and draw. Apply to all if None. Defaults to None.
+            channel_dim (int, optional): Dimension to stack masks. Defaults to 0.
             footprint_shape ('rectangle', 'disk', optional): Shape of footprint for dilation. Defaults to None.
             footprint_size (int, Tuple[int, int]): Size of footprint. Defaults to 5.
             mask_only (bool): Whether to return mask only or with meta data, Defaults to False.
@@ -57,7 +59,7 @@ class DrawPoints(Transform):
         Generate a binary mask where given points is True and otherwise False,
         then apply binary dilation with self.footprint.
         Args:
-            points: Sequence of integer points, [(h, w), ...]
+            points: Sequence of integer points, [(x, y), ...]
         Returns:
             mask: boolean array of shape self.spatial_size
         """
@@ -164,3 +166,124 @@ class DrawPointsd(MapTransform):
                 d[meta_key] = {**d.get(meta_key, {}), **meta_data}
         return d
 
+class Interpolate(DrawPoints):
+    """
+    Interpolate a sequence of (x, y) to a 2D mask,
+    dilated with square(footprint).
+    """
+    def __init__(
+        self,
+        spatial_size: Sequence[int],
+        apply_index: Optional[Sequence[int]]=None,
+        channel_dim: int=0,
+        footprint_shape: Optional[Literal['rectangle', 'disk']]='rectangle',
+        footprint_size: Union[int, Tuple[int, int]] = 5,
+        mask_only: bool=False,
+    ):
+        """
+        Args:
+            spatial_size (Sequence[int], optional): Mask shape to be interpolated
+            apply_index (Sequence[int], optional): Which index to read data and draw. Apply to all if None. Defaults to None.
+            channel_dim (int, optional): Dimension to stack masks. Defaults to 0.
+            footprint_shape ('rectangle', 'disk', optional): Shape of footprint for dilation. Defaults to 'rectangle'.
+            footprint_size (int, Tuple[int, int]): Size of footprint. Defaults to 5.
+            mask_only (bool): Whether to return mask only or with meta data, Defaults to False.
+        """
+        super().__init__(
+            spatial_size=spatial_size,
+            apply_index=apply_index,
+            channel_dim=channel_dim,
+            footprint_shape=footprint_shape,
+            footprint_size=footprint_size,
+            mask_only=mask_only
+        )
+
+    def extract_points(
+        self,
+        ptss: Sequence[Sequence[Tuple[float, float]]]
+    ) -> Sequence[Tuple[int, int]]:
+        """
+        Args:
+            pts: A sequence of sequence of float points, [[(x, y), ...], ...]
+        Returns:
+            pts: A sequence of integer points, [(x, y), ...]
+        """
+        flatten_pts = []
+        for pts in ptss:
+            pts = self.rescale_size(pts)
+            pts = self.remove_duplicate(pts)
+            pts = self.interpolate(pts)
+            flatten_pts.extend(pts)
+        return flatten_pts
+
+    def rescale_size(
+        self,
+        pts: Sequence[Tuple[float, float]]
+    ) -> Sequence[Tuple[int, int]]:
+        pts = [(int(p[0]*self.spatial_size[0]), int(p[1]*self.spatial_size[1])) for p in pts]
+        return pts
+
+    def remove_duplicate(
+        self,
+        pts: Sequence[Tuple[int, int]]
+    ) -> Sequence[Tuple[int, int]]:
+        res = [pts[0]]
+        for i in range(1, len(pts)):
+            if pts[i] != pts[i - 1]:
+                res.append(pts[i])
+        return res
+
+    def interpolate(
+        self,
+        pts: Sequence[Tuple[int, int]]
+    ) -> Sequence[Tuple[int, int]]:
+        """
+        Interpolate points to continuous coordinates.
+        """
+        pts = np.array(pts)
+        l = np.linalg.norm(pts[1:] - pts[:-1], axis=-1)
+        t = np.cumsum(l)
+        t = np.concatenate([[0], t])
+        t2 = np.arange(t[-1])
+        x, y = pts[:, 0], pts[:, 1]
+        x = interp1d(t, x, kind="linear" if len(pts) < 4 else "cubic",
+                    bounds_error=False, fill_value="extrapolate")(t2)
+        y = interp1d(t, y, kind="linear" if len(pts) < 4 else "cubic",
+                    bounds_error=False, fill_value="extrapolate")(t2)
+        pts = np.stack([x, y], axis=-1).astype(int)
+        pts = np.clip(pts, 0, self.spatial_size-1)
+        pts = pts.tolist()
+        return pts
+
+class Interpolated(DrawPointsd):
+    def __init__(
+        self,
+        keys: KeysCollection,
+        spatial_size: Sequence[int],
+        apply_index: Optional[Sequence[int]]=None,
+        channel_dim: int=0,
+        footprint_shape: Optional[Literal['rectangle', 'disk']]='rectangle',
+        footprint_size: Union[int, Tuple[int, int]] = 5,
+        from_meta: bool=False,
+        stack: bool=False,
+        meta_key_postfix: str=DEFAULT_POST_FIX,
+        allow_missing_keys: bool=False
+    ):
+        super().__init__(
+            keys=keys,
+            spatial_size=spatial_size,
+            apply_index=apply_index,
+            channel_dim=channel_dim,
+            from_meta=from_meta,
+            stack=stack,
+            meta_key_postfix=meta_key_postfix,
+            allow_missing_keys=allow_missing_keys
+        )
+
+        self.t = Interpolate(
+            spatial_size=spatial_size,
+            channel_dim=channel_dim,
+            footprint_shape=footprint_shape,
+            footprint_size=footprint_size,
+            mask_only=False
+        )
