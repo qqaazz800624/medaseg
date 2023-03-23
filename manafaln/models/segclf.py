@@ -5,6 +5,17 @@ import torch
 from manafaln.core.builders import ModelBuilder
 
 class SegClfModel(torch.nn.Module):
+    """
+    A PyTorch module that combines a segmentation model and a classification model,
+    where the input of classification model is the concatenation of segmentation output and input image.
+
+    Args:
+        seg_model (Dict): A dictionary that contains the configuration for the segmentation model.
+        clf_model (Dict): A dictionary that contains the configuration for the classification model.
+        seg_activation (Literal["sigmoid", "softmax"], optional): The activation function to use
+            on the segmentation input for classification model.
+            Can be either "sigmoid" or "softmax". If None, the segmentation output is used as is.
+    """
     def __init__(
         self,
         seg_model: Dict,

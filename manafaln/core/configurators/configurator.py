@@ -1,16 +1,10 @@
 import logging
-from abc import ABC, abstractmethod 
+from abc import ABC, abstractmethod
 from argparse import ArgumentParser
 from collections import OrderedDict
 from typing import Dict
 
 from manafaln.utils import load_yaml
-
-def load_config(config_path: str) -> Dict:
-    loader = YAML()
-    with open(config_path) as f:
-        config = loader.load(f)
-    return config
 
 class Configurator(ABC):
     def __init__(self, app_name=None, description=None):
@@ -129,4 +123,3 @@ class DefaultConfigurator(Configurator):
 
     def get_ckpt_path(self) -> str:
         return self.ckpt_path
-

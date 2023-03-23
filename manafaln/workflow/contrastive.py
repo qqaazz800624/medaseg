@@ -1,9 +1,10 @@
-from monai.utils import ensure_tuple
 import torch
+from monai.utils import ensure_tuple
 
-from manafaln.core.loss import LossHelper
 from manafaln.common.constants import DefaultKeys
 from manafaln.core.builders import ModelBuilder
+from manafaln.core.loss import LossHelper
+from manafaln.utils import get_items, update_items
 from manafaln.workflow.basev2 import SupervisedLearningV2
 from manafaln.workflow.semi_supervised import SemiSupervisedLearning
 
@@ -25,20 +26,15 @@ class SelfSupervisedContrastiveLearning(SupervisedLearningV2):
         self.model_output_keys_contrast = \
             ensure_tuple(config.get("output_keys_contrast", [s+"_contrast" for s in self.model_output_keys]))
 
-    def training_step(self, batch: dict, batch_idx):
-        # Get model input
-        model_input = (batch[k] for k in self.model_input_keys)
-        model_input_contrast = (batch[k] for k in self.model_input_keys_contrast)
-
-        # Get model output
+    def _training_step(self, batch, model_input_keys, model_output_keys):
+        model_input = get_items(batch, model_input_keys)
         preds = self.model(*model_input)
-        preds_contrast = self.model(*model_input_contrast)
+        batch = update_items(batch, model_output_keys, preds)
+        return batch
 
-        # Update model output to batch
-        preds = ensure_tuple(preds, wrap_array=True)
-        batch.update(zip(self.model_output_keys, preds))
-        preds_contrast = ensure_tuple(preds_contrast, wrap_array=True)
-        batch.update(zip(self.model_output_keys_contrast, preds_contrast))
+    def training_step(self, batch: dict, batch_idx):
+        batch = self._training_step(batch, self.model_input_keys, self.model_output_keys)
+        batch = self._training_step(batch, self.model_input_keys_contrast, self.model_output_keys_contrast)
 
         # Apply post processing
         batch = self.post_processing(batch)
@@ -76,27 +72,18 @@ class SemiSupervisedContrastiveLearning(SelfSupervisedContrastiveLearning, SemiS
         self.loss_fn.update({"contrastive": contrastive_loss})
 
     def training_step(self, batch: dict, batch_idx):
-        # Get model input
-        labeled_model_input = (batch["labeled"][k] for k in self.model_input_keys)
-        unlabeled_model_input = (batch["unlabeled"][k] for k in self.model_input_keys)
-        labeled_model_input_contrast = (batch["labeled"][k] for k in self.model_input_keys_contrast)
-        unlabeled_model_input_contrast = (batch["unlabeled"][k] for k in self.model_input_keys_contrast)
-
-        # Get model output
-        labeled_preds = self.model(*labeled_model_input)
-        unlabeled_preds = self.model(*unlabeled_model_input)
-        labeled_preds_contrast = self.model(*labeled_model_input_contrast)
-        unlabeled_preds_contrast = self.model(*unlabeled_model_input_contrast)
-
-        # Update model output to batch
-        labeled_preds = ensure_tuple(labeled_preds, wrap_array=True)
-        batch["labeled"].update(zip(self.model_output_keys, labeled_preds))
-        unlabeled_preds = ensure_tuple(unlabeled_preds, wrap_array=True)
-        batch["unlabeled"].update(zip(self.model_output_keys, unlabeled_preds))
-        labeled_preds_contrast = ensure_tuple(labeled_preds_contrast, wrap_array=True)
-        batch["labeled"].update(zip(self.model_output_keys_contrast, labeled_preds_contrast))
-        unlabeled_preds_contrast = ensure_tuple(unlabeled_preds_contrast, wrap_array=True)
-        batch["unlabeled"].update(zip(self.model_output_keys_contrast, unlabeled_preds_contrast))
+        # Labeled data
+        batch["labeled"] = self._training_step(
+            batch["labeled"], self.model_input_keys, self.model_output_keys)
+        # Unlabeled data
+        batch["unlabeled"] = self._training_step(
+            batch["unlabeled"], self.model_input_keys, self.model_output_keys)
+        # Labeled data, contrast
+        batch["labeled"] = self._training_step(
+            batch["labeled"], self.model_input_keys_contrast, self.model_output_keys_contrast)
+        # Unlabeled data, contrast
+        batch["unlabeled"] = self._training_step(
+            batch["unlabeled"], self.model_input_keys_contrast, self.model_output_keys_contrast)
 
         # Apply post processing
         batch["labeled"] = self.post_processing(batch["labeled"])
@@ -111,7 +98,10 @@ class SemiSupervisedContrastiveLearning(SelfSupervisedContrastiveLearning, SemiS
         features = {}
         for features_key in self.features_keys:
             features[features_key] = torch.cat(
-            [batch["labeled"][features_key], batch["unlabeled"][features_key]],
+            [
+                batch["labeled"][features_key],
+                batch["unlabeled"][features_key]
+            ],
             dim=0
             )
         contrastive_loss = self.loss_fn["contrastive"](**features)

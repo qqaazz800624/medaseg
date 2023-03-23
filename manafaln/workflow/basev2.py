@@ -8,6 +8,7 @@ from manafaln.core.builders import (InfererBuilder, ModelBuilder,
 from manafaln.core.loss import LossHelper
 from manafaln.core.metricv2 import MetricCollection
 from manafaln.core.transforms import build_transforms
+from manafaln.utils import get_items, update_items
 
 DEFAULT_INPUT_KEY = DefaultKeys.INPUT_KEY
 DEFAULT_OUTPUT_KEY = DefaultKeys.OUTPUT_KEY
@@ -48,7 +49,7 @@ class SupervisedLearningV2(LightningModule):
 
     def build_loss_fn(self, config):
         if config is None:
-            raise KeyError(f"loss is required in workflow {self.__class__.__name__}")
+            config = []
         self.loss_fn = LossHelper(config)
 
     def build_inferer(self, config):
@@ -127,14 +128,13 @@ class SupervisedLearningV2(LightningModule):
 
     def training_step(self, batch: dict, batch_idx):
         # Get model input
-        model_input = (batch[k] for k in self.model_input_keys)
+        model_input = get_items(batch, self.model_input_keys)
 
         # Get model output
         preds = self.model(*model_input)
 
         # Update model output to batch
-        preds = ensure_tuple(preds, wrap_array=True)
-        batch.update(zip(self.model_output_keys, preds))
+        batch = update_items(batch, self.model_output_keys, preds)
 
         # Apply post processing
         batch = self.post_processing(batch)
@@ -168,14 +168,13 @@ class SupervisedLearningV2(LightningModule):
 
     def validation_step(self, batch: dict, batch_idx):
         # Get model input
-        model_input = (batch[k] for k in self.model_input_keys)
+        model_input = get_items(batch, self.model_input_keys)
 
         # Run inference
         preds = self.forward(*model_input)
 
         # Update prediction to batch
-        preds = ensure_tuple(preds, wrap_array=True)
-        batch.update(zip(self.model_output_keys, preds))
+        batch = update_items(batch, self.model_output_keys, preds)
 
         # Post transform & compute metrics
         if self.decollate_fn["validation"] is not None:
@@ -192,17 +191,17 @@ class SupervisedLearningV2(LightningModule):
         m = self.validation_metrics.compute()
         self.log_dict(m)
         self.validation_metrics.reset()
+        return m
 
     def predict_step(self, batch: dict, batch_idx):
         # No label for predict
-        model_input = (batch[k] for k in self.model_input_keys)
+        model_input = get_items(batch, self.model_input_keys)
 
         # Run inference
         preds = self.forward(*model_input)
 
         # Update prediction to batch
-        preds = ensure_tuple(preds, wrap_array=True)
-        batch.update(zip(self.model_output_keys, preds))
+        batch = update_items(batch, self.model_output_keys, preds)
 
         if self.decollate_fn["predict"] is not None:
             outputs = []

@@ -1,32 +1,25 @@
 import os
-from typing import Any, Dict, Union, List, Tuple
+from typing import Dict, Union, List, Sequence
 
-import torch
 import pandas as pd
 from monai.transforms import Decollated
+from monai.utils import PostFix, ensure_tuple, convert_to_numpy
+from monai.utils.misc import ImageMetaKey
 from pytorch_lightning import Callback, LightningModule, Trainer
 
-def ensure_list(arg: Union[Any, List[Any]]):
-    if not isinstance(arg, List):
-        return [arg]
-    else:
-        return arg
+from manafaln.common.constants import DefaultKeys
+from manafaln.utils.misc import ensure_list, ensure_python_value, get_attr, get_item
 
-def ensure_python_value(value: Any):
-    if isinstance(value, torch.Tensor):
-        try:
-            return value.item()
-        except ValueError:
-            return value.tolist()
-    return value
+DEFAULT_META_KEY = PostFix.meta(DefaultKeys.INPUT_KEY) # "image_meta_dict"
+DEFAULT_INFO_KEYS = ImageMetaKey.FILENAME_OR_OBJ  # "filename_or_obj"
 
 class IterationMetricSaver(Callback):
     def __init__(
         self,
         filename: str,
         metrics: Union[str, List[str]],
-        meta_dict_key: str = "image_meta_dict",
-        meta_dict_info: Union[str, List[str]] = "filename_or_obj",
+        meta_dict_key: str = DEFAULT_META_KEY, # "image_meta_dict"
+        meta_dict_info: Union[str, List[str]] = DEFAULT_INFO_KEYS, # "filename_or_obj"
         decollate=False,
         save_preds=False
     ) -> None:
@@ -114,3 +107,62 @@ class IterationMetricSaver(Callback):
 class CheckpointMetricSaver(Callback):
     def on_save_checkpoint(self, trainer, pl_module, checkpoint):
         checkpoint["logged_metrics"] = trainer.logged_metrics
+
+class IterativeMetricSaver(Callback):
+    """
+    A callback to save metrics and info at the end of each validation epoch.
+    Args:
+        filename (os.PathLike): File name to save the metrics and info
+        states (Union[str, Sequence[str]]): Metrics state(s) to save
+        info_keys (Union[str, Sequence[str]], optional): Info key(s) to save.
+            Defaults to "image_meta_dict.filename_or_obj".
+
+    Attributes:
+        buffer (Dict): A dictionary to buffer the metrics and info before saving
+    """
+    def __init__(
+        self,
+        filename: os.PathLike,
+        states: Union[str, Sequence[str]],
+        info_keys: Union[str, Sequence[str]] = f"{DEFAULT_META_KEY}.{DEFAULT_INFO_KEYS}",
+    ):
+        self.filename = filename
+        os.makedirs(os.path.dirname(self.filename), exist_ok=True)
+
+        self.info_keys = ensure_tuple(info_keys)
+        self.states = ensure_tuple(states)
+
+        self.initialize_buffer()
+
+    def initialize_buffer(self):
+        self.buffer = {k: [] for k in self.info_keys + self.states}
+
+    def on_validation_batch_end(
+        self,
+        trainer,
+        pl_module,
+        outputs,
+        batch,
+        batch_idx,
+        dataloader_idx
+    ) -> None:
+
+        # In each validation step, get the info from batch to be saved.
+        for key in self.info_keys:
+            info = get_item(batch, key)
+            info = convert_to_numpy(info)
+            self.buffer[key].extend(info)
+
+        # In the last validation step,
+        if batch_idx == trainer.num_val_batches[dataloader_idx] - 1:
+            # get the states that is stored in metrics
+            for state in self.states:
+                metric = get_attr(pl_module.validation_metrics, state)
+                metric = convert_to_numpy(metric)
+                self.buffer[state].extend(metric)
+
+            # save the stored info and metrics into csv
+            df = pd.DataFrame(self.buffer)
+            df.to_csv(self.filename, index=False)
+
+            self.initialize_buffer()

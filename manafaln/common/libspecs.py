@@ -43,7 +43,7 @@ class LibSpecPyTorch(metaclass=LibSpecMeta):
 
 class LibSpecPyTorchLightning(metaclass=LibSpecMeta):
     CALLBACK = "pytorch_lightning.callbacks"
-    LOGGER   = "pytorch_lightining.loggers"
+    LOGGER   = "pytorch_lightning.loggers"
 
 class LibSpecTorchVision(metaclass=LibSpecMeta):
     MODEL   = "torchvision.models"

@@ -192,10 +192,16 @@ class DataLoaderBuilder(ComponentBuilder):
 
         sampler_config = kwargs.get("sampler", None)
         if sampler_config is not None:
-            sampler_builder = SamplerBuilder()
+            sampler_builder = SamplerBuilder(check_instance=self.check_instance)
             data_source = dataset.data
             sampler: Sampler = sampler_builder(sampler_config, data_source)
             kwargs["sampler"] = sampler
+
+        collate_fn_config = kwargs.get("collate_fn", None)
+        if collate_fn_config is not None:
+            M = importlib.import_module(collate_fn_config["path"])
+            collate_fn = getattr(M, collate_fn_config["name"])
+            kwargs["collate_fn"] = collate_fn
 
         out = self._build_instance(spec, name, path, args, kwargs)
         if out is None:

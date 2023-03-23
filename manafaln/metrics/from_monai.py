@@ -1,18 +1,24 @@
-from monai.utils import optional_import
+import importlib
+
+from monai.metrics import CumulativeIterationMetric
 from torchmetrics import Metric
+
 
 class MONAI(Metric):
     full_state_update: bool = True
-    def __init__(self, name, *args, **kwargs):
+    def __init__(self, name, path="monai.metrics", *args, **kwargs):
         """
+        A wrapper for `monai.metrics.CumulativeIterationMetric`.
         Args:
-            name: The metric name in MONAI package.
-            args: parameters for the MONAI metric.
-            kwargs: parameters for the MONAI metric.
+            name: The metric name.
+            path: Path to import metric.
+            args: arguments for the metric.
+            kwargs: keyword arguments for the metric.
         """
         super().__init__()
         self.name = name
-        metric, _ = optional_import("monai.metrics", name=name)
+        M = importlib.import_module(path)
+        metric: CumulativeIterationMetric = getattr(M, name)
         self.metric = metric(*args, **kwargs)
 
     def update(self, *args):

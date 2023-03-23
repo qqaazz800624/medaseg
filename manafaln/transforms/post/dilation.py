@@ -1,4 +1,4 @@
-from typing import Union, Sequence, Literal, Tuple, Optional
+from typing import Literal, Tuple
 
 import torch
 from monai.transforms import Transform, MapTransform
@@ -7,7 +7,7 @@ from monai.utils.enums import TransformBackends
 
 class Dilation(Transform):
     """
-    Apply dilation to 2D input for smoother loss and hence a better training convergence.
+    Apply dilation to 2D input
     """
     backend = [TransformBackends.TORCH]
 

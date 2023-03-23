@@ -1,17 +1,50 @@
-from typing import Optional, Sequence
+from typing import Optional, Sequence, Union
 
 import torch
 import torch.nn.functional as F
+from monai.utils import LossReduction
 from torch.nn.modules.loss import _Loss
 
-from manafaln.utils import label_smoothing
 
-class ClassificationFocalLoss(_Loss):
+def _label_smoothing(label: torch.Tensor, smooth: Optional[float]=None, binary: bool=False):
     """
-    This is a implementation of Focal Loss [1] with Label Smoothing [2].
-    It supports multi-class classification with other dimensions.
+    Label smoothing with
+
+    $$ (1-smooth)*label + smooth/num_classes $$
+
+    References:
+    Rafael Müller et al. (2019). When Does Label Smoothing Help? https://arxiv.org/abs/1906.02629
+
+    Args:
+        label (torch.Tensor): tensor to apply label smoothing, with last channel as label.
+        smooth (float): smoothing factor, requires 0 <= smooth < 1. Default: 0.0
+        binary (bool): whether the label is binary. Default: False
+    """
+
+    if smooth is None:
+        return label
+
+    assert 0 <= smooth < 1, "smoothing factor must be 0 <= smooth < 1"
+
+    if binary:
+        # shape: (..., 1) or (..., )
+        label_smooth = (1-smooth)*label + smooth/2
+    else:
+        # shape: (..., C)
+        label_smooth = (1-smooth)*label + smooth/label.size(-1)
+
+    return label_smooth
+
+class MulticlassFocalLoss(_Loss):
+    """
+    This is an extension of CrossEntropyLoss that down-weights loss from
+    high confidence correct predictions.
+    This is a reimplementation of Focal Loss [1] that supports multiclass.
+    Label Smoothing [2] is also supported.
+
     The data `output` (B, C, ...) is compared with ground truth `target` (B, C, ...).
     Note that `output` is expected to be logits.
+    Additional dimensions will be treated as instances.
 
     $ LS-Focal(\hat{y}, y) = -\sum_{i=1}^{K}\alpha_i(1-\hat{y}_i)^{\gamma}(y_i(1-\delta)+\delta/K)\cdot\log \hat{y}_i $
 
@@ -21,14 +54,16 @@ class ClassificationFocalLoss(_Loss):
     """
     def __init__(
             self,
-            gamma   : Optional[float]           = None,
+            gamma   : Optional[float]           = 2.0,
             alpha   : Optional[Sequence[float]] = None,
             smooth  : Optional[float]           = None,
+            reduction: Union[LossReduction, str] = LossReduction.MEAN,
         ):
         super().__init__()
         self.gamma  = gamma
         self.alpha  = alpha
         self.smooth = smooth
+        self.reduction = reduction
 
     def convert_instance(self, x: torch.Tensor):
         if x.dim()>2:
@@ -46,7 +81,7 @@ class ClassificationFocalLoss(_Loss):
         target = self.convert_instance(target)  # (B, C, ...) => (N, C)
 
         # Label smoothing, shape: (N, C)
-        target = label_smoothing(target, self.smooth)
+        target = _label_smoothing(target, self.smooth)
 
         # Compute log-probability, shape: (N, C)
         logpt = F.log_softmax(input, dim=-1)
@@ -54,25 +89,27 @@ class ClassificationFocalLoss(_Loss):
         # Compute crosss entropy, shape: (N, C)
         loss = -1 * logpt * target
 
-        # Compute focal loss, shape: (N, C)
+        # Down-weight loss from high confidence correct predictions, shape: (N, C)
         # Fallback to Cross Entropy if gamma is None
         if self.gamma is not None:
             # Probability, shape: (N, C)
             pt = F.softmax(input, dim=-1)
             loss *= (1-pt)**self.gamma
 
-        # Compute loss with alpha, shape: (N, C)
-        # Fallback to unweighted focal if alpha not given
+        # Weight loss by class with alpha, shape: (N, C)
+        # Fallback to unweighted loss if alpha not given
         if self.alpha is not None:
             # Alpha weighting, shape: (C, )
-            alpha = torch.tensor(self.alpha, device=input.device)
+            alpha = torch.tensor(self.alpha, device=loss.device)
             loss *= alpha
 
         # Sums of loss over instance, shape: (N, )
         loss = loss.sum(-1)
 
-        # Mean of loss over batch, shape: ()
-        loss = loss.mean()
-
-        # Return loss
-        return loss
+        if self.reduction == LossReduction.SUM.value:
+            return loss.sum()
+        if self.reduction == LossReduction.NONE.value:
+            return loss
+        if self.reduction == LossReduction.MEAN.value:
+            return loss.mean()
+        raise ValueError(f"Unsupported reduction: {self.reduction}")

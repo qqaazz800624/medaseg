@@ -4,12 +4,11 @@ from .augmentations import (
     RandInverseIntensityGamma,
     RandInverseIntensityGammad
 )
-from .normalize import (
-    NormalizeIntensityRange,
-    NormalizeIntensityRanged
-)
-
 from .clahe import (
     CLAHE,
     CLAHEd
+)
+from .normalize import (
+    NormalizeIntensityRange,
+    NormalizeIntensityRanged
 )

@@ -1,6 +1,5 @@
 from typing import Dict, Hashable, Mapping, Optional, Sequence, Union
 from numbers import Real
-import os
 
 import torch
 import numpy as np
@@ -61,9 +60,31 @@ class ScalarToNumpyArrayd(MapTransform):
                 d[key] = np.array([d[key]])
         return d
 
-class Exit(Transform):
-    def __init__(self, *args, **kwargs):
-        pass
+class UnpackDict(Transform):
+    def __init__(
+        self,
+        item_keys: Sequence[str]=None,
+    ):
+        self.item_keys = item_keys
 
-    def __call__(self, *args, **kwargs):
-        os._exit(os.EX_OK)
+    def __call__(self, data: dict):
+        data = [data.get(k) for k in self.item_keys]
+        return data
+
+class UnpackDictd(MapTransform):
+    def __init__(
+        self,
+        keys: KeysCollection,
+        item_keys: Sequence[str]=None,
+    ):
+        super().__init__(keys, False)
+        self.t = UnpackDict(item_keys)
+
+    def __call__(
+        self,
+        data: Mapping[Hashable, NdarrayOrTensor]
+    ):
+        d = dict(data)
+        for key in self.key_iterator(d):
+            d[key] = self.t(d[key])
+        return d
