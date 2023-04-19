@@ -2,6 +2,7 @@ import abc
 import inspect
 import importlib
 import logging
+import traceback
 from typing import Any, Callable, Dict, List, Optional, Sized
 
 import torch
@@ -56,7 +57,14 @@ class ComponentBuilder(object):
         spec = ComponentSpecs[self.component_type.name]
         args = config.get("args", {}) # Actually kwargs
 
-        out = self._build_instance(spec, name, path, [], args)
+        try:
+            out = self._build_instance(spec, name, path, [], args)
+        except Exception as e:
+            raise RuntimeError(
+                f"Error occurs while building component '{name}' "
+                f"with arguments {args}\n"
+            )
+
         if out is None:
             raise RuntimeError(f"Failed to build component: {name}.")
 

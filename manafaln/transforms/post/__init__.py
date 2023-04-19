@@ -6,7 +6,3 @@ from .dilation import (
     Dilation,
     Dilationd
 )
-from .discrete import (
-    AsDiscrete,
-    AsDiscreted
-)

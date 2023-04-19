@@ -3,7 +3,7 @@ from typing import Any, Callable
 import torch
 import torch.nn as nn
 from torch.optim import Optimizer
-if torch.__version__ > "2.0.0":
+if torch.__version__ >= "2.0.0":
     from torch.optim.lr_scheduler import LRScheduler
 else:
     from torch.optim.lr_scheduler import _LRScheduler as LRScheduler
