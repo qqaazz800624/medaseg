@@ -20,7 +20,7 @@ setup(
         "pytorch-lightning<2.0.0",
         "ruamel.yaml>=0.17.21",
         "Pillow>=9.5.0",
-        "scipy>=1.10.1",
+        "scipy<=1.9.1",
         "scikit-learn>=1.2.2",
         "scikit-image>=0.20.0",
         "pandas>=2.0.0",
