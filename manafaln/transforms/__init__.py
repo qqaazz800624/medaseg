@@ -37,8 +37,6 @@ from .spatial import (
 from .post import (
     Activations,
     Activationsd,
-    AsDiscrete,
-    AsDiscreted,
     Dilation,
     Dilationd,
 )
