@@ -21,7 +21,7 @@ class SaveImage(_SaveImage):
             data_kwargs=data_kwargs,
             meta_kwargs=meta_kwargs,
             write_kwargs=write_kwargs
-            )
+        )
 
 class SaveImaged(_SaveImaged):
     """
@@ -41,4 +41,4 @@ class SaveImaged(_SaveImaged):
             data_kwargs=data_kwargs,
             meta_kwargs=meta_kwargs,
             write_kwargs=write_kwargs
-            )
+        )

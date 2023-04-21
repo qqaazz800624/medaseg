@@ -2,10 +2,9 @@ from typing import Optional, Sequence
 
 import numpy as np
 from monai.transforms import MapTransform, Transform
-from monai.utils import convert_to_numpy, ensure_tuple
+from monai.utils import convert_to_numpy, ensure_tuple, optional_import
 from monai.utils.enums import TransformBackends
 from PIL import Image
-
 
 class OverlayMask(Transform):
     backend = [TransformBackends.NUMPY]

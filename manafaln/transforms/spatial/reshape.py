@@ -7,7 +7,6 @@ from monai.config.type_definitions import NdarrayOrTensor
 from monai.transforms import MapTransform, Transform
 from monai.utils.enums import TransformBackends
 
-
 class Reshape(Transform):
     backend = [TransformBackends.TORCH, TransformBackends.NUMPY]
     def __init__(
