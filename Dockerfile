@@ -1,10 +1,7 @@
-from projectmonai/monai:1.0.1
-
-RUN pip install -U pip && \
-    pip install 'pytorch-lightning>=1.7.0'
+from projectmonai/monai
 
 COPY . /opt/manafaln
-RUN cd /opt/manafaln && \
-    python setup.py install && \
+RUN pip install --no-cache-dir -U pip && \
+    pip install --no-cache-dir /opt/manafaln && \
     rm -rf /workspace/* && \
     cp -r /opt/manafaln/examples /workspace/examples
