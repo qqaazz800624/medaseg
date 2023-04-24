@@ -4,6 +4,7 @@ import json
 import logging
 from argparse import ArgumentParser
 from pathlib import Path, PurePath
+from pprint import PrettyPrinter
 from typing import Dict, List
 
 import nibabel as nib
@@ -41,8 +42,8 @@ def resolve_datalist(
 
 def percentile(hist):
     cs = np.cumsum(hist)
-    low  = np.argmax(cs > cs[-1] * 0.005)
-    high = np.argmax(cs > cs[-1] * 0.995)
+    low  = float(np.argmax(cs > cs[-1] * 0.005))
+    high = float(np.argmax(cs > cs[-1] * 0.995))
     return low, high
 
 def analysis(data):
@@ -51,7 +52,7 @@ def analysis(data):
     histogram = np.zeros(2049, dtype=np.int64)
 
     # Scan through all cases
-    for case in tqdm(data, desc="Collecting information for data"):
+    for case in tqdm(data, desc="Collecting information from data"):
         img = nib.load(case["image"])
         img = nib.as_closest_canonical(img)
         seg = nib.load(case["label"])
@@ -82,7 +83,30 @@ def analysis(data):
     min_intensity -= 1024
     max_intensity -= 1024
 
-    print(min_intensity, max_intensity)
+    # Compute global mean and std from histogram
+    intensity = np.array(range(-1024, 1025))
+    mean = np.average(intensity, weights=histogram)
+    var = np.sum(((intensity - mean) ** 2) * histogram) / np.sum(histogram)
+    std = np.sqrt(var)
+
+    # Compute target spacing
+    spacing = np.median(spacings, axis=0)
+
+    # Compute median of shape in target spacing
+    shape = np.median(shapes, axis=0) * spacing
+    shape = shape.astype(np.int32)
+
+    stats = {
+        "intensity": {
+            "min": min_intensity,
+            "max": max_intensity,
+            "mean": mean,
+            "std": std
+        },
+        "spacing": spacing.tolist(),
+        "shape": shape.tolist()
+    }
+    return stats
 
 if __name__ == "__main__":
     parser = ArgumentParser()
@@ -92,6 +116,7 @@ if __name__ == "__main__":
     parser.add_argument("--data_split_keys", nargs="+", default=["training", "validation"])
     parser.add_argument("--img_key", type=str, default="image", help="Dictionary key for the image file.")
     parser.add_argument("--seg_key", type=str, default="label", help="Dictionary key for the segmentation label file.")
+    parser.add_argument("--output", "-o", type=str, default=None, help="Write analysis output as JSON file.")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO)
@@ -105,7 +130,7 @@ if __name__ == "__main__":
         loader = YAML()
         with open(args.config) as f:
             config = loader.load(f)
-        
+
         dataroot = config["data"]["settings"]["data_root"]
         datalist = config["data"]["settings"]["data_list"]
     elif args.dataroot is not None and args.datalist is not None:
@@ -134,9 +159,18 @@ if __name__ == "__main__":
         img_key=args.img_key,
         seg_key=args.seg_key
     )
-
     logger.info(f"Collected {len(data)} pairs of image and segmentation labels.")
 
     # Run analysis
     stats = analysis(data)
+    logger.info("Analysis complete!")
+
+    # Print in prettry format
+    printer = PrettyPrinter(indent=4)
+    printer.pprint(stats)
+
+    # [Optional] Save result to file
+    if args.output is not None:
+        with open(args.output, "w") as f:
+            json.dump(stats, f, indent=4)
 

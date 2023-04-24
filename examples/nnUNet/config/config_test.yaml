@@ -4,14 +4,20 @@ variables:
   max_steps: &max_steps 120000
 
   # For data location
-  data_root: &data_root /home/nanaha/data/MSD/Liver
-  data_list: &data_list /home/nanaha/data/MSD/Liver/datalist.json
+  data_root: &data_root /work/pancreas/nvidia-tlt/dataset/model/Tutorial/Liver
+  data_list: &data_list /work/pancreas/nvidia-tlt/dataset/model/Tutorial/Liver/datalist.json
 
   # For data transform
-  spacing: &spacing [1.44423774, 1.44423774, 2.87368553]
-  roi_size: &roi_size [224, 224, 64]
-  num_samples: &num_samples 2
-  batch_size: &batch_size 1
+  intensity:
+    min: &intensity.min -20.0
+    max: &intensity.max 199.0
+    mean: &intensity.mean 96.90
+    std: &intensity.std 38.62
+  spacing: &spacing [1.5, 1.5, 2.0]
+  roi_size: &roi_size [160, 160, 96]
+
+  num_samples: &num_samples 4
+  batch_size: &batch_size 2
 
 trainer:
   settings:
@@ -23,14 +29,14 @@ trainer:
     # Set training steps
     max_steps: *max_steps
 
-    # Validation and experiment monitoring 
+    # Validation and experiment monitoring
     log_every_n_steps: 10
     check_val_every_n_epoch: 10
 
     # Options for trainings speed
-    benchmark: true
+    benchmark: False
     precision: 16
-    detect_anomaly: false
+    detect_anomaly: False
 
     # Avoid gradient explosion
     gradient_clip_val: 1.0
@@ -70,7 +76,7 @@ workflow:
         in_channels: 1
         out_channels: 3
         kernel_size:
-        - [3, 3, 1]
+        - [3, 3, 3]
         - [3, 3, 3]
         - [3, 3, 3]
         - [3, 3, 3]
@@ -78,13 +84,13 @@ workflow:
         - [3, 3, 3]
         strides:
         - [1, 1, 1]
-        - [2, 2, 1]
+        - [2, 2, 2]
         - [2, 2, 2]
         - [2, 2, 2]
         - [2, 2, 2]
         - [2, 2, 1]
         upsample_kernel_size:
-        - [2, 2, 1]
+        - [2, 2, 2]
         - [2, 2, 2]
         - [2, 2, 2]
         - [2, 2, 2]
@@ -92,9 +98,6 @@ workflow:
         deep_supervision: True
         deep_supr_num: 3
 
-    # Only used in training, this will apply additional
-    # transform (must be differentiable) to the model output
-    # in order to use special loss functions.
     post_processing:
     - name: DeepSupervisionSplitDimd
       path: custom.post
@@ -160,11 +163,6 @@ workflow:
           argmax: [True, False]
           to_onehot: [3, 3]
           dim: 1
-      - name: KeepLargestConnectedComponentd
-        args:
-          keys: [preds]
-          is_onehot: True
-          independent: False
       - name: SplitDimd
         args:
           keys: [preds, label]
@@ -198,6 +196,7 @@ workflow:
           output_postfix: preds
           output_ext: .nii.gz
           mode: nearest
+          dtype: float32
           squeeze_end_dims: True
           separate_folder: False
           print_log: False
@@ -299,10 +298,10 @@ data:
     - name: NormalizeIntensityRanged
       args:
         keys: [image]
-        a_min: -54.0
-        a_max: 258.0
-        subtrahend: 100.0
-        divisor: 50.0
+        a_min: *intensity.min
+        a_max: *intensity.max
+        subtrahend: *intensity.mean
+        divisor: *intensity.std
     - name: SpatialPadd
       args:
         keys: [image, label]
@@ -363,7 +362,7 @@ data:
       name: CacheDataset
       args:
         cache_rate: 1.0
-        num_workers: 4
+        num_workers: 8
 
     dataloader:
       name: DataLoader
@@ -371,10 +370,10 @@ data:
         batch_size: *batch_size
         shuffle: True
         pin_memory: False
-        num_workers: 4
+        num_workers: 16
 
   validation:
-    data_list_key: validation
+    data_list_key: testing
     transforms:
     - name: LoadImaged
       args:
@@ -395,10 +394,10 @@ data:
     - name: NormalizeIntensityRanged
       args:
         keys: [image]
-        a_min: -54.0
-        a_max: 258.0
-        subtrahend: 100.0
-        divisor: 50.0
+        a_min: *intensity.min
+        a_max: *intensity.max
+        subtrahend: *intensity.mean
+        divisor: *intensity.std
     - name: SaveMeta
       path: custom.meta
       args:
@@ -409,20 +408,20 @@ data:
         keys: [image, label]
 
     dataset:
-      name: Dataset
+      name: CacheDataset
+      args:
+        cache_rate: 1.0
+        num_workers: 8
 
     dataloader:
       name: DataLoader
       args:
         batch_size: 1
-        pin_memory: True
-        num_workers: 4
+        pin_memory: False
+        num_workers: 8
 
   predict:
-    data_list_key:
-    - training
-    - validation
-    - testing
+    data_list_key: testing
     transforms:
     - name: LoadImaged
       args:
@@ -443,10 +442,10 @@ data:
     - name: NormalizeIntensityRanged
       args:
         keys: [image]
-        a_min: -54.0
-        a_max: 258.0
-        subtrahend: 100.0
-        divisor: 50.0
+        a_min: *intensity.min
+        a_max: *intensity.max
+        subtrahend: *intensity.mean
+        divisor: *intensity.std
     - name: SaveMeta
       path: custom.meta
       args:
@@ -464,5 +463,5 @@ data:
       args:
         batch_size: 1
         pin_memory: True
-        num_workers: 4
+        num_workers: 8
 
