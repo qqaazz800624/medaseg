@@ -3,7 +3,12 @@ from typing import Any, Callable
 import torch
 import torch.nn as nn
 from torch.optim import Optimizer
-from torch.optim.lr_scheduler import _LRScheduler
+
+if torch.__version__ >= "2.0.0":
+    from torch.optim.lr_scheduler import LRScheduler
+else:
+    from torch.optim.lr_scheduler import _LRScheduler as LRScheduler
+
 from torch.utils.data import Dataset, DataLoader
 from pytorch_lightning import (
     Callback,
@@ -67,7 +72,7 @@ class OptimizerSpec(metaclass=ComponetSpecMeta):
 class SchedulerSpec(metaclass=ComponetSpecMeta):
     TYPE = ComponentType.SCHEDULER
     PROVIDERS = [_MONAI, _PyTorch]
-    INSTANCE_TYPE = _LRScheduler
+    INSTANCE_TYPE = LRScheduler
 
 class MetricSpec(metaclass=ComponetSpecMeta):
     TYPE = ComponentType.METRIC

@@ -3,6 +3,7 @@ from collections import OrderedDict
 from pathlib import Path
 
 import torch
+import pytorch_lightning
 
 def main(args):
     ckpt = torch.load(args.src, map_location='cpu')
@@ -15,6 +16,7 @@ def main(args):
 
     output["epoch"] = 0
     output["global_step"] = 0
+    output["pytorch-lightning_version"] = pytorch_lightning.__version__
 
     torch.save(output, args.dst)
 
