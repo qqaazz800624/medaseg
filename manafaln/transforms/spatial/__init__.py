@@ -6,20 +6,14 @@ __all__ = [
     "SimulateLowResolution",
     "SimulateLowResolutiond",
     "Reshape",
-    "Reshaped"
+    "Reshaped",
 ]
 
-from .anydim import (
-    AnyDim,
-    AnyDimd
-)
+from .anydim import AnyDim, AnyDimd
 from .augmentations import (
     RandFlipAxes3D,
     RandFlipAxes3Dd,
     SimulateLowResolution,
-    SimulateLowResolutiond
+    SimulateLowResolutiond,
 )
-from .reshape import (
-    Reshape,
-    Reshaped
-)
+from .reshape import Reshape, Reshaped
