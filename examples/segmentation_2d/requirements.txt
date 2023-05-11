@@ -1,0 +1,2 @@
+# To read nii.gz
+nibabel>=5.1.0

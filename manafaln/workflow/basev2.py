@@ -3,8 +3,12 @@ from monai.utils import ensure_tuple
 from pytorch_lightning import LightningModule
 
 from manafaln.common.constants import DefaultKeys
-from manafaln.core.builders import (InfererBuilder, ModelBuilder,
-                                    OptimizerBuilder, SchedulerBuilder)
+from manafaln.core.builders import (
+    InfererBuilder,
+    ModelBuilder,
+    OptimizerBuilder,
+    SchedulerBuilder,
+)
 from manafaln.core.loss import LossHelper
 from manafaln.core.metricv2 import MetricCollection
 from manafaln.core.transforms import build_transforms
@@ -13,12 +17,13 @@ from manafaln.utils import get_items, update_items
 DEFAULT_INPUT_KEY = DefaultKeys.INPUT_KEY
 DEFAULT_OUTPUT_KEY = DefaultKeys.OUTPUT_KEY
 
+
 class SupervisedLearningV2(LightningModule):
     def __init__(self, config: dict):
         super().__init__()
 
         # Save all hyperparameters
-        self.save_hyperparameters({ "workflow": config })
+        self.save_hyperparameters({"workflow": config})
 
         # Get configurations for all components
         components = self.hparams.workflow["components"]
@@ -30,7 +35,7 @@ class SupervisedLearningV2(LightningModule):
         self.build_metrics(components.get("metrics"))
 
         # Configure training settings
-        settings = self.hparams.workflow["settings"]
+        settings = self.hparams.workflow.get("settings", {})
         self.build_decollate_fn(settings.get("decollate"))
 
     def build_model(self, config):
@@ -38,11 +43,14 @@ class SupervisedLearningV2(LightningModule):
             raise KeyError(f"model is required in workflow {self.__class__.__name__}")
         builder = ModelBuilder()
         self.model = builder(config)
-        self.model_input_keys = ensure_tuple(config.get("input_keys", DEFAULT_INPUT_KEY))
-        self.model_output_keys = ensure_tuple(config.get("output_keys", DEFAULT_OUTPUT_KEY))
+        self.model_input_keys = ensure_tuple(
+            config.get("input_keys", DEFAULT_INPUT_KEY)
+        )
+        self.model_output_keys = ensure_tuple(
+            config.get("output_keys", DEFAULT_OUTPUT_KEY)
+        )
 
     def build_post_processing(self, config):
-        # TODO: Check backpropagation with torch.Tensor.requires_grad = True
         if config is None:
             config = []
         self.post_processing = build_transforms(config)
@@ -63,9 +71,7 @@ class SupervisedLearningV2(LightningModule):
         if config is None:
             config = {}
         self.post_transforms = {
-            phase: build_transforms(
-                config.get(phase, [])
-            )
+            phase: build_transforms(config.get(phase, []))
             for phase in ["training", "validation", "predict"]
         }
 
@@ -98,10 +104,7 @@ class SupervisedLearningV2(LightningModule):
         sch_builder = SchedulerBuilder()
 
         opt = {
-            "optimizer": opt_builder(
-                opt_config,
-                params=self.get_optimize_parameters()
-            )
+            "optimizer": opt_builder(opt_config, params=self.get_optimize_parameters())
         }
 
         if not sch_config is None:
@@ -117,7 +120,7 @@ class SupervisedLearningV2(LightningModule):
             opt["lr_scheduler"] = {
                 "scheduler": sch_builder(sch_config, opt=opt["optimizer"]),
                 "interval": interval,
-                "frequency": frequency
+                "frequency": frequency,
             }
 
         return opt

@@ -6,20 +6,9 @@ __all__ = [
     "Fill",
     "Filld",
     "OverlayMask",
-    "OverlayMaskd"
+    "OverlayMaskd",
 ]
 
-from .draw import (
-    DrawPoints,
-    DrawPointsd,
-    Interpolate,
-    Interpolated,
-)
-from .fill import (
-    Fill,
-    Filld
-)
-from .overlay import (
-    OverlayMask,
-    OverlayMaskd
-)
+from .draw import DrawPoints, DrawPointsd, Interpolate, Interpolated
+from .fill import Fill, Filld
+from .overlay import OverlayMask, OverlayMaskd

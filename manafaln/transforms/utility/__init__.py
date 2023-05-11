@@ -7,19 +7,13 @@ __all__ = [
     "ParseXAnnotationDetectionLabel",
     "ParseXAnnotationDetectionLabeld",
     "ParseXAnnotationSegmentationLabel",
-    "ParseXAnnotationSegmentationLabeld"
+    "ParseXAnnotationSegmentationLabeld",
 ]
 
-from .utility import (
-    ScalarToNumpyArrayd,
-    UnpackDict,
-    UnpackDictd,
-    Unsqueeze,
-    Unsqueezed,
-)
 from .parse_x_annotation import (
     ParseXAnnotationDetectionLabel,
     ParseXAnnotationDetectionLabeld,
     ParseXAnnotationSegmentationLabel,
     ParseXAnnotationSegmentationLabeld,
 )
+from .utility import ScalarToNumpyArrayd, UnpackDict, UnpackDictd, Unsqueeze, Unsqueezed
