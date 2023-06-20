@@ -10,7 +10,7 @@ Simply download with git and install.
 ```
 git clone https://gitlab.com/nanaha1003/manafaln.git
 cd manafaln
-python setup.py install
+pip install .
 ```
 
 Or use our Dockerfile to build a container.
