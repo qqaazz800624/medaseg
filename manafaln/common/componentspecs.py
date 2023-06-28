@@ -63,7 +63,7 @@ class LossSpec(metaclass=ComponetSpecMeta):
 
 class InfererSpec(metaclass=ComponetSpecMeta):
     TYPE = ComponentType.INFERER
-    PROVIDERS = [_MONAI]
+    PROVIDERS = [_Native, _MONAI]
     INSTANCE_TYPE = Callable
 
 class OptimizerSpec(metaclass=ComponetSpecMeta):

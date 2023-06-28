@@ -3,6 +3,8 @@ __all__ = [
     "RandAdjustBrightnessAndContrastd",
     "RandInverseIntensityGamma",
     "RandInverseIntensityGammad",
+    "AdaptiveHistogramNormalize",
+    "AdaptiveHistogramNormalized",
     "CLAHE",
     "CLAHEd",
     "NormalizeIntensityRange",
@@ -16,6 +18,8 @@ from .augmentations import (
     RandInverseIntensityGammad
 )
 from .clahe import (
+    AdaptiveHistogramNormalize,
+    AdaptiveHistogramNormalized,
     CLAHE,
     CLAHEd
 )

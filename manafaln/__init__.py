@@ -5,6 +5,7 @@ __all__ = [
     "core",
     "callbacks",
     "data",
+    "inferers",
     "transforms",
     "metrics",
     "models",

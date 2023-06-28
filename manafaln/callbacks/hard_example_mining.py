@@ -9,8 +9,8 @@ from pytorch_lightning import Callback, Trainer
 from pytorch_lightning.callbacks.progress.tqdm_progress import Tqdm, TQDMProgressBar
 from pytorch_lightning.trainer.supporters import CombinedLoader
 
-from manafaln.common.constants import DefaultKeys
 from manafaln.core.builders import ComponentBuilder, DataLoaderBuilder
+from manafaln.core.metricv2 import DEFAULT_METRIC_INPUT_KEYS
 from manafaln.data import DecathlonDataModule
 from manafaln.utils import get_items, update_items
 from manafaln.workflow import SupervisedLearningV2
@@ -36,10 +36,7 @@ class OnlineHardExampleMining(Callback):
     def __init__(
         self,
         hardness_config: Dict = None,
-        input_keys: Sequence[str] = (
-            DefaultKeys.OUTPUT_KEY,
-            DefaultKeys.LABEL_KEY,
-        ),
+        input_keys: Sequence[str] = DEFAULT_METRIC_INPUT_KEYS,
         starting_epoch: int = 1,
         epoch_interval: int = 1,
         smooth: float = 0.0,
