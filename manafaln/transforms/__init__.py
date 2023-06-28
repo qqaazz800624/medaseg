@@ -9,6 +9,8 @@ from .draw import (
     OverlayMaskd,
 )
 from .intensity import (
+    AdaptiveHistogramNormalize,
+    AdaptiveHistogramNormalized,
     CLAHE,
     CLAHEd,
     NormalizeIntensityRange,

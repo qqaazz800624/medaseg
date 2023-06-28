@@ -1,2 +1,5 @@
-# To read nii.gz
+# For data splitting
+scikit-learn>=1.2.2
+
+# For reading nii.gz
 nibabel>=5.1.0

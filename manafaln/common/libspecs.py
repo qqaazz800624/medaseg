@@ -15,6 +15,7 @@ class LibSpecMeta(type):
 class LibSpecNative(metaclass=LibSpecMeta):
     MODEL      = "manafaln.models"
     LOSS       = "manafaln.losses"
+    INFERER    = "manafaln.inferers"
     METRIC     = "manafaln.metrics"
     METRICV2   = "manafaln.metrics"
     TRANSFORM  = "manafaln.transforms"

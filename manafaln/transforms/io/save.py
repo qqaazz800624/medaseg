@@ -4,7 +4,7 @@ from monai.transforms import SaveImaged as _SaveImaged
 
 class SaveImage(_SaveImage):
     """
-    Overide monai.transforms.SaveImage with options.
+    Overrides monai.transforms.SaveImage with options.
     """
 
     def __init__(
@@ -27,7 +27,7 @@ class SaveImage(_SaveImage):
 
 class SaveImaged(_SaveImaged):
     """
-    Overide monai.transforms.SaveImaged with options.
+    Overrides monai.transforms.SaveImaged with options.
     """
 
     def __init__(

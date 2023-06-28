@@ -2,6 +2,7 @@ import os
 from typing import Literal, Sequence, Union
 
 import pandas as pd
+from monai.config.type_definitions import PathLike
 from monai.utils import PostFix, ensure_tuple
 from monai.utils.misc import ImageMetaKey
 from pytorch_lightning.callbacks import BasePredictionWriter
@@ -9,21 +10,28 @@ from pytorch_lightning.callbacks import BasePredictionWriter
 from manafaln.common.constants import DefaultKeys
 from manafaln.utils.misc import get_item, get_items
 
-DEFAULT_UID_KEY = PostFix.meta(DefaultKeys.INPUT_KEY) + "." + ImageMetaKey.FILENAME_OR_OBJ
+DEFAULT_UID_KEY = (
+    PostFix.meta(DefaultKeys.INPUT_KEY) + "." + ImageMetaKey.FILENAME_OR_OBJ
+)
 DEFAULT_OUTPUT_KEYS = DefaultKeys.OUTPUT_KEY
+
 
 class ClassificationPredictionWriter(BasePredictionWriter):
     def __init__(
         self,
-        output_file: os.PathLike,
-        uid_key: str=DEFAULT_UID_KEY,
-        pred_keys: Union[Sequence[str], str]=DEFAULT_OUTPUT_KEYS,
-        sep: str=".",
+        output_file: PathLike,
+        uid_key: str = DEFAULT_UID_KEY,
+        pred_keys: Union[Sequence[str], str] = DEFAULT_OUTPUT_KEYS,
+        sep: str = ".",
         write_interval: Literal["batch", "epoch", "batch_and_epoch"] = "batch",
     ):
         super().__init__(write_interval)
         self.output_file = output_file
-        os.makedirs(os.path.dirname(self.output_file), exist_ok=True)
+
+        dirname = os.path.dirname(self.output_file)
+        if dirname != "":
+            os.makedirs(dirname, exist_ok=True)
+
         self.uid_key = uid_key
         self.pred_keys = ensure_tuple(pred_keys)
         self.sep = sep
@@ -41,13 +49,14 @@ class ClassificationPredictionWriter(BasePredictionWriter):
             preds = get_items(outputs, self.pred_keys, self.sep)
             self.preds.extend(zip(uids, *preds))
 
+
 class CSVPredictionWriter(ClassificationPredictionWriter):
     def __init__(
         self,
-        output_file: os.PathLike,
-        uid_key: str=DEFAULT_UID_KEY,
-        pred_keys: Union[Sequence[str], str]=DEFAULT_OUTPUT_KEYS,
-        sep: str=".",
+        output_file: PathLike,
+        uid_key: str = DEFAULT_UID_KEY,
+        pred_keys: Union[Sequence[str], str] = DEFAULT_OUTPUT_KEYS,
+        sep: str = ".",
     ):
         super().__init__(output_file, uid_key, pred_keys, sep, write_interval="epoch")
 
