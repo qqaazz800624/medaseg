@@ -44,6 +44,9 @@ class RatioSampler(Sampler):
         self.positive_r = self.positive_n % len(self.positives)
 
     def __iter__(self):
+        """
+        Returns an iterator that samples indices to create a balanced dataset.
+        """
         # Oversample positive instances
         positive_samples = self.positives * self.positive_q + random.sample(self.positives, self.positive_r)
 
@@ -57,12 +60,18 @@ class RatioSampler(Sampler):
         return iter(samples)
 
     def __len__(self):
+        """
+        Returns the total number of samples in the dataset.
+        """
         return len(self.negatives) + self.positive_n
 
     def get_labels(
         self,
         data_list: List[Dict[str, Any]]
     ) -> List[bool]:
+        """
+        Extracts labels from the data list and returns a list of boolean values.
+        """
         labels = [
             bool(data[self.key])
             for data in data_list

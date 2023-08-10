@@ -12,6 +12,10 @@ from monai.utils.misc import ensure_tuple_rep
 from monai.utils.type_conversion import convert_data_type, convert_to_tensor
 
 class RandAdjustBrightnessAndContrast(RandomizableTransform):
+    """
+    Randomly adjust the brightness and contrast of the input image.
+    """
+
     backend = [TransformBackends.TORCH, TransformBackends.NUMPY]
 
     def __init__(
@@ -21,6 +25,13 @@ class RandAdjustBrightnessAndContrast(RandomizableTransform):
         contrast_range: Optional[List[float]] = None,
         dtype: DtypeLike = np.float32
     ):
+        """
+        Args:
+            probs: Probability of applying the brightness and contrast adjustment.
+            brightness_range: Range of brightness adjustment. Must be a list with length 2.
+            contrast_range: Range of contrast adjustment. Must be a list with length 2.
+            dtype: Data type of the output image.
+        """
         probs = ensure_tuple_rep(probs, 2)
 
         if brightness_range is None:
@@ -57,11 +68,17 @@ class RandAdjustBrightnessAndContrast(RandomizableTransform):
         self.dtype = dtype
 
     def clear(self):
+        """
+        Clear the internal states.
+        """
         self._brightness = None
         self._contrast = None
         self._do_transform = False
 
     def randomize(self, data: Any = None) -> None:
+        """
+        Randomize the brightness and contrast adjustment.
+        """
         self.clear()
         p, q = self.R.rand(2)
 
@@ -84,6 +101,16 @@ class RandAdjustBrightnessAndContrast(RandomizableTransform):
         img: NdarrayOrTensor,
         randomize: bool = True
     ) -> NdarrayOrTensor:
+        """
+        Apply the brightness and contrast adjustment to the input image.
+
+        Args:
+            img: The input image to be adjusted.
+            randomize: Whether to randomize the brightness and contrast adjustment.
+
+        Returns:
+            The adjusted image.
+        """
         if randomize:
             self.randomize()
         if not self._do_transform:
@@ -109,6 +136,10 @@ class RandAdjustBrightnessAndContrast(RandomizableTransform):
         return ret
 
 class RandAdjustBrightnessAndContrastd(MapTransform, RandomizableTransform):
+    """
+    Randomly adjust the brightness and contrast of the input image for a batch of images.
+    """
+
     backend = RandAdjustBrightnessAndContrast.backend
 
     def __init__(
@@ -119,6 +150,14 @@ class RandAdjustBrightnessAndContrastd(MapTransform, RandomizableTransform):
         contrast_range: Optional[List[float]] = None,
         dtype: DtypeLike = np.float32
     ):
+        """
+        Args:
+            keys: Keys of the corresponding items to be transformed.
+            probs: Probability of applying the brightness and contrast adjustment.
+            brightness_range: Range of brightness adjustment. Must be a list with length 2.
+            contrast_range: Range of contrast adjustment. Must be a list with length 2.
+            dtype: Data type of the output image.
+        """
         MapTransform.__init__(self, keys)
         RandomizableTransform.__init__(self, 1.0)
 
@@ -127,12 +166,24 @@ class RandAdjustBrightnessAndContrastd(MapTransform, RandomizableTransform):
         )
 
     def randomize(self) -> None:
+        """
+        Randomize the brightness and contrast adjustment.
+        """
         self.t.randomize()
 
     def __call__(
         self,
         data: Mapping[Hashable, NdarrayOrTensor]
     ) -> Dict[Hashable, NdarrayOrTensor]:
+        """
+        Apply the brightness and contrast adjustment to the input images.
+
+        Args:
+            data: A dictionary containing the input images.
+
+        Returns:
+            A dictionary containing the adjusted images.
+        """
         d = dict(data)
         self.randomize()
 
@@ -146,6 +197,10 @@ class RandAdjustBrightnessAndContrastd(MapTransform, RandomizableTransform):
         return d
 
 class RandInverseIntensityGamma(RandomizableTransform):
+    """
+    Randomly adjust the inverse intensity gamma of the input image.
+    """
+
     backend = [TransformBackends.TORCH, TransformBackends.NUMPY]
 
     def __init__(
@@ -153,6 +208,11 @@ class RandInverseIntensityGamma(RandomizableTransform):
         prob: float = 0.15,
         gamma: Union[Sequence[float], float] = (0.7, 1.5)
     ):
+        """
+        Args:
+            prob: Probability of applying the inverse intensity gamma adjustment.
+            gamma: Range of gamma adjustment. Must be a pair of numbers or a single number >= 0.5.
+        """
         RandomizableTransform.__init__(self, prob)
 
         if isinstance(gamma, (int, float)):
@@ -167,12 +227,25 @@ class RandInverseIntensityGamma(RandomizableTransform):
         self.gamma_value: Optional[float] = None
 
     def randomize(self, data: Optional[Any] = None) -> None:
+        """
+        Randomize the inverse intensity gamma adjustment.
+        """
         super().randomize(None)
         if not self._do_transform:
             return None
         self.gamma_value = self.R.uniform(low=self.gamma[0], high=self.gamma[1])
 
     def __call__(self, img: NdarrayOrTensor, randomize: bool = True) -> NdarrayOrTensor:
+        """
+        Apply the inverse intensity gamma adjustment to the input image.
+
+        Args:
+            img: The input image to be adjusted.
+            randomize: Whether to randomize the inverse intensity gamma adjustment.
+
+        Returns:
+            The adjusted image.
+        """
         img = convert_to_tensor(img, track_meta=get_track_meta())
         if randomize:
             self.randomize()
@@ -194,6 +267,10 @@ class RandInverseIntensityGamma(RandomizableTransform):
         return y
 
 class RandInverseIntensityGammad(MapTransform, RandomizableTransform):
+    """
+    Randomly adjust the inverse intensity gamma of the input image for a batch of images.
+    """
+
     backend = RandInverseIntensityGamma.backend
 
     def __init__(
@@ -202,18 +279,36 @@ class RandInverseIntensityGammad(MapTransform, RandomizableTransform):
         prob: float = 0.15,
         gamma: Union[Sequence[float], float] = (0.7, 1.5)
     ):
+        """
+        Args:
+            keys: Keys of the corresponding items to be transformed.
+            prob: Probability of applying the inverse intensity gamma adjustment.
+            gamma: Range of gamma adjustment. Must be a pair of numbers or a single number >= 0.5.
+        """
         MapTransform.__init__(self, keys)
         RandomizableTransform.__init__(self, 1.0)
 
         self.t = RandInverseIntensityGamma(prob, gamma)
 
     def randomize(self, data: Optional[Any] = None) -> None:
+        """
+        Randomize the inverse intensity gamma adjustment.
+        """
         self.t.randomize()
 
     def __call__(
         self,
         data: Mapping[Hashable, NdarrayOrTensor]
     ) -> Dict[Hashable, NdarrayOrTensor]:
+        """
+        Apply the inverse intensity gamma adjustment to the input images.
+
+        Args:
+            data: A dictionary containing the input images.
+
+        Returns:
+            A dictionary containing the adjusted images.
+        """
         d = dict(data)
         self.randomize()
 

@@ -12,14 +12,34 @@ DEFAULT_POST_FIX = PostFix.meta()
 class LoadJSON(Transform):
     """
     Load json file.
+
+    Args:
+        json_only (bool, optional): If True, only the json data will be returned. 
+            If False, both the json data and meta data will be returned. 
+            Defaults to False.
+
+    Returns:
+        tuple: A tuple containing the loaded json data and meta data (optional).
+
     """
+
     def __init__(
         self,
-        json_only: bool=False
+        json_only: bool = False
     ):
         self.json_only = json_only
 
     def __call__(self, path: PathLike):
+        """
+        Load the json file.
+
+        Args:
+            path (PathLike): The path to the json file.
+
+        Returns:
+            tuple: A tuple containing the loaded json data and meta data (optional).
+
+        """
         # Read json file
         data = load_yaml(path)
 
@@ -29,7 +49,24 @@ class LoadJSON(Transform):
         meta_data = {ImageMetaKey.FILENAME_OR_OBJ: path}
         return data, meta_data
 
+
 class LoadJSONd(MapTransform):
+    """
+    Load multiple json files.
+
+    Args:
+        keys (KeysCollection): The keys of the json files to load.
+        meta_key_postfix (str, optional): The postfix to add to the keys of the meta data.
+            Defaults to the default postfix.
+        allow_missing_keys (bool, optional): If True, missing keys will be ignored.
+            If False, an error will be raised for missing keys.
+            Defaults to False.
+
+    Returns:
+        dict: A dictionary containing the loaded json data and meta data (optional).
+
+    """
+
     def __init__(
         self,
         keys: KeysCollection,
@@ -44,6 +81,16 @@ class LoadJSONd(MapTransform):
         self,
         data: Mapping[Hashable, PathLike]
     ):
+        """
+        Load the multiple json files.
+
+        Args:
+            data (Mapping[Hashable, PathLike]): A mapping of keys to the paths of the json files.
+
+        Returns:
+            dict: A dictionary containing the loaded json data and meta data (optional).
+
+        """
         d = dict(data)
         for key in self.key_iterator(d):
             d[key], meta_data = self.t(d[key])

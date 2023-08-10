@@ -113,6 +113,15 @@ class OverlayMaskd(MapTransform):
         self.overlay = OverlayMask(colors=colors, alpha=alpha, indices=indices)
 
     def __call__(self, data: Mapping[Hashable, NdarrayOrTensor]):
+        """
+        Applies the overlay mask transform on the given data.
+
+        Args:
+            data (Mapping[Hashable, NdarrayOrTensor]): The data to apply the transform on.
+
+        Returns:
+            The transformed data.
+        """
         d = dict(data)
         for image_key, mask_key, name in self.key_iterator(
             d, self.mask_keys, self.names

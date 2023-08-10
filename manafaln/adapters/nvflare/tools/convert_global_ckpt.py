@@ -5,6 +5,15 @@ from pathlib import Path
 import torch
 
 def main(args):
+    """
+    Load a checkpoint from the source file and save a modified version of it to the destination file.
+
+    Args:
+        args (argparse.Namespace): Command line arguments.
+
+    Returns:
+        None
+    """
     ckpt = torch.load(args.src, map_location='cpu')
 
     output = OrderedDict()

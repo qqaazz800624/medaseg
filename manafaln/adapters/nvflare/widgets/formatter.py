@@ -9,6 +9,15 @@ from nvflare.app_common.abstract.formatter import Formatter
 from nvflare.app_common.app_constant import AppConstants
 
 def extract_tensor(data: Any) -> Any:
+    """
+    Extracts the tensor data as a list.
+
+    Args:
+        data (Any): The input data.
+
+    Returns:
+        Any: The tensor data as a list.
+    """
     if isinstance(data, torch.Tensor):
         return data.tolist()
     if isinstance(data, np.ndarray):
@@ -16,14 +25,42 @@ def extract_tensor(data: Any) -> Any:
     return data
 
 def simplify_metrics(metrics: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Simplifies the metrics dictionary by extracting tensor data as lists.
+
+    Args:
+        metrics (Dict[str, Any]): The metrics dictionary.
+
+    Returns:
+        Dict[str, Any]: The simplified metrics dictionary.
+    """
     return {k: extract_tensor(v) for k, v in metrics}
 
 class SimpleFormatter(Formatter):
+    """
+    A simple formatter class that formats FLContext data.
+
+    Attributes:
+        results (Dict[str, Any]): The formatted results.
+
+    Methods:
+        format(fl_ctx: FLContext) -> str: Formats the FLContext data.
+
+    """
     def __init__(self) -> None:
         super().__init__()
         self.results = {}
 
     def format(self, fl_ctx: FLContext) -> str:
+        """
+        Formats the FLContext data.
+
+        Args:
+            fl_ctx (FLContext): The FLContext object.
+
+        Returns:
+            str: The formatted data as a string.
+        """
         # Get validation result
         validation_shareables_dict = fl_ctx.get_prop(
             AppConstants.VALIDATION_RESULT,

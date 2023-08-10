@@ -11,6 +11,19 @@ from nvflare.app_common.pt.pt_fed_utils import PTModelPersistenceFormatManager
 from nvflare.app_common.app_constant import DefaultCheckpointFileName
 
 class SimpleModelLocator(ModelLocator):
+    """
+    A class that locates the model for federated learning.
+
+    Attributes:
+    - model_dir (str): The directory where the model is stored.
+    - model_file_name (str): The name of the model file.
+    - best_model_file_name (str): The name of the best model file.
+
+    Methods:
+    - get_model_names(fl_ctx: FLContext) -> List[str]: Returns a list of model names.
+    - locate_model(model_name, fl_ctx: FLContext) -> DXO: Locates and loads the specified model.
+    """
+
     SERVER_MODEL_NAME = "server"
     SERVER_BEST_MODEL_NAME = "server_best"
 
@@ -20,6 +33,14 @@ class SimpleModelLocator(ModelLocator):
         model_name=DefaultCheckpointFileName.GLOBAL_MODEL,
         best_model_name=DefaultCheckpointFileName.BEST_GLOBAL_MODEL
     ):
+        """
+        Initializes the SimpleModelLocator.
+
+        Parameters:
+        - model_dir (str): The directory where the model is stored.
+        - model_name (str): The name of the model file.
+        - best_model_name (str): The name of the best model file.
+        """
         super().__init__()
 
         self.model_dir = model_dir
@@ -27,12 +48,31 @@ class SimpleModelLocator(ModelLocator):
         self.best_model_file_name = best_model_name
 
     def get_model_names(self, fl_ctx: FLContext) -> List[str]:
+        """
+        Returns a list of model names.
+
+        Parameters:
+        - fl_ctx (FLContext): The FLContext object.
+
+        Returns:
+        - List[str]: A list of model names.
+        """
         return [
             SimpleModelLocator.SERVER_MODEL_NAME,
             SimpleModelLocator.SERVER_BEST_MODEL_NAME
         ]
 
     def locate_model(self, model_name, fl_ctx: FLContext) -> DXO:
+        """
+        Locates and loads the specified model.
+
+        Parameters:
+        - model_name (str): The name of the model to locate.
+        - fl_ctx (FLContext): The FLContext object.
+
+        Returns:
+        - DXO: The loaded model as a DXO object.
+        """
         dxo = None
         engine = fl_ctx.get_engine()
         app_root = fl_ctx.get_prop(FLContextKey.APP_ROOT)

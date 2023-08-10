@@ -12,6 +12,14 @@ from manafaln.apps.utils import (
 
 def run(config_train, config_data, config_workflow, ckpt) -> List[Dict[str, float]]:
     """
+    Run the validation process.
+
+    Args:
+        config_train (dict): Configuration for the trainer.
+        config_data (dict): Configuration for the data module.
+        config_workflow (dict): Configuration for the workflow.
+        ckpt (str): Path to the checkpoint file.
+
     Returns:
         List[Dict[str, float]]: Computed metrics of different dataloaders.
     """

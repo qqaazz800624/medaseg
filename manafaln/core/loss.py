@@ -36,9 +36,7 @@ class LossHelper(ModuleDict, _Loss):
         ValueError: log_label is not unique
         ValueError: log_label is same as `PYTORCH_LIGHTNING_LOSS_KEY`
     """
-    def __init__(self,
-        config: List[Dict[str, Any]],
-    ):
+    def __init__(self, config: List[Dict[str, Any]]):
         super().__init__()
 
         # Validate the log labels, ensure uniqueness

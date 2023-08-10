@@ -116,6 +116,7 @@ class ComponentBuilder(object):
 
         return out
 
+
 class ModelBuilder(ComponentBuilder):
     """A class for building models."""
 
@@ -133,6 +134,7 @@ class ModelBuilder(ComponentBuilder):
                 model is an instance of the expected class.
         """
         super().__init__(component_type, check_instance)
+
 
 class LossBuilder(ComponentBuilder):
     """A class for building loss functions."""
@@ -152,6 +154,7 @@ class LossBuilder(ComponentBuilder):
         """
         super().__init__(component_type, check_instance)
 
+
 class InfererBuilder(ComponentBuilder):
     """A class for building inferers."""
 
@@ -169,6 +172,7 @@ class InfererBuilder(ComponentBuilder):
                 inferer is an instance of the expected class.
         """
         super().__init__(component_type, check_instance)
+
 
 class OptimizerBuilder(ComponentBuilder):
     """A class for building optimizers."""
@@ -214,6 +218,7 @@ class OptimizerBuilder(ComponentBuilder):
 
         return out
 
+
 class SchedulerBuilder(ComponentBuilder):
     """A class for building schedulers."""
 
@@ -258,6 +263,7 @@ class SchedulerBuilder(ComponentBuilder):
 
         return out
 
+
 class MetricBuilder(ComponentBuilder):
     """A class for building metrics."""
 
@@ -275,6 +281,7 @@ class MetricBuilder(ComponentBuilder):
                 metric is an instance of the expected class.
         """
         super().__init__(component_type, check_instance)
+
 
 class DatasetBuilder(ComponentBuilder):
     """A class for building datasets."""
@@ -326,6 +333,7 @@ class DatasetBuilder(ComponentBuilder):
             self._check_instance(spec, out)
 
         return out
+
 
 class DataLoaderBuilder(ComponentBuilder):
     """A class for building data loaders."""
@@ -384,6 +392,7 @@ class DataLoaderBuilder(ComponentBuilder):
 
         return out
 
+
 class TransformBuilder(ComponentBuilder):
     """A class for building data transforms."""
 
@@ -401,6 +410,7 @@ class TransformBuilder(ComponentBuilder):
                 transform is an instance of the expected class.
         """
         super().__init__(component_type, check_instance)
+
 
 class DataModuleBuilder(ComponentBuilder):
     """A class for building data modules."""
@@ -443,6 +453,7 @@ class DataModuleBuilder(ComponentBuilder):
             self._check_instance(spec, out)
 
         return out
+
 
 class WorkflowBuilder(ComponentBuilder):
     """A class for building workflows."""
@@ -558,6 +569,7 @@ class CallbackBuilder(ComponentBuilder):
         """
         super().__init__(component_type, check_instance)
 
+
 class LoggerBuilder(ComponentBuilder):
     """A class for building loggers."""
 
@@ -576,6 +588,7 @@ class LoggerBuilder(ComponentBuilder):
         """
         super().__init__(component_type, check_instance)
 
+
 class MetricV2Builder(ComponentBuilder):
     """A class for building metricv2."""
 
@@ -593,6 +606,7 @@ class MetricV2Builder(ComponentBuilder):
                 metricv2 is an instance of the expected class.
         """
         super().__init__(component_type, check_instance)
+
 
 class SamplerBuilder(ComponentBuilder):
     """A class for building samplers."""

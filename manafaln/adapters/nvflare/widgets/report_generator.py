@@ -11,6 +11,21 @@ from nvflare.app_common.app_event_type import AppEventType
 from nvflare.widgets.widget import Widget
 
 class ReportGenerator(Widget):
+    """
+    A class that generates a report file based on validation results.
+
+    Args:
+        results_dir (Union[str, Path]): The directory where the report file will be saved. Defaults to AppConstants.CROSS_VAL_DIR.
+        report_path (Union[str, Path]): The path of the report file. Defaults to "cross_val_results.yaml".
+
+    Attributes:
+        ALLOWED_FILE_EXTENSIONS (list): A list of allowed file extensions for the report file.
+
+    Raises:
+        ValueError: If the report file extension is not .yaml, .yml, or .json.
+
+    """
+
     ALLOWED_FILE_EXTENSIONS = [".yaml", ".yml", ".json"]
 
     def __init__(
@@ -31,6 +46,15 @@ class ReportGenerator(Widget):
         self.val_results = []
 
     def handle_event(self, event_type: str, fl_ctx: FLContext):
+        """
+        Handles events related to validation results.
+
+        Args:
+            event_type (str): The type of the event.
+            fl_ctx (FLContext): The FLContext object containing the event information.
+
+        """
+
         if event_type == EventType.START_RUN:
             self.val_results.clear()
         elif event_type == AppEventType.VALIDATION_RESULT_RECEIVED:

@@ -19,6 +19,16 @@ def run(
     seed: Optional[int] = None,
     ckpt_path: Optional[str] = None,
 ):
+    """
+    Run the training workflow.
+
+    Args:
+        config_train (Dict): The configuration for training.
+        config_data (Dict): The configuration for data.
+        config_workflow (Dict): The configuration for the workflow.
+        seed (Optional[int], optional): The random seed for deterministic training. Defaults to None.
+        ckpt_path (Optional[str], optional): The path to the checkpoint file. Defaults to None.
+    """
     # Set seed for deterministic
     if seed is not None:
         # Don't touch algorithm settings here

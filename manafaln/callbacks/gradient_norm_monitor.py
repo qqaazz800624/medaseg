@@ -5,10 +5,26 @@ from torch.optim import Optimizer
 from pytorch_lightning import Callback, LightningModule, Trainer
 
 class GradientNormMonitor(Callback):
-    def __init__(
-        self,
-        norm_type: float = 2.0
-    ) -> None:
+    """
+    Callback class to monitor the gradient norm during training.
+
+    Args:
+        norm_type (float): The type of norm to calculate. Default is 2.0.
+
+    Attributes:
+        norm_type (float): The type of norm to calculate.
+
+    Methods:
+        on_before_optimizer_step: Called before each optimizer step to calculate and log the gradient norm.
+    """
+
+    def __init__(self, norm_type: float = 2.0) -> None:
+        """
+        Initializes the GradientNormMonitor callback.
+
+        Args:
+            norm_type (float): The type of norm to calculate. Default is 2.0.
+        """
         super().__init__()
         self.norm_type = norm_type
 
@@ -19,6 +35,15 @@ class GradientNormMonitor(Callback):
         optimizer: Optimizer,
         opt_idx: int
     ):
+        """
+        Callback method called before each optimizer step to calculate and log the gradient norm.
+
+        Args:
+            trainer (Trainer): The PyTorch Lightning Trainer object.
+            pl_module (LightningModule): The PyTorch Lightning LightningModule object.
+            optimizer (Optimizer): The optimizer being used for training.
+            opt_idx (int): The index of the optimizer being used.
+        """
         # Extract gradients
         grads = [p.grad for p in pl_module.parameters() if p.grad is not None]
         device = grads[0].device

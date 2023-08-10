@@ -12,7 +12,23 @@ DEFAULT_INPUT_KEY = DefaultKeys.INPUT_KEY
 DEFAULT_OUTPUT_KEY = DefaultKeys.OUTPUT_KEY
 
 class SelfSupervisedContrastiveLearning(SupervisedLearningV2):
+    """
+    A class for self-supervised contrastive learning.
+
+    Inherits from SupervisedLearningV2 class.
+    """
+
     def build_model(self, config):
+        """
+        Build the model for self-supervised contrastive learning.
+
+        Args:
+            config (dict): The configuration for building the model.
+
+        Raises:
+            KeyError: If model is not provided in the workflow configuration.
+
+        """
         if config is None:
             raise KeyError(f"model is required in workflow {self.__class__.__name__}")
         builder = ModelBuilder()
@@ -27,12 +43,35 @@ class SelfSupervisedContrastiveLearning(SupervisedLearningV2):
             ensure_tuple(config.get("output_keys_contrast", [s+"_contrast" for s in self.model_output_keys]))
 
     def _training_step(self, batch, model_input_keys, model_output_keys):
+        """
+        Perform a single training step.
+
+        Args:
+            batch (dict): The input batch.
+            model_input_keys (tuple): The keys for model input.
+            model_output_keys (tuple): The keys for model output.
+
+        Returns:
+            dict: The updated batch.
+
+        """
         model_input = get_items(batch, model_input_keys)
         preds = self.model(*model_input)
         batch = update_items(batch, model_output_keys, preds)
         return batch
 
     def training_step(self, batch: dict, batch_idx):
+        """
+        Perform a training step.
+
+        Args:
+            batch (dict): The input batch.
+            batch_idx (int): The index of the batch.
+
+        Returns:
+            dict: The loss value.
+
+        """
         batch = self._training_step(batch, self.model_input_keys, self.model_output_keys)
         batch = self._training_step(batch, self.model_input_keys_contrast, self.model_output_keys_contrast)
 
@@ -62,16 +101,47 @@ class SelfSupervisedContrastiveLearning(SupervisedLearningV2):
         return loss
 
 class SemiSupervisedContrastiveLearning(SelfSupervisedContrastiveLearning, SemiSupervisedLearning):
+    """
+    A class for semi-supervised contrastive learning.
+
+    Inherits from SelfSupervisedContrastiveLearning and SemiSupervisedLearning classes.
+    """
+
     def __init__(self, config):
+        """
+        Initialize the SemiSupervisedContrastiveLearning class.
+
+        Args:
+            config (dict): The configuration for the class.
+
+        """
         super().__init__(config)
         self.features_keys = config["settings"]["features_keys"]
 
     def build_loss_fn(self, config):
+        """
+        Build the loss function for semi-supervised contrastive learning.
+
+        Args:
+            config (dict): The configuration for building the loss function.
+
+        """
         super().build_loss_fn(config)
         contrastive_loss = LossHelper(config["contrastive"])
         self.loss_fn.update({"contrastive": contrastive_loss})
 
     def training_step(self, batch: dict, batch_idx):
+        """
+        Perform a training step for semi-supervised contrastive learning.
+
+        Args:
+            batch (dict): The input batch.
+            batch_idx (int): The index of the batch.
+
+        Returns:
+            dict: The loss value.
+
+        """
         # Labeled data
         batch["labeled"] = self._training_step(
             batch["labeled"], self.model_input_keys, self.model_output_keys)

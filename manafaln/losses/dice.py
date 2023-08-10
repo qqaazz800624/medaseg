@@ -8,6 +8,26 @@ from monai.networks import one_hot
 from monai.utils import DiceCEReduction, look_up_option
 
 class MultipleBackgroundDiceFocalLoss(_Loss):
+    """
+    Loss function that combines Dice loss and Focal loss for multiple background channels.
+
+    Args:
+        background_channels (List[int]): List of indices of background channels.
+        to_onehot_y (bool): Whether to convert target to one-hot encoding. Default is False.
+        sigmoid (bool): Whether to apply sigmoid activation to the input. Default is False.
+        softmax (bool): Whether to apply softmax activation to the input. Default is False.
+        squared_pred (bool): Whether to square the predictions. Default is False.
+        jaccard (bool): Whether to use Jaccard index instead of Dice coefficient. Default is False.
+        reduction (str): Type of reduction to apply. Default is "mean".
+        smooth_nr (float): Smoothing factor for numerator. Default is 1e-5.
+        smooth_dr (float): Smoothing factor for denominator. Default is 1e-5.
+        batch (bool): Whether to compute loss per batch. Default is False.
+        gamma (float): Focal loss gamma parameter. Default is 1.0.
+        focal_weight (Optional[torch.Tensor]): Weight tensor for focal loss. Default is None.
+        lambda_dice (float): Weight for Dice loss. Default is 1.0.
+        lambda_focal (float): Weight for Focal loss. Default is 1.0.
+    """
+    
     def __init__(
         self,
         background_channels: List[int],
@@ -63,6 +83,16 @@ class MultipleBackgroundDiceFocalLoss(_Loss):
         self.lambda_focal = lambda_focal
 
     def reduce_background_channels(self, tensor: torch.Tensor) -> torch.Tensor:
+        """
+        Reduce the background channels in the tensor.
+
+        Args:
+            tensor (torch.Tensor): Input tensor.
+
+        Returns:
+            torch.Tensor: Tensor with reduced background channels.
+        """
+
         n_chs = tensor.shape[1]
         slices = torch.split(tensor, 1, dim=1)
 

@@ -31,8 +31,15 @@ class SegClfModel(torch.nn.Module):
         self.seg_activation = seg_activation
 
     def forward(self, img: torch.Tensor):
-        """Sequentially pass `x` through segmentation and classification model."""
+        """
+        Sequentially pass `img` through segmentation and classification model.
 
+        Args:
+            img (torch.Tensor): The input image tensor.
+
+        Returns:
+            Tuple[torch.Tensor, torch.Tensor]: The segmentation output and classification output.
+        """
         pred_seg: torch.Tensor = self.segmentation_model(img)
 
         if self.seg_activation == "sigmoid":

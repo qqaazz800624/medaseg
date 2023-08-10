@@ -7,8 +7,18 @@ from monai.utils.enums import TransformBackends
 
 class Dilation(Transform):
     """
-    Apply dilation to 2D input
+    Apply dilation to 2D input.
+
+    Args:
+        dilate (Tuple[int, int]): The size of the dilation kernel.
+        mode (Literal["avg", "max"], optional): The type of dilation operation to apply. Defaults to "avg".
+        batched (bool, optional): Whether to apply dilation to a batch of images. Defaults to False.
+
+    Raises:
+        NotImplementedError: If an unsupported mode is provided.
+
     """
+
     backend = [TransformBackends.TORCH]
 
     def __init__(self,
@@ -36,7 +46,17 @@ class Dilation(Transform):
         else:
             raise NotImplementedError
 
-    def __call__(self, data: torch.Tensor):
+    def __call__(self, data: torch.Tensor) -> torch.Tensor:
+        """
+        Apply dilation to the input tensor.
+
+        Args:
+            data (torch.Tensor): The input tensor to apply dilation to.
+
+        Returns:
+            torch.Tensor: The dilated tensor.
+
+        """
         if not self.batched:
             data = data.unsqueeze(0)
         data = self.dilate(data)
@@ -63,6 +83,16 @@ class Dilationd(MapTransform):
         self,
         data
     ):
+        """
+        Apply dilation to the input data.
+
+        Args:
+            data: The input data to apply dilation to.
+
+        Returns:
+            dict: The dilated data.
+
+        """
         d = dict(data)
         for key in self.key_iterator(d):
             d[key] = self.t(d[key])
