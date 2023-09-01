@@ -40,13 +40,13 @@ class ParseXAnnotationSegmentationLabel(Transform):
         W, H = size
         for segment in segments:
             x, y = segment["a"]
-            x = float(x/W)
-            y = float(y/H)
+            x = float(x / W)
+            y = float(y / H)
             pts.append([x, y])
 
         x, y = segment["b"]
-        x = float(x/W)
-        y = float(y/H)
+        x = float(x / W)
+        y = float(y / H)
         pts.append([x, y])
         return pts
 
@@ -144,10 +144,10 @@ class ParseXAnnotationDetectionLabel(Transform):
             x_min, y_min = shape["a"]
             x_max, y_max = shape["b"]
             if self.spatial_size is not None:
-                x_min = x_min/size[0]*self.spatial_size[0]
-                y_min = y_min/size[1]*self.spatial_size[1]
-                x_max = x_max/size[0]*self.spatial_size[0]
-                y_max = y_max/size[1]*self.spatial_size[1]
+                x_min = x_min / size[0] * self.spatial_size[0]
+                y_min = y_min / size[1] * self.spatial_size[1]
+                x_max = x_max / size[0] * self.spatial_size[0]
+                y_max = y_max / size[1] * self.spatial_size[1]
             box = [x_min, y_min, x_max, y_max]
             boxes.append(box)
             labels.append(label)
