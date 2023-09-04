@@ -140,4 +140,5 @@ cython_debug/
 # PyTorch Lightning
 lightning_logs/
 
+# MacOS files
 .DS_Store
