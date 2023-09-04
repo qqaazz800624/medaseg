@@ -23,6 +23,17 @@ DEFAULT_INFO_KEYS = ImageMetaKey.FILENAME_OR_OBJ  # "filename_or_obj"
 
 
 class IterationMetricSaver(Callback):
+    """
+    A class that inherits from the Callback class. It saves metrics and predictions during validation iterations.
+
+    Args:
+        filename (str): The filename where the metrics will be saved.
+        metrics (Union[str, List[str]]): The metrics to be saved.
+        meta_dict_key (str, optional): The key in the metadata dictionary where the metrics will be stored. Defaults to DEFAULT_META_KEY.
+        meta_dict_info (Union[str, List[str]], optional): The additional information to be saved in the metadata dictionary. Defaults to DEFAULT_INFO_KEYS.
+        decollate (bool, optional): Indicates whether to decollate the data or not. If set to True, additional keys will be added to self.decollate_fn. Defaults to False.
+        save_preds (bool, optional): Indicates whether to save predictions or not. Defaults to False.
+    """
     def __init__(
         self,
         filename: str,
