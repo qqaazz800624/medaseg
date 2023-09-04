@@ -43,6 +43,17 @@ class IterationMetricSaver(Callback):
         decollate=False,
         save_preds=False,
     ) -> None:
+        """
+        A callback to save metrics and info at the end of each validation batch.
+
+        Args:
+            filename (str): File name to save the metrics and info.
+            metrics (Union[str, List[str]]): Metrics to save.
+            meta_dict_key (str, optional): Key to access the meta dictionary. Defaults to DEFAULT_META_KEY.
+            meta_dict_info (Union[str, List[str]], optional): Info keys to save. Defaults to DEFAULT_INFO_KEYS.
+            decollate (bool, optional): Whether to decollate the inputs. Defaults to False.
+            save_preds (bool, optional): Whether to save the predictions. Defaults to False.
+        """
         super().__init__()
 
         self.filename = filename
@@ -72,6 +83,17 @@ class IterationMetricSaver(Callback):
         batch_idx: int,
         dataloader_idx: int,
     ) -> None:
+        """
+        Called at the end of each validation batch.
+
+        Args:
+            trainer (Trainer): The trainer object.
+            pl_module (LightningModule): The lightning module.
+            outputs (List): The outputs of the validation batch.
+            batch (Dict): The validation batch.
+            batch_idx (int): The index of the batch.
+            dataloader_idx (int): The index of the dataloader.
+        """
         if self.decollate_fn is not None:
             if len(outputs) > 1:
                 raise ValueError(
@@ -106,6 +128,13 @@ class IterationMetricSaver(Callback):
     def on_validation_epoch_end(
         self, trainer: Trainer, pl_module: LightningModule
     ) -> None:
+        """
+        Called at the end of each validation epoch.
+
+        Args:
+            trainer (Trainer): The trainer object.
+            pl_module (LightningModule): The lightning module.
+        """
         if len(self.buffer) > 0:
             # Make titles
             columns = self.meta_dict_info[:]
@@ -125,22 +154,18 @@ class IterationMetricSaver(Callback):
 
 class CheckpointMetricSaver(Callback):
     def on_save_checkpoint(self, trainer, pl_module, checkpoint):
+        """
+        Called when saving a checkpoint.
+
+        Args:
+            trainer (Trainer): The trainer object.
+            pl_module (LightningModule): The lightning module.
+            checkpoint (Dict): The checkpoint dictionary.
+        """
         checkpoint["logged_metrics"] = trainer.logged_metrics
 
 
 class IterativeMetricSaver(Callback):
-    """
-    A callback to save metrics and info at the end of each validation epoch.
-    Args:
-        filename (PathLike): File name to save the metrics and info
-        states (Union[str, Sequence[str]]): Metrics state(s) to save
-        info_keys (Union[str, Sequence[str]], optional): Info key(s) to save.
-            Defaults to "image_meta_dict.filename_or_obj".
-
-    Attributes:
-        buffer (Dict): A dictionary to buffer the metrics and info before saving
-    """
-
     def __init__(
         self,
         filename: PathLike,
@@ -149,6 +174,14 @@ class IterativeMetricSaver(Callback):
             str, Sequence[str]
         ] = f"{DEFAULT_META_KEY}.{DEFAULT_INFO_KEYS}",
     ):
+        """
+        A callback to save metrics and info at the end of each validation epoch.
+
+        Args:
+            filename (PathLike): File name to save the metrics and info.
+            states (Union[str, Sequence[str]]): Metrics state(s) to save.
+            info_keys (Union[str, Sequence[str]], optional): Info key(s) to save. Defaults to DEFAULT_META_KEY.DEFAULT_INFO_KEYS.
+        """
         self.filename = filename
 
         dirname = os.path.dirname(self.filename)
@@ -166,6 +199,17 @@ class IterativeMetricSaver(Callback):
     def on_validation_batch_end(
         self, trainer, pl_module, outputs, batch, batch_idx, dataloader_idx
     ) -> None:
+        """
+        Called at the end of each validation batch.
+
+        Args:
+            trainer (Trainer): The trainer object.
+            pl_module (LightningModule): The lightning module.
+            outputs (Any): The outputs of the validation batch.
+            batch (Any): The validation batch.
+            batch_idx (int): The index of the batch.
+            dataloader_idx (int): The index of the dataloader.
+        """
         # In each validation step, get the info from batch to be saved.
         for key in self.info_keys:
             info = get_item(batch, key)
@@ -186,7 +230,6 @@ class IterativeMetricSaver(Callback):
 
             self.initialize_buffer()
 
-
 class ConfusionMatrixSaver(Callback):
     def __init__(
         self,
@@ -201,6 +244,21 @@ class ConfusionMatrixSaver(Callback):
         validate_args: bool = True,
         **kwargs: Any,
     ):
+        """
+        A callback to save the confusion matrix.
+
+        Args:
+            task (Literal["binary", "multiclass", "multilabel"]): The task type.
+            input_keys (Sequence[str], optional): The input keys. Defaults to DEFAULT_METRIC_INPUT_KEYS.
+            output_file (PathLike, optional): The output file name. Defaults to "confusion_matrix.png".
+            threshold (float, optional): The threshold value. Defaults to 0.5.
+            num_classes (Optional[int], optional): The number of classes. Defaults to None.
+            num_labels (Optional[int], optional): The number of labels. Defaults to None.
+            normalize (Optional[Literal["true", "pred", "all", "none"]], optional): The normalization type. Defaults to None.
+            ignore_index (Optional[int], optional): The ignore index. Defaults to None.
+            validate_args (bool, optional): Whether to validate the arguments. Defaults to True.
+            **kwargs (Any): Additional keyword arguments.
+        """
         self.input_keys = ensure_tuple(input_keys)
         self.confusion_matrix_metric = ConfusionMatrix(
             task=task,
@@ -215,6 +273,15 @@ class ConfusionMatrixSaver(Callback):
         self.output_file = output_file
 
     def plot_cm(self, cm: np.ndarray) -> Figure:
+        """
+        Plot the confusion matrix.
+
+        Args:
+            cm (np.ndarray): The confusion matrix.
+
+        Returns:
+            Figure: The plotted figure.
+        """
         fig, ax = plt.subplots()
 
         ax.imshow(cm, cmap="Blues")
@@ -287,6 +354,17 @@ class ConfusionMatrixSaver(Callback):
         batch_idx: int,
         dataloader_idx: int,
     ) -> None:
+        """
+        Called at the end of each validation batch.
+
+        Args:
+            trainer (Trainer): The trainer object.
+            pl_module (LightningModule): The lightning module.
+            outputs (Optional[STEP_OUTPUT]): The outputs of the validation batch.
+            batch (Any): The validation batch.
+            batch_idx (int): The index of the batch.
+            dataloader_idx (int): The index of the dataloader.
+        """
         preds, target = get_items(batch, self.input_keys)
         device = self.confusion_matrix_metric.device
         self.confusion_matrix_metric.update(preds.to(device), target.to(device))
@@ -294,6 +372,13 @@ class ConfusionMatrixSaver(Callback):
     def on_validation_epoch_end(
         self, trainer: Trainer, pl_module: LightningModule
     ) -> None:
+        """
+        Called at the end of each validation epoch.
+
+        Args:
+            trainer (Trainer): The trainer object.
+            pl_module (LightningModule): The lightning module.
+        """
         cm = self.confusion_matrix_metric.compute().numpy()
         fig = self.plot_cm(cm)
 

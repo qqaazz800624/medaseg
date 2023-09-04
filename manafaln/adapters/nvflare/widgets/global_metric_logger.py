@@ -13,6 +13,16 @@ from nvflare.app_common.app_event_type import AppEventType
 from nvflare.widgets.widget import Widget
 
 class GlobalMetricLogger(Widget):
+    """
+    A widget for logging global metrics during federated learning.
+
+    Args:
+        log_dir (str, optional): The directory to save the log files. Defaults to "logs".
+        log_name (str, optional): The name of the log file. Defaults to "key_metric".
+        val_metric_name (str, optional): The name of the validation metric to log. Defaults to MetaKey.INITIAL_METRICS.
+        aggregation_weights (Dict, optional): The weights for aggregating the metrics from different clients. Defaults to None.
+    """
+
     def __init__(
         self,
         log_dir: str = "logs",
@@ -31,6 +41,13 @@ class GlobalMetricLogger(Widget):
         self.logger.info(f"metric logger weights control: {aggregation_weights}")
 
     def handle_event(self, event_type: str, fl_ctx: FLContext):
+        """
+        Handles the events triggered during federated learning.
+
+        Args:
+            event_type (str): The type of the event.
+            fl_ctx (FLContext): The context object for federated learning.
+        """
         if event_type == EventType.START_RUN:
             self._startup(fl_ctx)
         elif event_type == AppEventType.ROUND_STARTED:
@@ -43,10 +60,19 @@ class GlobalMetricLogger(Widget):
             self._shutdown(fl_ctx)
 
     def _reset_metrics(self):
+        """
+        Resets the accumulated metrics.
+        """
         self.val_metric_sum = 0
         self.val_metric_weights = 0
 
     def _startup(self, fl_ctx: FLContext):
+        """
+        Initializes the metric logger at the start of the federated learning run.
+
+        Args:
+            fl_ctx (FLContext): The context object for federated learning.
+        """
         app_root = fl_ctx.get_prop(FLContextKey.APP_ROOT)
         log_path = os.path.join(app_root, self.log_dir)
         if not os.path.exists(log_path):
@@ -56,6 +82,12 @@ class GlobalMetricLogger(Widget):
         self.writer = SummaryWriter(log_dir=log_path)
 
     def _before_accept(self, fl_ctx: FLContext):
+        """
+        Handles the BEFORE_CONTRIBUTION_ACCEPT event.
+
+        Args:
+            fl_ctx (FLContext): The context object for federated learning.
+        """
         peer_ctx = fl_ctx.get_peer_context()
         shareable = peer_ctx.get_prop(FLContextKey.SHAREABLE)
 
@@ -100,6 +132,12 @@ class GlobalMetricLogger(Widget):
         self.val_metric_weights += client_weight
 
     def _before_aggregate(self, fl_ctx: FLContext):
+        """
+        Handles the BEFORE_AGGREGATION event.
+
+        Args:
+            fl_ctx (FLContext): The context object for federated learning.
+        """
         if self.val_metric_weights == 0:
             self.log_debug(fl_ctx, "nothing accumulated")
             return
@@ -115,5 +153,11 @@ class GlobalMetricLogger(Widget):
         self._reset_metrics()
 
     def _shutdown(self, fl_ctx: FLContext):
+        """
+        Shuts down the metric logger at the end of the federated learning run.
+
+        Args:
+            fl_ctx (FLContext): The context object for federated learning.
+        """
         self.writer.close()
 

@@ -10,6 +10,16 @@ from manafaln.utils import load_yaml, save_yaml
 
 
 def get_next_version(lightning_logs_dir) -> int:
+    """
+    Get the next version number for the lightning logs directory.
+
+    Args:
+        lightning_logs_dir (str): The path to the lightning logs directory.
+
+    Returns:
+        int: The next version number.
+
+    """
     try:
         listdir_info = os.listdir(lightning_logs_dir)
     except OSError:
@@ -27,6 +37,20 @@ def get_next_version(lightning_logs_dir) -> int:
 
 
 def prepare_config(base_config, fold, total_folds, lightning_version, devices):
+    """
+    Prepare the configuration for a specific fold.
+
+    Args:
+        base_config (dict): The base configuration.
+        fold (int): The fold number.
+        total_folds (int): The total number of folds.
+        lightning_version (int): The version number for the lightning logs.
+        devices (list): The list of devices.
+
+    Returns:
+        tempfile.NamedTemporaryFile: The temporary file containing the configuration.
+
+    """
     # Replace data list key for different folds
     fold_config = deepcopy(base_config)
     fold_config["data"]["training"]["data_list_key"] = [
@@ -60,6 +84,20 @@ def prepare_config(base_config, fold, total_folds, lightning_version, devices):
 
 
 def train_folds(total_folds, base_config, lightning_version, training_folds, devices):
+    """
+    Train the specified folds.
+
+    Args:
+        total_folds (int): The total number of folds.
+        base_config (dict): The base configuration.
+        lightning_version (int): The version number for the lightning logs.
+        training_folds (list): The list of folds to be trained.
+        devices (list): The list of devices.
+
+    Raises:
+        RuntimeError: If the training fails.
+
+    """
     for fold in training_folds:
         temp_file = prepare_config(
             base_config, fold, total_folds, lightning_version, devices
@@ -74,6 +112,14 @@ def train_folds(total_folds, base_config, lightning_version, training_folds, dev
 
 
 def evaluate_folds(total_folds, lightning_version):
+    """
+    Evaluate the trained folds.
+
+    Args:
+        total_folds (int): The total number of folds.
+        lightning_version (int): The version number for the lightning logs.
+
+    """
     folds_metrics = {}
     for fold in range(total_folds):
         fold_metrics = torch.load(

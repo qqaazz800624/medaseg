@@ -13,6 +13,19 @@ class ScoreCAM(CAM):
     """
 
     def compute_map(self, x, class_idx=None, layer_idx=-1, **kwargs):
+        """
+        Compute the class activation map (CAM) for the given input.
+
+        Args:
+            x (torch.Tensor): The input tensor.
+            class_idx (int, optional): The index of the class to compute CAM for. If None, the class with the highest
+                probability will be used. Default is None.
+            layer_idx (int, optional): The index of the layer to compute CAM from. Default is -1.
+
+        Returns:
+            Tuple[torch.Tensor, torch.Tensor]: The logits and the CAM.
+
+        """
         logits, acti, _ = self.nn_module(x, **kwargs)
         acti = acti[layer_idx]
         if class_idx is None:
@@ -29,6 +42,19 @@ class ScoreCAM(CAM):
         )  # resume the spatial dims on the selected class
 
     def __call__(self, x, class_idx=None, layer_idx=-1, **kwargs):
+        """
+        Compute the logits and the CAM for the given input.
+
+        Args:
+            x (torch.Tensor): The input tensor.
+            class_idx (int, optional): The index of the class to compute CAM for. If None, the class with the highest
+                probability will be used. Default is None.
+            layer_idx (int, optional): The index of the layer to compute CAM from. Default is -1.
+
+        Returns:
+            Tuple[torch.Tensor, torch.Tensor]: The logits and the CAM.
+
+        """
         logits, acti_map = self.compute_map(x, class_idx, layer_idx, **kwargs)
         return logits, self._upsample_and_post_process(acti_map, x)
 
@@ -41,6 +67,20 @@ class ScoreGradCAM(GradCAM):
     def compute_map(
         self, x, class_idx=None, retain_graph=False, layer_idx=-1, **kwargs
     ):
+        """
+        Compute the GradCAM for the given input.
+
+        Args:
+            x (torch.Tensor): The input tensor.
+            class_idx (int, optional): The index of the class to compute GradCAM for. If None, the class with the highest
+                probability will be used. Default is None.
+            retain_graph (bool, optional): Whether to retain the computation graph. Default is False.
+            layer_idx (int, optional): The index of the layer to compute GradCAM from. Default is -1.
+
+        Returns:
+            Tuple[torch.Tensor, torch.Tensor]: The logits and the GradCAM.
+
+        """
         logits, acti, grad = self.nn_module(
             x, class_idx=class_idx, retain_graph=retain_graph, **kwargs
         )
@@ -51,6 +91,20 @@ class ScoreGradCAM(GradCAM):
         return logits, F.relu(acti_map)
 
     def __call__(self, x, class_idx=None, layer_idx=-1, retain_graph=False, **kwargs):
+        """
+        Compute the logits and the GradCAM for the given input.
+
+        Args:
+            x (torch.Tensor): The input tensor.
+            class_idx (int, optional): The index of the class to compute GradCAM for. If None, the class with the highest
+                probability will be used. Default is None.
+            layer_idx (int, optional): The index of the layer to compute GradCAM from. Default is -1.
+            retain_graph (bool, optional): Whether to retain the computation graph. Default is False.
+
+        Returns:
+            Tuple[torch.Tensor, torch.Tensor]: The logits and the GradCAM.
+
+        """
         logits, acti_map = self.compute_map(
             x,
             class_idx=class_idx,
@@ -69,6 +123,20 @@ class ScoreGradCAMpp(ScoreGradCAM):
     def compute_map(
         self, x, class_idx=None, retain_graph=False, layer_idx=-1, **kwargs
     ):
+        """
+        Compute the GradCAMpp for the given input.
+
+        Args:
+            x (torch.Tensor): The input tensor.
+            class_idx (int, optional): The index of the class to compute GradCAMpp for. If None, the class with the highest
+                probability will be used. Default is None.
+            retain_graph (bool, optional): Whether to retain the computation graph. Default is False.
+            layer_idx (int, optional): The index of the layer to compute GradCAMpp from. Default is -1.
+
+        Returns:
+            Tuple[torch.Tensor, torch.Tensor]: The logits and the GradCAMpp.
+
+        """
         logits, acti, grad = self.nn_module(
             x, class_idx=class_idx, retain_graph=retain_graph, **kwargs
         )
@@ -97,6 +165,19 @@ class ScoreSaliencyInferer(SaliencyInferer):
     """
 
     def __call__(self, inputs: torch.Tensor, network: nn.Module, *args: Any, **kwargs: Any):  # type: ignore
+        """
+        Compute the logits and the CAM for the given input.
+
+        Args:
+            inputs (torch.Tensor): The input tensor.
+            network (nn.Module): The neural network model.
+            args (Any): Additional positional arguments.
+            kwargs (Any): Additional keyword arguments.
+
+        Returns:
+            Tuple[torch.Tensor, torch.Tensor]: The logits and the CAM.
+
+        """
         cam: Union[CAM, GradCAM, GradCAMpp]
 
         if self.cam_name == "cam":

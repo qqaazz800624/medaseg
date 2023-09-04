@@ -35,6 +35,7 @@ def _label_smoothing(label: torch.Tensor, smooth: Optional[float]=None, binary: 
 
     return label_smooth
 
+
 class MulticlassFocalLoss(_Loss):
     """
     This is an extension of CrossEntropyLoss that down-weights loss from
@@ -52,20 +53,30 @@ class MulticlassFocalLoss(_Loss):
     [1] Lin et al. (2017). Focal Loss for Dense Object Detection. https://arxiv.org/abs/1708.02002
     [2] Rafael Müller et al. (2019). When Does Label Smoothing Help? https://arxiv.org/abs/1906.02629
     """
+
     def __init__(
             self,
-            gamma   : Optional[float]           = 2.0,
-            alpha   : Optional[Sequence[float]] = None,
-            smooth  : Optional[float]           = None,
+            gamma: Optional[float] = 2.0,
+            alpha: Optional[Sequence[float]] = None,
+            smooth: Optional[float] = None,
             reduction: Union[LossReduction, str] = LossReduction.MEAN,
         ):
         super().__init__()
-        self.gamma  = gamma
-        self.alpha  = alpha
+        self.gamma = gamma
+        self.alpha = alpha
         self.smooth = smooth
         self.reduction = reduction
 
     def convert_instance(self, x: torch.Tensor):
+        """
+        Convert the input tensor to the instance format.
+
+        Args:
+            x (torch.Tensor): The input tensor to convert.
+
+        Returns:
+            torch.Tensor: The converted tensor.
+        """
         if x.dim()>2:
             x = x.transpose(1, -1)      # (B, C, ...) => (B, ..., C)
             x = x.reshape(-1, x.size(-1))  # (B, ..., C) => (N, C)
@@ -75,6 +86,16 @@ class MulticlassFocalLoss(_Loss):
             input: torch.Tensor,    # logit, shape: (B, C, ...)
             target: torch.Tensor,   # probability, shape: (B, C, ...)
         ) -> torch.Tensor:
+        """
+        Compute the multiclass focal loss.
+
+        Args:
+            input (torch.Tensor): The logit tensor, with shape (B, C, ...).
+            target (torch.Tensor): The probability tensor, with shape (B, C, ...).
+
+        Returns:
+            torch.Tensor: The computed loss tensor.
+        """
 
         # Convert other dimensions to instance, shape: (N, C)
         input = self.convert_instance(input)    # (B, C, ...) => (N, C)

@@ -8,6 +8,18 @@ from manafaln.apps.utils import (
 )
 
 def run(config_train, config_data, config_workflow, ckpt):
+    """
+    Runs the inference process.
+
+    Args:
+        config_train (dict): Configuration for the trainer.
+        config_data (dict): Configuration for the data module.
+        config_workflow (dict): Configuration for the workflow.
+        ckpt (str): Path to the checkpoint file.
+
+    Returns:
+        None
+    """
     # Configure data module (only predict_dataloader will be used)
     data = build_data_module(config_data)
 

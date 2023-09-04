@@ -5,6 +5,18 @@ import pandas as pd
 import yaml
 
 def main(args):
+    """
+    Main function that processes the input data and generates a CSV file.
+
+    Parameters:
+    args (argparse.Namespace): Command line arguments.
+
+    Raises:
+    FileNotFoundError: If the input file does not exist.
+
+    Returns:
+    None
+    """
     if not args.input.exists():
         raise FileNotFoundError(f"File not found: {args.input}")
 

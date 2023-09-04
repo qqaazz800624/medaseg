@@ -19,6 +19,25 @@ DEFAULT_OUTPUT_KEY = DefaultKeys.OUTPUT_KEY
 
 
 class SupervisedLearningV2(LightningModule):
+    """
+    LightningModule for supervised learning.
+
+    Args:
+        config (dict): The configuration dictionary for the workflow.
+
+    Attributes:
+        model: The model for supervised learning.
+        model_input_keys: The input keys for the model.
+        model_output_keys: The output keys for the model.
+        post_processing: The post-processing transforms.
+        loss_fn: The loss function.
+        inferer: The inferer for making predictions.
+        post_transforms: The post-transforms for different phases.
+        training_metrics: The metrics for training phase.
+        validation_metrics: The metrics for validation phase.
+        decollate_fn: The decollate function for different phases.
+    """
+
     def __init__(self, config: dict):
         super().__init__()
 
@@ -39,6 +58,13 @@ class SupervisedLearningV2(LightningModule):
         self.build_decollate_fn(settings.get("decollate"))
 
     def build_model(self, config):
+        """
+        Build the model for supervised learning.
+
+        Args:
+            config: The configuration for the model.
+        """
+
         if config is None:
             raise KeyError(f"model is required in workflow {self.__class__.__name__}")
         builder = ModelBuilder()
@@ -51,16 +77,37 @@ class SupervisedLearningV2(LightningModule):
         )
 
     def build_post_processing(self, config):
+        """
+        Build the post-processing transforms.
+
+        Args:
+            config: The configuration for the post-processing transforms.
+        """
+
         if config is None:
             config = []
         self.post_processing = build_transforms(config)
 
     def build_loss_fn(self, config):
+        """
+        Build the loss function.
+
+        Args:
+            config: The configuration for the loss function.
+        """
+
         if config is None:
             config = []
         self.loss_fn = LossHelper(config)
 
     def build_inferer(self, config):
+        """
+        Build the inferer for making predictions.
+
+        Args:
+            config: The configuration for the inferer.
+        """
+
         # If inferer is not given, use SimpleInferer
         if config is None:
             config = {"name": "SimpleInferer"}
@@ -68,6 +115,13 @@ class SupervisedLearningV2(LightningModule):
         self.inferer = builder(config)
 
     def build_post_transforms(self, config):
+        """
+        Build the post-transforms for different phases.
+
+        Args:
+            config: The configuration for the post-transforms.
+        """
+
         if config is None:
             config = {}
         self.post_transforms = {
@@ -76,12 +130,26 @@ class SupervisedLearningV2(LightningModule):
         }
 
     def build_metrics(self, config):
+        """
+        Build the metrics for different phases.
+
+        Args:
+            config: The configuration for the metrics.
+        """
+
         if config is None:
             config = {}
         self.training_metrics = MetricCollection(config.get("training", []))
         self.validation_metrics = MetricCollection(config.get("validation", []))
 
     def build_decollate_fn(self, settings):
+        """
+        Build the decollate function for different phases.
+
+        Args:
+            settings: The settings for the decollate function.
+        """
+
         decollate_fn = {}
         for phase in ["training", "validation", "predict"]:
             if (settings is None) or (phase not in settings):
@@ -92,9 +160,23 @@ class SupervisedLearningV2(LightningModule):
         self.decollate_fn = decollate_fn
 
     def get_optimize_parameters(self):
+        """
+        Get the parameters for optimization.
+
+        Returns:
+            The parameters for optimization.
+        """
+
         return self.model.parameters()
 
     def configure_optimizers(self):
+        """
+        Configure the optimizers and schedulers.
+
+        Returns:
+            The optimizers and schedulers.
+        """
+
         # Extract optimizer & scheduler configurations
         workflow = self.hparams.workflow
         opt_config = workflow["components"]["optimizer"]
@@ -126,10 +208,32 @@ class SupervisedLearningV2(LightningModule):
         return opt
 
     def forward(self, inputs, *args):
+        """
+        Forward pass of the model.
+
+        Args:
+            inputs: The inputs to the model.
+            *args: Additional arguments.
+        
+        Returns:
+            The output of the model.
+        """
+
         result = self.inferer(inputs, self.model, *args)
         return result
 
     def training_step(self, batch: dict, batch_idx):
+        """
+        Training step.
+
+        Args:
+            batch (dict): The batch data.
+            batch_idx: The index of the batch.
+
+        Returns:
+            The loss value.
+        """
+
         # Get model input
         model_input = get_items(batch, self.model_input_keys)
 
@@ -165,11 +269,25 @@ class SupervisedLearningV2(LightningModule):
         return loss
 
     def training_epoch_end(self, outputs):
+        """
+        Training epoch end.
+
+        Args:
+            outputs: The outputs of the training epoch.
+        """
+
         m = self.training_metrics.compute()
         self.log_dict(m)
         self.training_metrics.reset()
 
     def validation_step(self, batch: dict, batch_idx):
+        """
+        Validation step.
+
+        Args:
+            batch (dict): The batch data.
+            batch_idx: The index of the batch.
+        """
         # Get model input
         model_input = get_items(batch, self.model_input_keys)
 
@@ -191,12 +309,33 @@ class SupervisedLearningV2(LightningModule):
             self.validation_metrics.update(**batch)
 
     def validation_epoch_end(self, validation_step_outputs):
+        """
+        Validation epoch end.
+
+        Args:
+            validation_step_outputs: The outputs of the validation epoch.
+
+        Returns:
+            The computed metrics.
+        """
+        
         m = self.validation_metrics.compute()
         self.log_dict(m)
         self.validation_metrics.reset()
         return m
 
     def predict_step(self, batch: dict, batch_idx):
+        """
+        Predict step.
+
+        Args:
+            batch (dict): The batch data.
+            batch_idx: The index of the batch.
+        
+        Returns:
+            The predicted outputs.
+        """
+
         # No label for predict
         model_input = get_items(batch, self.model_input_keys)
 

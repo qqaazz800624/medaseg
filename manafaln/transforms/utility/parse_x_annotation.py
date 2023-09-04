@@ -1,4 +1,4 @@
-from typing import Dict, Hashable, List, Mapping, Tuple
+from typing import Any, Dict, Hashable, List, Mapping, Tuple
 
 from monai.config import KeysCollection
 from monai.transforms import MapTransform, Transform
@@ -40,13 +40,13 @@ class ParseXAnnotationSegmentationLabel(Transform):
         W, H = size
         for segment in segments:
             x, y = segment["a"]
-            x = float(x/W)
-            y = float(y/H)
+            x = float(x / W)
+            y = float(y / H)
             pts.append([x, y])
 
         x, y = segment["b"]
-        x = float(x/W)
-        y = float(y/H)
+        x = float(x / W)
+        y = float(y / H)
         pts.append([x, y])
         return pts
 
@@ -70,6 +70,17 @@ class ParseXAnnotationSegmentationLabel(Transform):
         return data
 
 class ParseXAnnotationSegmentationLabeld(MapTransform):
+    """
+    A transform that parses the JSON annotations from the XAnnotation tool by EBM to get segmentation labels.
+
+    Args:
+        keys (KeysCollection): keys to pick data for transformation.
+        item_keys (List[str]): a list of item keys to parse from the JSON annotations.
+        allow_missing_keys (bool): whether to allow missing keys.
+
+    Returns:
+        Dict[Hashable, Any]: a dictionary containing the transformed data.
+    """
     def __init__(
         self,
         keys: KeysCollection,
@@ -82,7 +93,14 @@ class ParseXAnnotationSegmentationLabeld(MapTransform):
     def __call__(
         self,
         data: Mapping[Hashable, Dict]
-    ):
+    ) -> Dict[Hashable, Any]:
+        """
+        Args:
+            data (Mapping[Hashable, Dict]): input data to be transformed.
+
+        Returns:
+            Dict[Hashable, Any]: transformed data.
+        """
         d = dict(data)
         for key in self.key_iterator(d):
             d[key] = self.t(d[key])
@@ -94,17 +112,20 @@ class ParseXAnnotationDetectionLabel(Transform):
     and their corresponding labels.
 
     Args:
-        spatial_size: the spatial size (width, height) of the image that the bounding boxes should normalized to
+        spatial_size (Tuple[int, int]): the spatial size (width, height) of the image that the bounding boxes should be normalized to.
+
+    Returns:
+        Tuple[List[List[float]], List[str]]: a tuple containing a list of bounding boxes and a list of labels.
     """
-    def __init__(self, spatial_size=None):
+    def __init__(self, spatial_size: Tuple[int, int]=None):
         self.spatial_size = spatial_size # W, H
 
     def __call__(self, json_obj: Dict) -> Tuple[List[List[float]], List[str]]:
         """
-        Parses the JSON object and returns a tuple containing a list of bounding boxes and a list of labels
+        Parses the JSON object and returns a tuple containing a list of bounding boxes and a list of labels.
 
         Args:
-            json_obj: a JSON object in the XAnnotation format by EBM
+            json_obj (Dict): a JSON object in the XAnnotation format by EBM.
 
         Returns:
             A tuple containing:
@@ -123,10 +144,10 @@ class ParseXAnnotationDetectionLabel(Transform):
             x_min, y_min = shape["a"]
             x_max, y_max = shape["b"]
             if self.spatial_size is not None:
-                x_min = x_min/size[0]*self.spatial_size[0]
-                y_min = y_min/size[1]*self.spatial_size[1]
-                x_max = x_max/size[0]*self.spatial_size[0]
-                y_max = y_max/size[1]*self.spatial_size[1]
+                x_min = x_min / size[0] * self.spatial_size[0]
+                y_min = y_min / size[1] * self.spatial_size[1]
+                x_max = x_max / size[0] * self.spatial_size[0]
+                y_max = y_max / size[1] * self.spatial_size[1]
             box = [x_min, y_min, x_max, y_max]
             boxes.append(box)
             labels.append(label)
@@ -134,11 +155,24 @@ class ParseXAnnotationDetectionLabel(Transform):
         return boxes, labels
 
 class ParseXAnnotationDetectionLabeld(MapTransform):
+    """
+    A transform that parses the JSON annotations from the XAnnotation tool by EBM to get detection labels.
+
+    Args:
+        keys (KeysCollection): keys to pick data for transformation.
+        box_keys (KeysCollection): keys to store the bounding boxes.
+        label_keys (KeysCollection): keys to store the labels.
+        spatial_size (Tuple[int, int]): the spatial size (width, height) of the image that the bounding boxes should be normalized to.
+        allow_missing_keys (bool): whether to allow missing keys.
+
+    Returns:
+        Dict[Hashable, Any]: a dictionary containing the transformed data.
+    """
     def __init__(self,
         keys: KeysCollection,
         box_keys: KeysCollection,
         label_keys: KeysCollection,
-        spatial_size=None,
+        spatial_size: Tuple[int, int]=None,
         allow_missing_keys: bool=False,
     ):
         super().__init__(keys=keys, allow_missing_keys=allow_missing_keys)
@@ -151,10 +185,13 @@ class ParseXAnnotationDetectionLabeld(MapTransform):
 
         self.t = ParseXAnnotationDetectionLabel(spatial_size=spatial_size)
 
-    def __call__(self, data):
+    def __call__(self, data: Mapping[Hashable, Dict]) -> Dict[Hashable, Any]:
         """
         Args:
-            data: A list of labels, each label is a list bounding boxes
+            data: A list of labels, each label is a list bounding boxes.
+            
+        Returns:
+            Dict[Hashable, Any]: transformed data.
         """
         d = dict(data)
         for key, box_key, label_key in self.key_iterator(d, self.box_keys, self.label_keys):

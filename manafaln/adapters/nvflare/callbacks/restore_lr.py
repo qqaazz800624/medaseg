@@ -6,6 +6,22 @@ import torch
 from pytorch_lightning import Callback
 
 class RestoreLR(Callback):
+    """
+    Callback for restoring optimizer and learning rate scheduler states during training.
+
+    Args:
+        from_checkpoint (Optional[str]): Path to the checkpoint file to restore from. Default is None.
+
+    Attributes:
+        optimizer_states (list): List to store the optimizer states.
+        lr_schedulers (list): List to store the learning rate scheduler states.
+        logger (Logger): Logger object for logging messages.
+
+    Methods:
+        on_fit_start(trainer, pl_module): Callback method called at the start of the training loop.
+        on_fit_end(trainer, pl_module): Callback method called at the end of the training loop.
+    """
+
     def __init__(self, from_checkpoint: Optional[str] = None):
         super().__init__()
 
@@ -20,6 +36,13 @@ class RestoreLR(Callback):
         self.logger = getLogger(__name__)
 
     def on_fit_start(self, trainer, pl_module):
+        """
+        Callback method called at the start of the training loop.
+
+        Args:
+            trainer (Trainer): The PyTorch Lightning Trainer object.
+            pl_module (LightningModule): The PyTorch Lightning LightningModule object.
+        """
         if len(self.optimizer_states) > 0:
             trainer.strategy.load_optimizer_state_dict({
                 "optimizer_states": self.optimizer_states
@@ -34,6 +57,13 @@ class RestoreLR(Callback):
             self.logger.info("LR scheduler state restored")
 
     def on_fit_end(self, trainer, pl_module):
+        """
+        Callback method called at the end of the training loop.
+
+        Args:
+            trainer (Trainer): The PyTorch Lightning Trainer object.
+            pl_module (LightningModule): The PyTorch Lightning LightningModule object.
+        """
         opts = trainer.optimizers
         schs = trainer.lr_scheduler_configs
 

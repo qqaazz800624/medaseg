@@ -12,6 +12,23 @@ from monai.utils.enums import TransformBackends
 from monai.utils.type_conversion import convert_data_type, convert_to_tensor
 
 class NormalizeIntensityRange(Transform):
+    """
+    Normalize the intensity range of the input image.
+
+    Args:
+        a_min (float): The minimum value of the intensity range.
+        a_max (float): The maximum value of the intensity range.
+        subtrahend (float): The value to subtract from the image.
+        divisor (float): The value to divide the image by.
+        dtype (DtypeLike, optional): The data type of the output image. Defaults to np.float32.
+
+    Returns:
+        NdarrayOrTensor: The normalized image.
+
+    Raises:
+        ValueError: If a_min is greater than a_max.
+    """
+
     backend = [TransformBackends.TORCH, TransformBackends.NUMPY]
 
     def __init__(
@@ -40,6 +57,18 @@ class NormalizeIntensityRange(Transform):
         divisor: Optional[float] = None,
         dtype: Optional[DtypeLike] = None
     ) -> NdarrayOrTensor:
+        """
+        Apply the normalization to the input image.
+
+        Args:
+            img (NdarrayOrTensor): The input image to be normalized.
+            subtrahend (float, optional): The value to subtract from the image. Defaults to None.
+            divisor (float, optional): The value to divide the image by. Defaults to None.
+            dtype (DtypeLike, optional): The data type of the output image. Defaults to None.
+
+        Returns:
+            NdarrayOrTensor: The normalized image.
+        """
         if subtrahend is None:
             subtrahend = self.subtrahend
         if divisor is None:
@@ -55,7 +84,25 @@ class NormalizeIntensityRange(Transform):
         ret: NdarrayOrTensor = convert_data_type(img, dtype=dtype)[0]
         return ret
 
+
 class NormalizeIntensityRanged(MapTransform):
+    """
+    Apply NormalizeIntensityRange transform to a collection of images.
+
+    Args:
+        keys (KeysCollection): The keys corresponding to the images to be normalized.
+        a_min (float): The minimum value of the intensity range.
+        a_max (float): The maximum value of the intensity range.
+        subtrahend (float): The value to subtract from the images.
+        divisor (float): The value to divide the images by.
+        dtype (DtypeLike, optional): The data type of the output images. Defaults to np.float32.
+        allow_missing_keys (bool, optional): Whether to allow missing keys. Defaults to False.
+
+    Returns:
+        Dict[Hashable, NdarrayOrTensor]: The dictionary containing the normalized images.
+
+    """
+
     backend = NormalizeIntensityRange.backend
 
     def __init__(
@@ -79,6 +126,15 @@ class NormalizeIntensityRanged(MapTransform):
         self,
         data: Mapping[Hashable, NdarrayOrTensor]
     ) -> Dict[Hashable, NdarrayOrTensor]:
+        """
+        Apply the NormalizeIntensityRange transform to the input data.
+
+        Args:
+            data (Mapping[Hashable, NdarrayOrTensor]): The input data to be transformed.
+
+        Returns:
+            Dict[Hashable, NdarrayOrTensor]: The dictionary containing the transformed data.
+        """
         d = dict(data)
         for key in self.keys:
             d[key] = self.t(d[key])

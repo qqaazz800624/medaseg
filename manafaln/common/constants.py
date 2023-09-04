@@ -6,6 +6,24 @@ from monai.utils.enums import StrEnum
 class ComponentType(Enum):
     """
     Enumerate types of components
+    
+    Attributes:
+        UNKNOWN (int): Unknown component type.
+        MODEL (int): Model component type.
+        LOSS (int): Loss component type.
+        INFERER (int): Inferer component type.
+        OPTIMIZER (int): Optimizer component type.
+        SCHEDULER (int): Scheduler component type.
+        METRIC (int): Metric component type.
+        DATASET (int): Dataset component type.
+        DATALOADER (int): Dataloader component type.
+        TRANSFORM (int): Transform component type.
+        DATAMODULE (int): Datamodule component type.
+        WORKFLOW (int): Workflow component type.
+        CALLBACK (int): Callback component type.
+        LOGGER (int): Logger component type.
+        SAMPLER (int): Sampler component type.
+        METRICV2 (int): MetricV2 component type.
     """
     UNKNOWN    = 0
     MODEL      = 1
@@ -27,6 +45,23 @@ class ComponentType(Enum):
 class ComponentPaths(StrEnum):
     """
     The default paths for each component are for the dynamic module loader
+    
+    Attributes:
+        DEFAULT_MODEL_PATH (str): Default model path.
+        DEFAULT_LOSS_PATH (str): Default loss path.
+        DEFAULT_INFERER_PATH (str): Default inferer path.
+        DEFAULT_OPTIMIZER_PATH (str): Default optimizer path.
+        DEFAULT_SCHEDULER_PATH (str): Default scheduler path.
+        DEFAULT_METRIC_PATH (str): Default metric path.
+        DEFAULT_DATASET_PATH (str): Default dataset path.
+        DEFAULT_DATALOADER_PATH (str): Default dataloader path.
+        DEFAULT_TRANSFORM_PATH (str): Default transform path.
+        DEFAULT_DATAMODULE_PATH (str): Default datamodule path.
+        DEFAULT_WORKFLOW_PATH (str): Default workflow path.
+        DEFAULT_CALLBACK_PATH (str): Default callback path.
+        DEFAULT_LOGGER_PATH (str): Default logger path.
+        DEFAULT_SAMPLER_PATH (str): Default sampler path.
+        DEFAULT_METRICV2_PATH (str): Default metricV2 path.
     """
     DEFAULT_MODEL_PATH      = "monai.networks.nets"
     DEFAULT_LOSS_PATH       = "monai.losses"
@@ -47,6 +82,11 @@ class ComponentPaths(StrEnum):
 class DefaultKeys(StrEnum):
     """
     The default keys for passing data in workflow
+    
+    Attributes:
+        INPUT_KEY (str): Input key for passing data in workflow.
+        OUTPUT_KEY (str): Output key for passing data in workflow.
+        LABEL_KEY (str): Label key for passing data in workflow.
     """
     INPUT_KEY = "image"
     OUTPUT_KEY = "preds"

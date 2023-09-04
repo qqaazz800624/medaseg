@@ -5,7 +5,26 @@ from manafaln.data.decathlon import DecathlonDataModule
 
 
 class SemiSupervisedDataModule(DecathlonDataModule):
+    """
+    A data module for semi-supervised learning in the Decathlon dataset.
+
+    Inherits from DecathlonDataModule.
+
+    Attributes:
+        train_datasets (Dict): A dictionary containing the labeled and unlabeled training datasets.
+
+    Methods:
+        get_train_datasets(): Retrieves the labeled and unlabeled training datasets.
+        train_dataloader(): Builds and returns the data loaders for the labeled and unlabeled datasets.
+    """
+
     def get_train_datasets(self):
+        """
+        Retrieves the labeled and unlabeled training datasets.
+
+        Returns:
+            Dict: A dictionary containing the labeled and unlabeled training datasets.
+        """
         datasets = getattr(self, "train_datasets", None)
         if datasets is None:
             config = self.hparams.data["training"]
@@ -22,6 +41,12 @@ class SemiSupervisedDataModule(DecathlonDataModule):
         return self.train_datasets
 
     def train_dataloader(self) -> Dict:
+        """
+        Builds and returns the data loaders for the labeled and unlabeled datasets.
+
+        Returns:
+            Dict: A dictionary containing the data loaders for the labeled and unlabeled datasets.
+        """
         # Create data loader builder
         builder = DataLoaderBuilder()
 
