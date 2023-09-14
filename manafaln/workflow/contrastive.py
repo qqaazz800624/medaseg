@@ -8,10 +8,11 @@ from manafaln.utils import get_items, update_items
 from manafaln.workflow.basev2 import SupervisedLearningV2
 from manafaln.workflow.semi_supervised import SemiSupervisedLearning
 
-DEFAULT_INPUT_KEY = DefaultKeys.INPUT_KEY
-DEFAULT_OUTPUT_KEY = DefaultKeys.OUTPUT_KEY
 
 class SelfSupervisedContrastiveLearning(SupervisedLearningV2):
+    DEFAULT_INPUT_KEY = DefaultKeys.INPUT_KEY
+    DEFAULT_OUTPUT_KEY = DefaultKeys.OUTPUT_KEY
+
     """
     A class for self-supervised contrastive learning.
 
@@ -33,8 +34,12 @@ class SelfSupervisedContrastiveLearning(SupervisedLearningV2):
             raise KeyError(f"model is required in workflow {self.__class__.__name__}")
         builder = ModelBuilder()
         self.model = builder(config)
-        self.model_input_keys = ensure_tuple(config.get("input_keys", DEFAULT_INPUT_KEY))
-        self.model_output_keys = ensure_tuple(config.get("output_keys", DEFAULT_OUTPUT_KEY))
+        self.model_input_keys = ensure_tuple(
+            config.get("input_keys", SelfSupervisedContrastiveLearning.DEFAULT_INPUT_KEY)
+        )
+        self.model_output_keys = ensure_tuple(
+            config.get("output_keys", SelfSupervisedContrastiveLearning.DEFAULT_OUTPUT_KEY)
+        )
 
         # Second keys for contrastive learning
         self.model_input_keys_contrast = \

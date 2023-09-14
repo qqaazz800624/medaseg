@@ -20,7 +20,7 @@ class SupervisedClassification(SupervisedLearning):
 
         Parameters:
         - config (dict): A dictionary containing the configuration parameters for the model.
-        
+
         """
         super().__init__(config)
 

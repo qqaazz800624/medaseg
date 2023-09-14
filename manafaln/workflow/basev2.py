@@ -14,11 +14,10 @@ from manafaln.core.metricv2 import MetricCollection
 from manafaln.core.transforms import build_transforms
 from manafaln.utils import get_items, update_items
 
-DEFAULT_INPUT_KEY = DefaultKeys.INPUT_KEY
-DEFAULT_OUTPUT_KEY = DefaultKeys.OUTPUT_KEY
-
-
 class SupervisedLearningV2(LightningModule):
+    DEFAULT_INPUT_KEY = DefaultKeys.INPUT_KEY
+    DEFAULT_OUTPUT_KEY = DefaultKeys.OUTPUT_KEY
+
     """
     LightningModule for supervised learning.
 
@@ -70,10 +69,10 @@ class SupervisedLearningV2(LightningModule):
         builder = ModelBuilder()
         self.model = builder(config)
         self.model_input_keys = ensure_tuple(
-            config.get("input_keys", DEFAULT_INPUT_KEY)
+            config.get("input_keys", SupervisedLearningV2.DEFAULT_INPUT_KEY)
         )
         self.model_output_keys = ensure_tuple(
-            config.get("output_keys", DEFAULT_OUTPUT_KEY)
+            config.get("output_keys", SupervisedLearningV2.DEFAULT_OUTPUT_KEY)
         )
 
     def build_post_processing(self, config):
@@ -214,7 +213,7 @@ class SupervisedLearningV2(LightningModule):
         Args:
             inputs: The inputs to the model.
             *args: Additional arguments.
-        
+
         Returns:
             The output of the model.
         """
@@ -268,12 +267,10 @@ class SupervisedLearningV2(LightningModule):
         # Return {"loss": xxx, ...}
         return loss
 
-    def training_epoch_end(self, outputs):
+    def on_train_epoch_end(self):
         """
         Training epoch end.
 
-        Args:
-            outputs: The outputs of the training epoch.
         """
 
         m = self.training_metrics.compute()
@@ -308,21 +305,15 @@ class SupervisedLearningV2(LightningModule):
             batch = self.post_transforms["validation"](batch)
             self.validation_metrics.update(**batch)
 
-    def validation_epoch_end(self, validation_step_outputs):
+    def on_validation_epoch_end(self):
         """
         Validation epoch end.
 
-        Args:
-            validation_step_outputs: The outputs of the validation epoch.
-
-        Returns:
-            The computed metrics.
         """
-        
+
         m = self.validation_metrics.compute()
         self.log_dict(m)
         self.validation_metrics.reset()
-        return m
 
     def predict_step(self, batch: dict, batch_idx):
         """
@@ -331,7 +322,7 @@ class SupervisedLearningV2(LightningModule):
         Args:
             batch (dict): The batch data.
             batch_idx: The index of the batch.
-        
+
         Returns:
             The predicted outputs.
         """

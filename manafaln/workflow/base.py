@@ -200,12 +200,10 @@ class SupervisedLearning(LightningModule):
 
         return loss
 
-    def training_epoch_end(self, outputs):
+    def on_train_epoch_end(self):
         """
         Training epoch end hook.
 
-        Args:
-            outputs: The outputs of the training epoch.
         """
         m = self.train_metrics.aggregate()
         self.log_dict(m, sync_dist=True)
@@ -254,12 +252,10 @@ class SupervisedLearning(LightningModule):
         # Output metrics and meta data of this batch
         return metrics
 
-    def validation_epoch_end(self, validation_step_outputs):
+    def on_validation_epoch_end(self):
         """
         Validation epoch end hook.
 
-        Args:
-            validation_step_outputs: The outputs of the validation epoch.
         """
         m = self.valid_metrics.aggregate()
         self.log_dict(m, sync_dist=True)

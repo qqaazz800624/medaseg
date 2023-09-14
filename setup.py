@@ -4,14 +4,14 @@ from setuptools import find_packages, setup
 
 setup(
     name="manafaln",
-    version="0.5.2",
+    version="0.6.0",
     author=["Pochuan Wang", "Tianyu Hwang"],
     author_email=["d08922016@csie.ntu.edu.tw", "tyhwang@ncts.ntu.edu.tw"],
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
         "monai>=1.1.0",
-        "pytorch-lightning<2.0.0",
+        "lightning>=2.0.0",
         "ruamel.yaml>=0.17.21",
         "scikit-image>=0.20.0",
         "pandas>=2.0.0",
