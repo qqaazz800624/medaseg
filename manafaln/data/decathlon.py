@@ -16,6 +16,22 @@ from manafaln.core.builders import (
 from manafaln.core.transforms import build_transforms
 
 class DecathlonDataModule(LightningDataModule):
+    """
+    Data module for loading and preparing datasets for the Decathlon challenge.
+
+    Args:
+        config (Dict): Configuration dictionary for the data module.
+
+    Attributes:
+        data_list (str): Path to the data list file.
+        data_root (str): Root directory of the data.
+        is_segmentation (bool): Flag indicating whether the task is segmentation or not.
+        use_shm_cache (bool): Flag indicating whether to use shared memory cache or not.
+        shm_cache_path (str): Path to the shared memory cache.
+        ori_data_root (str): Original data root directory.
+
+    """
+
     def __init__(self, config: Dict):
         super().__init__()
 
@@ -26,9 +42,9 @@ class DecathlonDataModule(LightningDataModule):
         settings = config["settings"]
 
         # Must get configurations
-        self.data_root       = settings["data_root"]
         self.data_list       = settings["data_list"]
-        self.is_segmentation = settings["is_segmentation"]
+        self.data_root       = settings.get("data_root", None)
+        self.is_segmentation = settings.get("is_segmentation", True)
 
         # Optional configurations
         # Use SHM if you have large size ram disk
@@ -43,11 +59,24 @@ class DecathlonDataModule(LightningDataModule):
             )
 
     def prepare_data(self):
+        """
+        Prepares the data for training by copying the data to shared memory cache if necessary.
+        """
         if (self.use_shm_cache) and (not os.path.exists(self.data_root)):
             # Copy the whole directory to SHM
             copytree(self.ori_data_root, self.data_root)
 
     def build_dataset(self, config: dict):
+        """
+        Builds the dataset for a given configuration.
+
+        Args:
+            config (dict): Configuration dictionary for the dataset.
+
+        Returns:
+            dataset: The built dataset.
+
+        """
         if isinstance(config["data_list_key"], str):
             files = load_decathlon_datalist(
                 data_list_file_path=self.data_list,
@@ -74,6 +103,13 @@ class DecathlonDataModule(LightningDataModule):
         return dataset
 
     def get_train_dataset(self):
+        """
+        Returns the training dataset.
+
+        Returns:
+            dataset: The training dataset.
+
+        """
         dataset = getattr(self, "train_dataset", None)
         if dataset is None:
             config = self.hparams.data["training"]
@@ -81,6 +117,13 @@ class DecathlonDataModule(LightningDataModule):
         return self.train_dataset
 
     def get_val_dataset(self):
+        """
+        Returns the validation dataset.
+
+        Returns:
+            dataset: The validation dataset.
+
+        """
         dataset = getattr(self, "val_dataset", None)
         if dataset is None:
             config = self.hparams.data["validation"]
@@ -88,17 +131,52 @@ class DecathlonDataModule(LightningDataModule):
         return self.val_dataset
 
     def get_test_dataset(self):
+        """
+        Returns the test dataset.
+
+        Returns:
+            dataset: The test dataset.
+
+        """
         dataset = getattr(self, "test_dataset", None)
         if dataset is None:
             config = self.hparams.data["test"]
             self.test_dataset = self.build_dataset(config)
         return self.test_dataset
 
+    def get_predict_dataset(self):
+        """
+        Returns the predict dataset.
+
+        Returns:
+            dataset: The predict dataset.
+
+        """
+        dataset = getattr(self, "predict_dataset", None)
+        if dataset is None:
+            config = self.hparams.data["predict"]
+            self.predict_dataset = self.build_dataset(config)
+        return self.predict_dataset
+
     def build_loader(self, phase: str):
+        """
+        Builds the data loader for a given phase.
+
+        Args:
+            phase (str): The phase of the data loader.
+
+        Returns:
+            loader: The built data loader.
+
+        Raises:
+            ValueError: If the phase is not allowed for the data module.
+
+        """
         phase_to_dataset = {
             "training": self.get_train_dataset,
             "validation": self.get_val_dataset,
-            "test": self.get_test_dataset
+            "test": self.get_test_dataset,
+            "predict": self.get_predict_dataset
         }
 
         if not phase in phase_to_dataset.keys():
@@ -117,11 +195,41 @@ class DecathlonDataModule(LightningDataModule):
         return loader
 
     def train_dataloader(self):
+        """
+        Returns the data loader for training.
+
+        Returns:
+            loader: The data loader for training.
+
+        """
         return self.build_loader(phase="training")
 
     def val_dataloader(self):
+        """
+        Returns the data loader for validation.
+
+        Returns:
+            loader: The data loader for validation.
+
+        """
         return self.build_loader(phase="validation")
 
     def test_dataloader(self):
+        """
+        Returns the data loader for testing.
+
+        Returns:
+            loader: The data loader for testing.
+
+        """
         return self.build_loader(phase="test")
 
+    def predict_dataloader(self):
+        """
+        Returns the data loader for prediction.
+
+        Returns:
+            loader: The data loader for prediction.
+
+        """
+        return self.build_loader(phase="predict")

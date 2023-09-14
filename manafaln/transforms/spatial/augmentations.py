@@ -12,6 +12,16 @@ from monai.utils.enums import TransformBackends
 from monai.utils.type_conversion import convert_data_type, convert_to_tensor
 
 class RandFlipAxes3D(RandomizableTransform):
+    """
+    Randomly flips the axes of a 3D image tensor.
+
+    Args:
+        prob_x: Probability of flipping along the x-axis. Defaults to 0.5.
+        prob_y: Probability of flipping along the y-axis. Defaults to 0.5.
+        prob_z: Probability of flipping along the z-axis. Defaults to 0.5.
+        dtype: Data type of the output. Defaults to np.float32.
+    """
+
     backend = [TransformBackends.TORCH, TransformBackends.NUMPY]
 
     def __init__(
@@ -24,14 +34,14 @@ class RandFlipAxes3D(RandomizableTransform):
         def ensure_probability(p, name):
             if 0.0 <= p <= 1.0:
                 return p
-            raise ValueError(f"Probability {name} must between 0 and 1.")
+            raise ValueError(f"Probability {name} must be between 0 and 1.")
 
         p = ensure_probability(prob_x, "prob_x")
         q = ensure_probability(prob_y, "prob_y")
         r = ensure_probability(prob_z, "prob_z")
 
         prob = 1.0 - (1.0 - p) * (1.0 - q) * (1.0 - r)
-        RandomizableTransform.__init__(self, prob) # This is useless
+        RandomizableTransform.__init__(self, prob)
 
         self.p = p
         self.q = q
@@ -44,6 +54,9 @@ class RandFlipAxes3D(RandomizableTransform):
         self.dtype = dtype
 
     def randomize(self) -> None:
+        """
+        Randomize the flipping axes based on the given probabilities.
+        """
         p, q, r = self.R.rand(3)
 
         self._flip_x = p < self.p
@@ -60,6 +73,16 @@ class RandFlipAxes3D(RandomizableTransform):
         img: NdarrayOrTensor,
         randomize: bool = True
     ) -> NdarrayOrTensor:
+        """
+        Apply the random flipping to the input image.
+
+        Args:
+            img: The input image tensor.
+            randomize: Whether to randomize the flipping axes. Defaults to True.
+
+        Returns:
+            The transformed image tensor.
+        """
         if randomize:
             self.randomize()
         if not self._do_transform:
@@ -83,6 +106,17 @@ class RandFlipAxes3D(RandomizableTransform):
         return ret
 
 class RandFlipAxes3Dd(RandomizableTransform, MapTransform):
+    """
+    Randomly flips the axes of multiple 3D image tensors.
+
+    Args:
+        keys: The keys corresponding to the image tensors to be transformed.
+        prob_x: Probability of flipping along the x-axis. Defaults to 0.5.
+        prob_y: Probability of flipping along the y-axis. Defaults to 0.5.
+        prob_z: Probability of flipping along the z-axis. Defaults to 0.5.
+        dtype: Data type of the output. Defaults to np.float32.
+    """
+
     def __init__(
         self,
         keys: KeysCollection,
@@ -97,12 +131,24 @@ class RandFlipAxes3Dd(RandomizableTransform, MapTransform):
         self.t = RandFlipAxes3D(prob_x, prob_y, prob_z, dtype)
 
     def randomize(self) -> None:
+        """
+        Randomize the flipping axes.
+        """
         self.t.randomize()
 
     def __call__(
         self,
         data: Mapping[Hashable, NdarrayOrTensor]
     ) -> Dict[Hashable, NdarrayOrTensor]:
+        """
+        Apply the random flipping to the input image tensors.
+
+        Args:
+            data: The input data dictionary.
+
+        Returns:
+            The transformed data dictionary.
+        """
         d = dict(data)
         self.randomize()
 
@@ -116,6 +162,15 @@ class RandFlipAxes3Dd(RandomizableTransform, MapTransform):
         return d
 
 class SimulateLowResolution(RandomizableTransform):
+    """
+    Simulate low resolution by zooming in on a 3D image tensor.
+
+    Args:
+        prob: Probability of applying the transformation. Defaults to 0.125.
+        zoom_range: Range of zooming scale. Defaults to [0.5, 1.0].
+        dtype: Data type of the output. Defaults to np.float32.
+    """
+
     backend = [TransformBackends.TORCH, TransformBackends.NUMPY]
 
     def __init__(
@@ -131,6 +186,9 @@ class SimulateLowResolution(RandomizableTransform):
         self.dtype = dtype
 
     def randomize(self) -> None:
+        """
+        Randomize the zooming scale.
+        """
         super().randomize(None)
         if not self._do_transform:
             return
@@ -142,6 +200,16 @@ class SimulateLowResolution(RandomizableTransform):
         img: NdarrayOrTensor,
         randomize: bool = True
     ) -> NdarrayOrTensor:
+        """
+        Apply the low resolution simulation to the input image.
+
+        Args:
+            img: The input image tensor.
+            randomize: Whether to randomize the zooming scale. Defaults to True.
+
+        Returns:
+            The transformed image tensor.
+        """
         if randomize:
             self.randomize()
         if not self._do_transform:
@@ -160,6 +228,16 @@ class SimulateLowResolution(RandomizableTransform):
         return ret
 
 class SimulateLowResolutiond(RandomizableTransform, MapTransform):
+    """
+    Simulate low resolution by zooming in on multiple 3D image tensors.
+
+    Args:
+        keys: The keys corresponding to the image tensors to be transformed.
+        prob: Probability of applying the transformation. Defaults to 0.125.
+        zoom_range: Range of zooming scale. Defaults to [0.5, 1.0].
+        dtype: Data type of the output. Defaults to np.float32.
+    """
+
     backend = SimulateLowResolution.backend
 
     def __init__(
@@ -175,12 +253,24 @@ class SimulateLowResolutiond(RandomizableTransform, MapTransform):
         self.t = SimulateLowResolution(prob, zoom_range, dtype)
 
     def randomize(self) -> None:
+        """
+        Randomize the zooming scale.
+        """
         self.t.randomize()
 
     def __call__(
         self,
         data: Mapping[Hashable, NdarrayOrTensor]
     ) -> Dict[Hashable, NdarrayOrTensor]:
+        """
+        Apply the low resolution simulation to the input image tensors.
+
+        Args:
+            data: The input data dictionary.
+
+        Returns:
+            The transformed data dictionary.
+        """
         d = dict(data)
         self.randomize()
 

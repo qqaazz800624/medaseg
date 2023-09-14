@@ -5,6 +5,13 @@ import torch
 from pytorch_lightning import Callback, LightningModule, Trainer
 
 class FedProxLoss(Callback):
+    """
+    Callback class for Federated Proximal (FedProx) loss.
+
+    Args:
+        mu (float): The coefficient for the FedProx loss. Default is 1.0.
+    """
+
     def __init__(self, mu: float = 1.0):
         super().__init__()
 
@@ -13,6 +20,13 @@ class FedProxLoss(Callback):
         self.logger = logging.getLogger(__name__)
 
     def on_train_start(self, trainer: Trainer, pl_module: LightningModule):
+        """
+        Called when the training starts.
+
+        Args:
+            trainer (Trainer): The trainer object.
+            pl_module (LightningModule): The LightningModule object.
+        """
         self.global_state = OrderedDict(
             (name, param.clone().detach()) for name, param in pl_module.model.named_parameters()
         )
@@ -32,6 +46,14 @@ class FedProxLoss(Callback):
         pl_module: LightningModule,
         loss: torch.Tensor
     ):
+        """
+        Called before the backward pass.
+
+        Args:
+            trainer (Trainer): The trainer object.
+            pl_module (LightningModule): The LightningModule object.
+            loss (torch.Tensor): The loss tensor.
+        """
         fedprox_loss = 0.0
         for name, param in pl_module.model.named_parameters():
             fedprox_loss += torch.sum((param - self.global_state[name]) ** 2)

@@ -2,6 +2,7 @@ import torch
 from torch.nn import CrossEntropyLoss
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR
+from torch.utils.data import RandomSampler
 from monai.data import Dataset, DataLoader
 from monai.inferers import SimpleInferer
 from monai.metrics import DiceMetric
@@ -22,7 +23,8 @@ from manafaln.core.builders import (
     TransformBuilder,
     DataModuleBuilder,
     WorkflowBuilder,
-    CallbackBuilder
+    CallbackBuilder,
+    SamplerBuilder
 )
 
 class ToyModel(torch.nn.Module):
@@ -174,3 +176,14 @@ def test_callback_builder():
     out = builder(config)
     assert isinstance(out, ModelCheckpoint)
 
+def test_sampler_builder():
+    builder = SamplerBuilder()
+    
+    data_source = [1, 2, 3, 4, 5]
+
+    config = {
+        "name": "RandomSampler",
+        "args": {}
+    }
+    out = builder(config, data_source)
+    assert isinstance(out, RandomSampler)

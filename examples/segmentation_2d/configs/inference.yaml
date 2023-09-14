@@ -1,0 +1,93 @@
+trainer:
+  settings:
+    accelerator: gpu
+    devices: [0]
+
+workflow:
+  name: SupervisedLearningV2
+
+  settings:
+    decollate:
+      predict:
+      - image
+      - image_meta_dict
+      - preds
+
+  components:
+    model:
+      name: UNet
+      args:
+        spatial_dims: 2
+        in_channels: 1
+        out_channels: 1
+        channels: [32, 64, 128]
+        strides: [2, 2]
+
+    post_transforms:
+      predict:
+      - name: Activationsd
+        args:
+          keys: preds
+          sigmoid: True
+      - name: AsDiscreted
+        args:
+          keys: preds
+          threshold: 0.5
+      - name: OverlayMaskd
+        args:
+          image_keys: image
+          mask_keys: preds
+          alpha: 0.2
+      - name: SaveImaged
+        args:
+          keys: image
+          meta_keys: image_meta_dict
+          output_postfix: pred
+          output_dir: data/preds
+          print_log: false
+          output_ext: png
+          output_dtype: uint8
+          scale: 255
+          resample: true
+      - name: SaveRunLengthEncodingd
+        path: custom.run_length_encoder
+        args:
+          keys: preds
+          meta_keys: image_meta_dict
+          output_dir: data
+          filename: predictions.csv
+
+data:
+  name: DecathlonDataModule
+
+  settings:
+    data_root: data
+    data_list: data/datalist.json
+
+  predict:
+    data_list_key: test
+    transforms:
+    - name: LoadImaged
+      args:
+        keys: [image]
+    - name: EnsureChannelFirstd
+      args:
+        keys: [image]
+    - name: ScaleIntensityd
+      args:
+        keys: [image]
+    - name: EnsureTyped
+      args:
+        keys: [image]
+        dtype: float32
+        track_meta: False
+
+    dataset:
+      name: Dataset
+
+    dataloader:
+      name: DataLoader
+      args:
+        batch_size: 1
+        pin_memory: False
+        num_workers: 8

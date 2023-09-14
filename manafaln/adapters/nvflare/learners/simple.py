@@ -31,6 +31,19 @@ from manafaln.core.builders import (
 )
 
 class SimpleLearner(Learner):
+    """
+    SimpleLearner is a class that represents a simple learner for a machine learning model.
+
+    Args:
+        config_train (str): The path to the training configuration file.
+        config_valid (str): The path to the validation configuration file.
+        aggregation_interval (Literal["step", "epoch"], optional): The interval at which to aggregate the training results. Defaults to "epoch".
+        aggregation_frequency (int, optional): The frequency at which to aggregate the training results. Defaults to 10.
+        restore_local_ckpt (str, optional): The path to the local checkpoint file to restore from. Defaults to None.
+        train_task_name (str, optional): The name of the training task. Defaults to AppConstants.TASK_TRAIN.
+        submit_model_task_name (str, optional): The name of the submit model task. Defaults to AppConstants.TASK_SUBMIT_MODEL.
+    """
+
     def __init__(
         self,
         config_train: str,
@@ -74,6 +87,15 @@ class SimpleLearner(Learner):
         self.signal_handler = AbortTraining()
 
     def process_train_config(self, config: Dict):
+        """
+        Process the training configuration.
+
+        Args:
+            config (Dict): The training configuration.
+
+        Returns:
+            Dict: The processed training configuration.
+        """
         # Disable training limits
         settings = config["trainer"].get("settings", {})
         settings["max_steps"] = -1
@@ -101,6 +123,15 @@ class SimpleLearner(Learner):
         return config
 
     def process_valid_config(self, config: Dict):
+        """
+        Process the validation configuration.
+
+        Args:
+            config (Dict): The validation configuration.
+
+        Returns:
+            Dict: The processed validation configuration.
+        """
         # Overwrite some settings for correct behavior
         config["trainer"]["settings"]["default_root_dir"] = self.app_root
 
@@ -115,18 +146,52 @@ class SimpleLearner(Learner):
         return config
 
     def build_data_module(self, config_data: Dict):
+        """
+        Build the data module.
+
+        Args:
+            config_data (Dict): The data configuration.
+
+        Returns:
+            DataModuleBuilder: The built data module.
+        """
         builder = DataModuleBuilder()
         return builder(config_data)
 
     def build_workflow(self, config_workflow: Dict):
+        """
+        Build the workflow.
+
+        Args:
+            config_workflow (Dict): The workflow configuration.
+
+        Returns:
+            WorkflowBuilder: The built workflow.
+        """
         builder = WorkflowBuilder()
         return builder(config_workflow)
 
     def build_callbacks(self, config_callbacks: List[Dict]):
+        """
+        Build the callbacks.
+
+        Args:
+            config_callbacks (List[Dict]): The callbacks configuration.
+
+        Returns:
+            List[CallbackBuilder]: The built callbacks.
+        """
         builder = CallbackBuilder()
         return [builder(c) for c in config_callbacks]
 
     def initialize(self, parts: dict, fl_ctx: FLContext):
+        """
+        Initialize the learner.
+
+        Args:
+            parts (dict): The parts dictionary.
+            fl_ctx (FLContext): The FLContext object.
+        """
         # Common setups
         self.app_root = fl_ctx.get_prop(FLContextKey.APP_ROOT)
 
@@ -176,6 +241,12 @@ class SimpleLearner(Learner):
         )
 
     def local_train(self, fl_ctx: FLContext):
+        """
+        Perform local training.
+
+        Args:
+            fl_ctx (FLContext): The FLContext object.
+        """
         # Manually set training length
         init_steps = self.trainer.global_step
         if self.aggregation_interval == "step":
@@ -195,6 +266,17 @@ class SimpleLearner(Learner):
         self.num_steps_current_round = self.trainer.global_step - init_steps
 
     def train(self, data: Shareable, fl_ctx: FLContext, abort_signal: Signal) -> Shareable:
+        """
+        Train the model.
+
+        Args:
+            data (Shareable): The input data.
+            fl_ctx (FLContext): The FLContext object.
+            abort_signal (Signal): The abort signal.
+
+        Returns:
+            Shareable: The output data.
+        """
         # 1. Prepare datasets (training & validation)
         if self.train_datamodule is None:
             raise RuntimeError(
@@ -250,6 +332,16 @@ class SimpleLearner(Learner):
         return dxo.to_shareable()
 
     def get_model_for_validation(self, model_name: str, fl_ctx: FLContext) -> Shareable:
+        """
+        Get the model for validation.
+
+        Args:
+            model_name (str): The name of the model.
+            fl_ctx (FLContext): The FLContext object.
+
+        Returns:
+            Shareable: The model for validation.
+        """
         if model_name == ModelName.BEST_MODEL:
             model_data = None
             try:
@@ -282,6 +374,17 @@ class SimpleLearner(Learner):
             raise ValueError(f"Unknown model_type {model_name}")
 
     def validate(self, data: Shareable, fl_ctx: FLContext, abort_signal: Signal) -> Shareable:
+        """
+        Validate the model.
+
+        Args:
+            data (Shareable): The input data.
+            fl_ctx (FLContext): The FLContext object.
+            abort_signal (Signal): The abort signal.
+
+        Returns:
+            Shareable: The output data.
+        """
         # 1. Extract data from shareable
         model_owner = data.get_header(AppConstants.MODEL_OWNER, "global_model")
         validate_type = data.get_header(AppConstants.VALIDATE_TYPE)
@@ -348,6 +451,12 @@ class SimpleLearner(Learner):
         return dxo.to_shareable()
 
     def finalize(self, fl_ctx: FLContext):
+        """
+        Finalize the learner.
+
+        Args:
+            fl_ctx (FLContext): The FLContext object.
+        """
         if self.train_datamodule:
             self.train_datamodule.teardown("fit")
         if self.valid_datamodule:

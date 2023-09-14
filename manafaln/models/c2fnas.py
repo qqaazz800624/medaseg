@@ -8,12 +8,23 @@ from torch.nn import Sigmoid, Softmax
 
 class ConvBlock(nn.Module):
     def __init__(self, inc, outc, kernel_size=3, mode="3d"):
+        """
+        Convolutional block module.
+
+        Args:
+        - inc: int - Number of input channels.
+        - outc: int - Number of output channels.
+        - kernel_size: int - Size of the kernel.
+        - mode: str - Mode for convolution. Can be "2d", "3d", or "p3d".
+
+        Raises:
+        - ValueError: If the mode is not one of "2d", "3d", or "p3d".
+        """
         super(ConvBlock, self).__init__()
 
         self.mode = mode.lower()
         if self.mode not in ["2d", "3d", "p3d"]:
-            raise ValueError("Unknow mode for convolution")
-        #endif
+            raise ValueError("Unknown mode for convolution")
 
         pad_size = (kernel_size - 1) // 2
 
@@ -27,7 +38,6 @@ class ConvBlock(nn.Module):
                 bias=False
             )
             self.conv2 = None
-        #endif
 
         if self.mode == "3d":
             self.conv1 = Conv3d(
@@ -39,7 +49,6 @@ class ConvBlock(nn.Module):
                 bias=False
             )
             self.conv2 = None
-        #endif
 
         if self.mode == "p3d":
             self.conv1 = Conv3d(
@@ -58,24 +67,35 @@ class ConvBlock(nn.Module):
                 padding=(0, 0, pad_size),
                 bias=False
             )
-        #endif
 
         self.norm = InstanceNorm3d(outc)
-    #end
 
     def forward(self, x):
+        """
+        Forward pass of the convolutional block.
+
+        Args:
+        - x: torch.Tensor - Input tensor.
+
+        Returns:
+        - torch.Tensor - Output tensor.
+        """
         x = F.relu(x)
         x = self.conv1(x)
         if self.conv2 is not None:
             x = self.conv2(x)
-        #endif
         x = self.norm(x)
         return x
-    #end
-#end
 
 class UpsampleBlock(nn.Module):
     def __init__(self, inc, outc):
+        """
+        Upsample block module.
+
+        Args:
+        - inc: int - Number of input channels.
+        - outc: int - Number of output channels.
+        """
         super(UpsampleBlock, self).__init__()
 
         self.up = Upsample(
@@ -91,19 +111,32 @@ class UpsampleBlock(nn.Module):
             bias=False
         )
         self.norm = InstanceNorm3d(outc)
-    #end
 
     def forward(self, x):
+        """
+        Forward pass of the upsample block.
+
+        Args:
+        - x: torch.Tensor - Input tensor.
+
+        Returns:
+        - torch.Tensor - Output tensor.
+        """
         x = self.up(x)
         x = F.relu(x)
         x = self.conv(x)
         x = self.norm(x)
         return x
-    #end
-#end
 
 class DownsampleBlock(nn.Module):
     def __init__(self, inc, outc):
+        """
+        Downsample block module.
+
+        Args:
+        - inc: int - Number of input channels.
+        - outc: int - Number of output channels.
+        """
         super(DownsampleBlock, self).__init__()
 
         self.conv = Conv3d(
@@ -115,52 +148,95 @@ class DownsampleBlock(nn.Module):
             bias=False
         )
         self.norm = InstanceNorm3d(outc)
-    #end
 
     def forward(self, x):
+        """
+        Forward pass of the downsample block.
+
+        Args:
+        - x: torch.Tensor - Input tensor.
+
+        Returns:
+        - torch.Tensor - Output tensor.
+        """
         x = F.relu(x)
         x = self.conv(x)
         x = self.norm(x)
         return x
-    #end
-#end
 
 class Identity(nn.Module):
     def __init__(self, inc, outc, mode="3d"):
+        """
+        Identity module.
+
+        Args:
+        - inc: int - Number of input channels.
+        - outc: int - Number of output channels.
+        - mode: str - Mode for convolution. Can be "2d", "3d", or "p3d".
+        """
         super(Identity, self).__init__()
 
         self.prep = ConvBlock(inc, outc, kernel_size=1)
         self.conv = ConvBlock(outc, outc, kernel_size=3, mode=mode)
         self.post = ConvBlock(outc, outc, kernel_size=1)
-    #end
 
     def forward(self, x):
+        """
+        Forward pass of the identity module.
+
+        Args:
+        - x: torch.Tensor - Input tensor.
+
+        Returns:
+        - torch.Tensor - Output tensor.
+        """
         x = self.prep(x)
         x = self.conv(x)
         x = self.post(x)
         return x
-    #end
-#end
 
 class IdentityDownsample(nn.Module):
     def __init__(self, inc, outc, mode="3d"):
+        """
+        Identity downsample module.
+
+        Args:
+        - inc: int - Number of input channels.
+        - outc: int - Number of output channels.
+        - mode: str - Mode for convolution. Can be "2d", "3d", or "p3d".
+        """
         super(IdentityDownsample, self).__init__()
 
         self.prep = DownsampleBlock(inc, outc)
         self.conv = ConvBlock(outc, outc, kernel_size=3, mode=mode)
         self.post = ConvBlock(outc, outc, kernel_size=1)
-    #end
 
     def forward(self, x):
+        """
+        Forward pass of the identity downsample module.
+
+        Args:
+        - x: torch.Tensor - Input tensor.
+
+        Returns:
+        - torch.Tensor - Output tensor.
+        """
         x = self.prep(x)
         x = self.conv(x)
         x = self.post(x)
         return x
-    #end
-#end
 
 class Merge(nn.Module):
     def __init__(self, xc, prevc, outc, mode="3d"):
+        """
+        Merge module.
+
+        Args:
+        - xc: int - Number of input channels for the current tensor.
+        - prevc: int - Number of input channels for the previous tensor.
+        - outc: int - Number of output channels.
+        - mode: str - Mode for convolution. Can be "2d", "3d", or "p3d".
+        """
         super(Merge, self).__init__()
 
         self.prep0 = ConvBlock(xc,    outc, kernel_size=1)
@@ -170,9 +246,18 @@ class Merge(nn.Module):
         self.conv1 = ConvBlock(outc, outc, kernel_size=3, mode=mode)
 
         self.post = ConvBlock(outc, outc, kernel_size=1)
-    #end
 
     def forward(self, x, prev):
+        """
+        Forward pass of the merge module.
+
+        Args:
+        - x: torch.Tensor - Current tensor.
+        - prev: torch.Tensor - Previous tensor.
+
+        Returns:
+        - torch.Tensor - Output tensor.
+        """
         x0 = self.prep0(x)
         x1 = self.prep1(prev)
 
@@ -180,11 +265,18 @@ class Merge(nn.Module):
 
         s = self.post(s)
         return s
-    #end
-#end
 
 class MergeUpsample(nn.Module):
     def __init__(self, xc, prevc, outc, mode="3d"):
+        """
+        Merge upsample module.
+
+        Args:
+        - xc: int - Number of input channels for the current tensor.
+        - prevc: int - Number of input channels for the previous tensor.
+        - outc: int - Number of output channels.
+        - mode: str - Mode for convolution. Can be "2d", "3d", or "p3d".
+        """
         super(MergeUpsample, self).__init__()
 
         self.prep0 = UpsampleBlock(xc, outc)
@@ -194,9 +286,18 @@ class MergeUpsample(nn.Module):
         self.conv1 = ConvBlock(outc, outc, kernel_size=3, mode=mode)
 
         self.post = ConvBlock(outc, outc, kernel_size=1)
-    #end
 
     def forward(self, x, prev):
+        """
+        Forward pass of the merge upsample module.
+
+        Args:
+        - x: torch.Tensor - Current tensor.
+        - prev: torch.Tensor - Previous tensor.
+
+        Returns:
+        - torch.Tensor - Output tensor.
+        """
         x0 = self.prep0(x)
         x1 = self.prep1(prev)
 
@@ -204,11 +305,16 @@ class MergeUpsample(nn.Module):
 
         s = self.post(s)
         return s
-    #end
-#end
 
 class FirstStem(nn.Module):
     def __init__(self, inc, outc):
+        """
+        First stem module.
+
+        Args:
+        - inc: int - Number of input channels.
+        - outc: int - Number of output channels.
+        """
         super(FirstStem, self).__init__()
 
         filters = outc // 2
@@ -232,9 +338,17 @@ class FirstStem(nn.Module):
             bias=False
         )
         self.norm2 = InstanceNorm3d(outc)
-    #end
 
     def forward(self, x):
+        """
+        Forward pass of the first stem module.
+
+        Args:
+        - x: torch.Tensor - Input tensor.
+
+        Returns:
+        - torch.Tensor - Output tensor.
+        """
         x = self.conv1(x)
         x = self.norm1(x)
         x = F.relu(x)
@@ -242,11 +356,16 @@ class FirstStem(nn.Module):
         x = self.conv2(x)
         x = self.norm2(x)
         return x
-    #end
-#end
 
 class FinalStem(nn.Module):
     def __init__(self, inc, outc):
+        """
+        Final stem module.
+
+        Args:
+        - inc: int - Number of input channels.
+        - outc: int - Number of output channels.
+        """
         super(FinalStem, self).__init__()
 
         filters = outc * 2
@@ -275,9 +394,18 @@ class FinalStem(nn.Module):
             bias=False
         )
         self.norm2 = InstanceNorm3d(outc)
-    #end
 
     def forward(self, x, skip):
+        """
+        Forward pass of the final stem module.
+
+        Args:
+        - x: torch.Tensor - Input tensor.
+        - skip: torch.Tensor - Skip connection tensor.
+
+        Returns:
+        - torch.Tensor - Output tensor.
+        """
         x = torch.cat((x, skip), dim=1)
 
         x = F.relu(x)
@@ -291,8 +419,6 @@ class FinalStem(nn.Module):
         x = F.relu(x)
 
         return x
-    #end
-#end
 
 class C2FNAS(nn.Module):
     def __init__(
@@ -302,6 +428,18 @@ class C2FNAS(nn.Module):
         init_filters=32,
         final_activation="softmax"
     ):
+        """
+        C2FNAS model.
+
+        Args:
+        - in_channels: int - Number of input channels.
+        - num_classes: int - Number of output classes.
+        - init_filters: int - Number of initial filters.
+        - final_activation: str - Final activation function. Can be "sigmoid" or "softmax".
+
+        Raises:
+        - ValueError: If the final_activation is "sigmoid" and num_classes is not 1.
+        """
         super(C2FNAS, self).__init__()
 
         self.in_channels      = in_channels
@@ -311,7 +449,6 @@ class C2FNAS(nn.Module):
 
         if final_activation == "sigmoid" and num_classes != 1:
             raise ValueError("Output classes must be 1 when using sigmoid")
-        #endif
 
         filters = init_filters
 
@@ -335,7 +472,6 @@ class C2FNAS(nn.Module):
              Merge(filters * 2, filters * 2, filters * 2, mode="3d")
         ])
 
-        # concatenate x and skip
         self.final_stem = FinalStem(filters * 4, filters)
 
         if final_activation.lower() == "sigmoid":
@@ -368,10 +504,18 @@ class C2FNAS(nn.Module):
                 bias=False
             )
             self.output = None
-        #endif
-    #end
 
     def encoder(self, x):
+        """
+        Encoder part of the model.
+
+        Args:
+        - x: torch.Tensor - Input tensor.
+
+        Returns:
+        - torch.Tensor - Encoded tensor.
+        - List[torch.Tensor] - List of skip connection tensors.
+        """
         x = self.first_stem(x)
 
         skips = []
@@ -391,9 +535,18 @@ class C2FNAS(nn.Module):
         x = self.encode_layers[5](x)
 
         return x, skips
-    #end
 
     def decoder(self, x: torch.Tensor, skips: List[torch.Tensor]):
+        """
+        Decoder part of the model.
+
+        Args:
+        - x: torch.Tensor - Encoded tensor.
+        - skips: List[torch.Tensor] - List of skip connection tensors.
+
+        Returns:
+        - torch.Tensor - Decoded tensor.
+        """
         x = self.decode_layers[0](x, skips[2])
 
         x = self.decode_layers[1](x)
@@ -410,19 +563,32 @@ class C2FNAS(nn.Module):
         x = self.final_stem(x, prev)
 
         return x
-    #end
 
     def model(self, x):
+        """
+        Model part of the model.
+
+        Args:
+        - x: torch.Tensor - Input tensor.
+
+        Returns:
+        - torch.Tensor - Output tensor.
+        """
         x, skips = self.encoder(x)
         x = self.decoder(x, skips)
         x = self.final_conv(x)
         if self.output is not None:
             x = self.output(x)
-        #endif
         return x
-    #end
 
     def forward(self, x):
+        """
+        Forward pass of the model.
+
+        Args:
+        - x: torch.Tensor - Input tensor.
+
+        Returns:
+        - torch.Tensor - Output tensor.
+        """
         return self.model(x)
-    #end
-#end

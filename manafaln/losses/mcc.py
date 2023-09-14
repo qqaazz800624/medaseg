@@ -9,6 +9,24 @@ from monai.utils import LossReduction
 from monai.losses.focal_loss import FocalLoss
 
 class MCCLoss(_Loss):
+    """
+    Compute the Matthews Correlation Coefficient (MCC) loss.
+
+    Args:
+        include_background: Whether to include the background class in the loss calculation. Defaults to True.
+        to_onehot_y: Whether to convert the target tensor to one-hot encoding. Defaults to False.
+        sigmoid: Whether to apply sigmoid activation to the input tensor. Defaults to False.
+        softmax: Whether to apply softmax activation to the input tensor. Defaults to False.
+        reduction: The reduction method to apply to the loss. Can be one of LossReduction.MEAN, LossReduction.SUM, or LossReduction.NONE. Defaults to LossReduction.MEAN.
+        smooth_nr: The smoothing factor for the numerator in the MCC calculation. Defaults to 1e-5.
+        smooth_dr: The smoothing factor for the denominator in the MCC calculation. Defaults to 1e-5.
+        batch: Whether the input tensor has a batch dimension. Defaults to False.
+
+    Raises:
+        ValueError: If both sigmoid and softmax are set to True.
+
+    """
+
     def __init__(
         self,
         include_background: bool = True,
@@ -38,6 +56,21 @@ class MCCLoss(_Loss):
         input: torch.Tensor,
         target: torch.Tensor
     ) -> torch.Tensor:
+        """
+        Compute the forward pass of the MCC loss.
+
+        Args:
+            input: The input tensor.
+            target: The target tensor.
+
+        Returns:
+            The computed MCC loss.
+
+        Raises:
+            AssertionError: If the input and target tensors have different shapes.
+
+        """
+
         if self.sigmoid:
             input = torch.sigmoid(input)
 
@@ -85,7 +118,30 @@ class MCCLoss(_Loss):
             return torch.mean(mcc_loss)
         raise ValueError(f"Unsupported reduction: {self.reduction}")
 
+
 class MCCFocalLoss(_Loss):
+    """
+    Compute the combined loss of MCC loss and Focal loss.
+
+    Args:
+        include_background: Whether to include the background class in the loss calculation. Defaults to True.
+        to_onehot_y: Whether to convert the target tensor to one-hot encoding. Defaults to False.
+        sigmoid: Whether to apply sigmoid activation to the input tensor. Defaults to False.
+        softmax: Whether to apply softmax activation to the input tensor. Defaults to False.
+        reduction: The reduction method to apply to the loss. Can be one of LossReduction.MEAN, LossReduction.SUM, or LossReduction.NONE. Defaults to LossReduction.MEAN.
+        smooth_nr: The smoothing factor for the numerator in the MCC calculation. Defaults to 1e-5.
+        smooth_dr: The smoothing factor for the denominator in the MCC calculation. Defaults to 1e-5.
+        batch: Whether the input tensor has a batch dimension. Defaults to False.
+        gamma: The gamma parameter for the Focal loss. Defaults to 2.0.
+        focal_weight: The weight parameter for the Focal loss. Defaults to None.
+        lambda_mcc: The weight parameter for the MCC loss. Defaults to 1.0.
+        lambda_focal: The weight parameter for the Focal loss. Defaults to 1.0.
+
+    Raises:
+        AssertionError: If lambda_mcc or lambda_focal is less than or equal to 0.
+
+    """
+
     def __init__(
         self,
         include_background: bool = True,
@@ -132,6 +188,18 @@ class MCCFocalLoss(_Loss):
         input: torch.Tensor,
         target: torch.Tensor
     ) -> torch.Tensor:
+        """
+        Compute the forward pass of the combined MCC and Focal loss.
+
+        Args:
+            input: The input tensor.
+            target: The target tensor.
+
+        Returns:
+            The computed combined loss.
+
+        """
+
         mcc_loss = self.mcc(input, target)
         focal_loss = self.focal(input, target)
         total_loss = self.lambda_mcc * mcc_loss + self.lambda_focal * focal_loss

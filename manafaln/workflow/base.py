@@ -4,7 +4,7 @@ import torch
 import monai
 from monai.transforms import Decollated
 from pytorch_lightning import LightningModule
-from pytorch_lightning.utilities.distributed import rank_zero_only
+from pytorch_lightning.utilities import rank_zero_only
 
 from manafaln.core.metric import MetricCollection
 from manafaln.core.builders import (
@@ -17,6 +17,17 @@ from manafaln.core.builders import (
 from manafaln.core.transforms import build_transforms
 
 def configure_batch_decollate(settings, phase, keys):
+    """
+    Configure batch decollate based on the given settings, phase, and keys.
+
+    Args:
+        settings (dict): The settings dictionary.
+        phase (str): The phase of the batch.
+        keys (list): The list of keys for decollation.
+
+    Returns:
+        Decollated or None: The decollated object or None if decollation is not needed.
+    """
     decollate = settings.get("decollate", False)
     decollate_phases = settings.get("decollate_phases", [])
     if decollate and phase in decollate_phases:
@@ -24,6 +35,23 @@ def configure_batch_decollate(settings, phase, keys):
     return None
 
 class SupervisedLearning(LightningModule):
+    """
+    A PyTorch Lightning module for supervised learning.
+
+    Args:
+        config (dict): The configuration dictionary.
+
+    Attributes:
+        model: The model for supervised learning.
+        loss_fn: The loss function for supervised learning.
+        inferer: The inferer for supervised learning.
+        train_decollate: The decollated object for training phase.
+        valid_decollate: The decollated object for validation phase.
+        test_decollate: The decollated object for test phase.
+        post_transforms (dict): The post transforms for each phase.
+        train_metrics: The metric collection for training phase.
+        valid_metrics: The metric collection for validation phase.
+    """
     def __init__(self, config: dict):
         super().__init__()
 
@@ -59,18 +87,55 @@ class SupervisedLearning(LightningModule):
         self.valid_metrics = MetricCollection(components["validation_metrics"])
 
     def build_model(self, config):
+        """
+        Build the model based on the given configuration.
+
+        Args:
+            config: The configuration for building the model.
+
+        Returns:
+            The built model.
+        """
         builder = ModelBuilder()
         return builder(config)
 
     def build_loss_fn(self, config):
+        """
+        Build the loss function based on the given configuration.
+
+        Args:
+            config: The configuration for building the loss function.
+
+        Returns:
+            The built loss function.
+        """
         builder = LossBuilder()
         return builder(config)
 
     def build_inferer(self, config):
+        """
+        Build the inferer based on the given configuration.
+
+        Args:
+            config: The configuration for building the inferer.
+
+        Returns:
+            The built inferer.
+        """
         builder = InfererBuilder()
         return builder(config)
 
     def configure_batch_decollate(self, config, phase):
+        """
+        Configure batch decollate based on the given configuration and phase.
+
+        Args:
+            config: The configuration for batch decollate.
+            phase: The phase of the batch.
+
+        Returns:
+            Decollated or None: The decollated object or None if decollation is not needed.
+        """
         if phase == "training" or phase == "validation":
             keys = [
                 "image", "image_meta_dict", "image_transforms",
@@ -88,9 +153,28 @@ class SupervisedLearning(LightningModule):
         return None
 
     def forward(self, data):
+        """
+        Forward pass of the model.
+
+        Args:
+            data: The input data.
+
+        Returns:
+            The output of the model.
+        """
         return self.inferer(data, self.model)
 
     def training_step(self, batch, batch_idx):
+        """
+        Training step of the module.
+
+        Args:
+            batch: The input batch.
+            batch_idx: The index of the batch.
+
+        Returns:
+            The loss value.
+        """
         image = batch["image"]
         label = batch["label"]
 
@@ -117,11 +201,27 @@ class SupervisedLearning(LightningModule):
         return loss
 
     def training_epoch_end(self, outputs):
+        """
+        Training epoch end hook.
+
+        Args:
+            outputs: The outputs of the training epoch.
+        """
         m = self.train_metrics.aggregate()
         self.log_dict(m, sync_dist=True)
         self.train_metrics.reset()
 
     def validation_step(self, batch, batch_idx):
+        """
+        Validation step of the module.
+
+        Args:
+            batch: The input batch.
+            batch_idx: The index of the batch.
+
+        Returns:
+            The metrics of the batch.
+        """
         batch = deepcopy(batch)
 
         image = batch["image"]
@@ -155,11 +255,24 @@ class SupervisedLearning(LightningModule):
         return metrics
 
     def validation_epoch_end(self, validation_step_outputs):
+        """
+        Validation epoch end hook.
+
+        Args:
+            validation_step_outputs: The outputs of the validation epoch.
+        """
         m = self.valid_metrics.aggregate()
         self.log_dict(m, sync_dist=True)
         self.valid_metrics.reset()
 
     def test_step(self, batch, batch_idx):
+        """
+        Test step of the module.
+
+        Args:
+            batch: The input batch.
+            batch_idx: The index of the batch.
+        """
         # No label for test
         image = batch["image"]
 
@@ -176,9 +289,21 @@ class SupervisedLearning(LightningModule):
         return None
 
     def get_optimize_parameters(self):
+        """
+        Get the parameters for optimization.
+
+        Returns:
+            The parameters for optimization.
+        """
         return self.model.parameters()
 
     def configure_optimizers(self):
+        """
+        Configure the optimizers.
+
+        Returns:
+            dict: The optimizer configuration.
+        """
         # Extract optimizer & scheduler configurations
         workflow = self.hparams.workflow
         opt_config = workflow["components"]["optimizer"]

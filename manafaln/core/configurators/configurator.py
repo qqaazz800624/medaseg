@@ -1,16 +1,10 @@
 import logging
-from abc import ABC, abstractmethod 
+from abc import ABC, abstractmethod
 from argparse import ArgumentParser
 from collections import OrderedDict
 from typing import Dict
 
-from ruamel.yaml import YAML
-
-def load_config(config_path: str) -> Dict:
-    loader = YAML()
-    with open(config_path) as f:
-        config = loader.load(f)
-    return config
+from manafaln.utils import load_yaml
 
 class Configurator(ABC):
     def __init__(self, app_name=None, description=None):
@@ -94,7 +88,7 @@ class DefaultConfigurator(Configurator):
 
     def process_args(self, args) -> None:
         if args.config:
-            config = load_config(args.config)
+            config = load_yaml(args.config)
             self.logger.info(f"Load global configuration from {args.config}.")
         elif None in [args.trainer, args.data, args.workflow]:
             # At least one configuration is missing
@@ -108,7 +102,7 @@ class DefaultConfigurator(Configurator):
         # Override the configuration by component config file
         for f, c in zip([args.trainer, args.data, args.workflow], ["trainer", "data", "workflow"]):
             if f:
-                config_f = load_config(f)
+                config_f = load_yaml(f)
                 config[c] = config_f[c]
                 self.logger.info(f"Load {c} configuration from {f}.")
 
@@ -129,4 +123,3 @@ class DefaultConfigurator(Configurator):
 
     def get_ckpt_path(self) -> str:
         return self.ckpt_path
-
