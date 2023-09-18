@@ -1,7 +1,7 @@
 from typing import Dict, Optional
 
+from lightning import Trainer
 from monai.utils import set_determinism
-from pytorch_lightning import Trainer
 
 from manafaln.apps.utils import (
     build_callbacks,

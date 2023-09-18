@@ -1,5 +1,5 @@
 from .base import SupervisedLearning
-from .basev2 import SupervisedLearningV2
+from .base_v2 import SupervisedLearningV2
 from .classification import SupervisedClassification
 from .contrastive import (
     SelfSupervisedContrastiveLearning,

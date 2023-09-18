@@ -2,7 +2,7 @@ from typing import Dict, Union
 
 import torch
 from monai.config.type_definitions import PathLike
-from pytorch_lightning import Callback, LightningModule, Trainer
+from lightning import Callback, LightningModule, Trainer
 
 from manafaln.utils.misc import get_attr
 

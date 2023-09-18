@@ -5,7 +5,7 @@ import pandas as pd
 from monai.config.type_definitions import PathLike
 from monai.utils import PostFix, ensure_tuple
 from monai.utils.misc import ImageMetaKey
-from pytorch_lightning.callbacks import BasePredictionWriter
+from lightning.pytorch.callbacks import BasePredictionWriter
 
 from manafaln.common.constants import DefaultKeys
 from manafaln.utils.misc import get_item, get_items

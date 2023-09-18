@@ -5,12 +5,12 @@ from typing import Callable, Dict, List, Sequence
 import torch
 from monai.data import DataLoader
 from monai.utils import ensure_tuple
-from pytorch_lightning import Callback, Trainer
-from pytorch_lightning.callbacks.progress.tqdm_progress import Tqdm, TQDMProgressBar
-from pytorch_lightning.trainer.supporters import CombinedLoader
+from lightning import Callback, Trainer
+from lightning.pytorch.callbacks.progress.tqdm_progress import Tqdm, TQDMProgressBar
+from lightning.pytorch.utilities import CombinedLoader
 
 from manafaln.core.builders import ComponentBuilder, DataLoaderBuilder
-from manafaln.core.metricv2 import DEFAULT_METRIC_INPUT_KEYS
+from manafaln.core.metric_v2 import DEFAULT_METRIC_INPUT_KEYS
 from manafaln.data import DecathlonDataModule
 from manafaln.utils import get_items, update_items
 from manafaln.workflow import SupervisedLearningV2

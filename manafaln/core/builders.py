@@ -590,7 +590,7 @@ class LoggerBuilder(ComponentBuilder):
 
 
 class MetricV2Builder(ComponentBuilder):
-    """A class for building metricv2."""
+    """A class for building metric_v2."""
 
     def __init__(
         self,
@@ -601,9 +601,9 @@ class MetricV2Builder(ComponentBuilder):
         Initializes the MetricV2Builder.
 
         Args:
-            component_type (ComponentType): The type of the metricv2 component.
+            component_type (ComponentType): The type of the metric_v2 component.
             check_instance (bool): Whether to check if the constructed
-                metricv2 is an instance of the expected class.
+                metric_v2 is an instance of the expected class.
         """
         super().__init__(component_type, check_instance)
 

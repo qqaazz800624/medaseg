@@ -79,8 +79,8 @@ class LibSpecPyTorchLightning(metaclass=LibSpecMeta):
     Library specification for PyTorch Lightning components.
     """
 
-    CALLBACK = "pytorch_lightning.callbacks"
-    LOGGER   = "pytorch_lightning.loggers"
+    CALLBACK = "lightning.pytorch.callbacks"
+    LOGGER   = "lightning.pytorch.loggers"
 
 
 class LibSpecTorchVision(metaclass=LibSpecMeta):

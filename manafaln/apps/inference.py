@@ -1,4 +1,4 @@
-from pytorch_lightning import Trainer
+from lightning import Trainer
 
 from manafaln.core.configurators import InferenceConfigurator
 from manafaln.apps.utils import (

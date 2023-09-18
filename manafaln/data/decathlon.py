@@ -6,7 +6,7 @@ import torch
 import monai
 from monai.data.decathlon_datalist import load_decathlon_datalist
 from monai.transforms import Compose
-from pytorch_lightning import LightningDataModule
+from lightning import LightningDataModule
 
 from manafaln.core.builders import (
     DatasetBuilder,

@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from pytorch_lightning import Callback, LightningModule, Trainer
+from lightning import Callback, LightningModule, Trainer
 
 class MetricsAverager(Callback):
     """

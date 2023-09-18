@@ -1,6 +1,6 @@
+from lightning import LightningModule
 from monai.transforms import Decollated
 from monai.utils import ensure_tuple
-from pytorch_lightning import LightningModule
 
 from manafaln.common.constants import DefaultKeys
 from manafaln.core.builders import (
@@ -10,7 +10,7 @@ from manafaln.core.builders import (
     SchedulerBuilder,
 )
 from manafaln.core.loss import LossHelper
-from manafaln.core.metricv2 import MetricCollection
+from manafaln.core.metric_v2 import MetricCollection
 from manafaln.core.transforms import build_transforms
 from manafaln.utils import get_items, update_items
 
@@ -166,7 +166,8 @@ class SupervisedLearningV2(LightningModule):
             The parameters for optimization.
         """
 
-        return self.model.parameters()
+        # return self.model.parameters()
+        return self.trainer.model.parameters()
 
     def configure_optimizers(self):
         """
@@ -249,7 +250,7 @@ class SupervisedLearningV2(LightningModule):
         loss = self.loss_fn(**batch)
 
         # Log current loss value
-        self.log_dict(loss)
+        self.log_dict(loss, sync_dist=True)
 
         if self.decollate_fn["training"] is not None:
             # Decolloate batch before post transform
@@ -274,7 +275,7 @@ class SupervisedLearningV2(LightningModule):
         """
 
         m = self.training_metrics.compute()
-        self.log_dict(m)
+        self.log_dict(m, sync_dist=True)
         self.training_metrics.reset()
 
     def validation_step(self, batch: dict, batch_idx):
@@ -312,7 +313,7 @@ class SupervisedLearningV2(LightningModule):
         """
 
         m = self.validation_metrics.compute()
-        self.log_dict(m)
+        self.log_dict(m, sync_dist=True)
         self.validation_metrics.reset()
 
     def predict_step(self, batch: dict, batch_idx):

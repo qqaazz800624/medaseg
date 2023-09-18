@@ -179,7 +179,7 @@ class DistillationLearning(SupervisedLearning):
             "train_loss": loss,
             "train_gt_loss": gt_loss,
             "train_kd_loss": kd_loss
-        })
+        }, sync_dist=True)
 
         return loss
 

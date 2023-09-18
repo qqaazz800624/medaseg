@@ -11,12 +11,8 @@ else:
 
 from torch.utils.data import Dataset, DataLoader, Sampler
 from torchmetrics import Metric as MetricV2
-from pytorch_lightning import (
-    Callback,
-    LightningDataModule,
-    LightningModule
-)
-from pytorch_lightning.loggers.logger import Logger
+from lightning import Callback, LightningDataModule, LightningModule
+from lightning.pytorch.loggers import Logger
 from monai.metrics import Metric
 from monai.transforms import Transform
 

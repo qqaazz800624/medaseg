@@ -3,7 +3,7 @@ from operator import attrgetter
 from typing import Dict, Sequence
 
 import numpy as np
-from pytorch_lightning import Callback, Trainer
+from lightning import Callback, Trainer
 from scipy.interpolate import interp1d
 
 from manafaln.core.loss import LossHelper

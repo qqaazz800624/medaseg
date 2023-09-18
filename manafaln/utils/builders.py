@@ -6,12 +6,8 @@ import torch.nn as nn
 import torch.optim as optim
 from monai.metrics import Metric
 from monai.transforms import Compose
-from pytorch_lightning import (
-    LightningModule,
-    LightningDataModule
-)
-from pytorch_lightning.callbacks import Callback
-from pytorch_lightning.loggers.logger import Logger
+from lightning import Callback, LightningModule, LightningDataModule
+from lightning.pytorch.loggers import Logger
 
 from manafaln.common.constants import ComponentType, ComponentPaths
 

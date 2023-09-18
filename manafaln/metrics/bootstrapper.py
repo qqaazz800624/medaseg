@@ -5,7 +5,7 @@ from torch import Tensor
 from torchmetrics import Metric
 from torchmetrics.wrappers.bootstrapping import _bootstrap_sampler
 from monai.utils import ensure_tuple
-from pytorch_lightning.utilities.seed import isolate_rng
+from lightning.pytorch.utilities.seed import isolate_rng
 
 from manafaln.core.builders import MetricV2Builder as MetricBuilder
 

@@ -1,8 +1,8 @@
 from copy import deepcopy
 from typing import Any
 
-from pytorch_lightning import Callback, LightningModule, Trainer
-from pytorch_lightning.utilities.types import STEP_OUTPUT
+from lightning import Callback, LightningModule, Trainer
+from lightning.pytorch.utilities.types import STEP_OUTPUT
 
 class PauseTraining(Callback):
     """

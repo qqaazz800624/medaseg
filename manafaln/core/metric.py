@@ -8,10 +8,10 @@ from manafaln.core.builders import MetricBuilder
 def _ensure_list(name: Union[str, List[str]]) -> List[str]:
     """
     Ensure that the input is a list of strings.
-    
+
     Args:
         name: A string or a list of strings.
-        
+
     Returns:
         A list of strings.
     """
@@ -22,10 +22,10 @@ def _ensure_list(name: Union[str, List[str]]) -> List[str]:
 def _unpack_fn(lambda_fn: Optional[str] = None) -> Callable:
     """
     Unpacks a lambda function from a string representation.
-    
+
     Args:
         lambda_fn: A string representation of a lambda function.
-        
+
     Returns:
         A callable function.
     """
@@ -40,7 +40,7 @@ class MetricHelper:
     def __init__(self, config: Dict, builder: MetricBuilder):
         """
         Initialize the MetricHelper instance.
-        
+
         Args:
             config: A dictionary containing the configuration for the metric.
             builder: An instance of MetricBuilder.
@@ -53,7 +53,7 @@ class MetricHelper:
     def is_cumulative(self) -> bool:
         """
         Check if the metric is cumulative.
-        
+
         Returns:
             True if the metric is cumulative, False otherwise.
         """
@@ -63,7 +63,7 @@ class MetricHelper:
     def is_iterative(self) -> bool:
         """
         Check if the metric is iterative.
-        
+
         Returns:
             True if the metric is iterative, False otherwise.
         """
@@ -72,11 +72,11 @@ class MetricHelper:
     def _update_output(self, values, output):
         """
         Update the output dictionary with metric values.
-        
+
         Args:
             values: The metric values.
             output: The output dictionary.
-            
+
         Returns:
             The updated output dictionary.
         """
@@ -91,10 +91,10 @@ class MetricHelper:
     def apply(self, data) -> Dict:
         """
         Apply the metric to the given data.
-        
+
         Args:
             data: The input data.
-            
+
         Returns:
             A dictionary containing the metric values.
         """
@@ -110,7 +110,7 @@ class MetricHelper:
     def aggregate(self) -> Dict:
         """
         Aggregate the metric values.
-        
+
         Returns:
             A dictionary containing the aggregated metric values.
         """
@@ -134,7 +134,7 @@ class MetricCollection:
     def __init__(self, metric_list: List[Dict]):
         """
         Initialize the MetricCollection instance.
-        
+
         Args:
             metric_list: A list of metric configurations.
         """
@@ -144,10 +144,10 @@ class MetricCollection:
     def apply(self, data) -> Dict[str, torch.Tensor]:
         """
         Apply the metrics to the given data.
-        
+
         Args:
             data: The input data.
-            
+
         Returns:
             A dictionary containing the metric values.
         """
@@ -160,7 +160,7 @@ class MetricCollection:
     def aggregate(self) -> Dict:
         """
         Aggregate the metric values.
-        
+
         Returns:
             A dictionary containing the aggregated metric values.
         """

@@ -5,7 +5,7 @@ from monai.metrics import CumulativeIterationMetric
 from torchmetrics import Metric
 
 
-class MONAI(Metric):
+class FromMONAI(Metric):
     full_state_update: bool = True
 
     def __init__(self, name, path="monai.metrics", *args, **kwargs):
@@ -56,3 +56,6 @@ class MONAI(Metric):
         Reset the metric to its initial state.
         """
         self.metric.reset()
+
+# Keep this abbr. for backward capbility
+MONAI = FromMONAI

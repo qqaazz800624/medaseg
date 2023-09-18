@@ -2,7 +2,7 @@ from torch.nn import ModuleDict
 
 from manafaln.core.loss import LossHelper
 from manafaln.utils import get_items, update_items
-from manafaln.workflow.basev2 import SupervisedLearningV2
+from manafaln.workflow.base_v2 import SupervisedLearningV2
 
 class SemiSupervisedLearning(SupervisedLearningV2):
     """
@@ -77,7 +77,7 @@ class SemiSupervisedLearning(SupervisedLearningV2):
         loss = {"loss": total_loss, **labeled_loss, **unlabeled_loss}
 
         # Log current loss value
-        self.log_dict(loss)
+        self.log_dict(loss, sync_dist=True)
 
         # Post transform and compute metrics on labeled data only
         if self.decollate_fn["training"] is not None:

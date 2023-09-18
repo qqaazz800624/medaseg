@@ -2,8 +2,8 @@ import os
 from typing import Any
 import logging
 
-from pytorch_lightning.loggers import TensorBoardLogger as _TensorBoardLogger
-from pytorch_lightning.utilities import rank_zero_only
+from lightning.pytorch.loggers import TensorBoardLogger as _TensorBoardLogger
+from lightning.pytorch.utilities import rank_zero_only
 
 from manafaln.utils import save_yaml
 

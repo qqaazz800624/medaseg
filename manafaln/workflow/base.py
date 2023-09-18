@@ -3,8 +3,8 @@ from copy import deepcopy
 import torch
 import monai
 from monai.transforms import Decollated
-from pytorch_lightning import LightningModule
-from pytorch_lightning.utilities import rank_zero_only
+from lightning import LightningModule
+from lightning.pytorch.utilities import rank_zero_only
 
 from manafaln.core.metric import MetricCollection
 from manafaln.core.builders import (
@@ -196,7 +196,7 @@ class SupervisedLearning(LightningModule):
             self.train_metrics.apply(batch)
 
         # Log current loss value
-        self.log_dict({ "train_loss": loss })
+        self.log_dict({ "train_loss": loss }, sync_dist=True)
 
         return loss
 

@@ -1,7 +1,7 @@
 from typing import Dict, List
 
 from torch import Tensor
-from pytorch_lightning import Trainer
+from lightning import Trainer
 
 from manafaln.core.configurators import ValidateConfigurator
 from manafaln.apps.utils import (

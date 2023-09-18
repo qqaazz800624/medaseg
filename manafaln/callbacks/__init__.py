@@ -12,4 +12,3 @@ from .metrics_aggregator import MetricsAverager
 from .preds_writer import CSVPredictionWriter
 from .scheduler import LossScheduler
 from .sharing_strategy_setter import SharingStrategySetter
-from .smart_cache_handler import SmartCacheHandler

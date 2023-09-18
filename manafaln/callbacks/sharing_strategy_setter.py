@@ -2,7 +2,7 @@ import logging
 from typing import Literal
 
 import torch
-from pytorch_lightning import Callback, LightningModule, Trainer
+from lightning import Callback, LightningModule, Trainer
 
 logger = logging.getLogger(__name__)
 

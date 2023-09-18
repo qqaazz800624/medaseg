@@ -9,12 +9,12 @@ from monai.config.type_definitions import PathLike
 from monai.transforms import Decollated
 from monai.utils import PostFix, convert_to_numpy, ensure_tuple
 from monai.utils.misc import ImageMetaKey
-from pytorch_lightning import Callback, LightningModule, Trainer
-from pytorch_lightning.utilities.types import STEP_OUTPUT
+from lightning import Callback, LightningModule, Trainer
+from lightning.pytorch.utilities.types import STEP_OUTPUT
 from torchmetrics import ConfusionMatrix
 
 from manafaln.common.constants import DefaultKeys
-from manafaln.core.metricv2 import DEFAULT_METRIC_INPUT_KEYS
+from manafaln.core.metric_v2 import DEFAULT_METRIC_INPUT_KEYS
 from manafaln.utils import get_items
 from manafaln.utils.misc import ensure_list, ensure_python_value, get_attr, get_item
 
