@@ -1,3 +1,5 @@
+from typing import Dict, List
+
 from lightning import LightningModule
 from monai.transforms import Decollated
 from monai.utils import ensure_tuple
@@ -37,7 +39,7 @@ class SupervisedLearningV2(LightningModule):
         decollate_fn: The decollate function for different phases.
     """
 
-    def __init__(self, config: dict):
+    def __init__(self, config: Dict) -> None:
         super().__init__()
 
         # Save all hyperparameters
@@ -46,17 +48,17 @@ class SupervisedLearningV2(LightningModule):
         # Get configurations for all components
         components = self.hparams.workflow["components"]
         self.build_model(components.get("model"))
-        self.build_post_processing(components.get("post_processing"))
-        self.build_loss_fn(components.get("loss"))
-        self.build_inferer(components.get("inferer"))
-        self.build_post_transforms(components.get("post_transforms"))
-        self.build_metrics(components.get("metrics"))
+        self.build_post_processing(components.get("post_processing", []))
+        self.build_loss_fn(components.get("loss", []))
+        self.build_inferer(components.get("inferer", {}))
+        self.build_post_transforms(components.get("post_transforms", {}))
+        self.build_metrics(components.get("metrics", {}))
 
         # Configure training settings
         settings = self.hparams.workflow.get("settings", {})
         self.build_decollate_fn(settings.get("decollate"))
 
-    def build_model(self, config):
+    def build_model(self, config: Dict) -> None:
         """
         Build the model for supervised learning.
 
@@ -64,10 +66,14 @@ class SupervisedLearningV2(LightningModule):
             config: The configuration for the model.
         """
 
-        if config is None:
-            raise KeyError(f"model is required in workflow {self.__class__.__name__}")
+        if config is None or len(config) == 0:
+            raise KeyError(
+                f"model is required in workflow {self.__class__.__name__}"
+            )
+
         builder = ModelBuilder()
         self.model = builder(config)
+
         self.model_input_keys = ensure_tuple(
             config.get("input_keys", SupervisedLearningV2.DEFAULT_INPUT_KEY)
         )
@@ -75,19 +81,19 @@ class SupervisedLearningV2(LightningModule):
             config.get("output_keys", SupervisedLearningV2.DEFAULT_OUTPUT_KEY)
         )
 
-    def build_post_processing(self, config):
+    def build_post_processing(self, config: List[Dict]) -> None:
         """
         Build the post-processing transforms.
 
         Args:
-            config: The configuration for the post-processing transforms.
+            config: A list of configuration for the post-processing transforms.
         """
 
-        if config is None:
+        if config is None or len(config) == 0:
             config = []
         self.post_processing = build_transforms(config)
 
-    def build_loss_fn(self, config):
+    def build_loss_fn(self, config: List[Dict]) -> None:
         """
         Build the loss function.
 
@@ -95,11 +101,13 @@ class SupervisedLearningV2(LightningModule):
             config: The configuration for the loss function.
         """
 
-        if config is None:
+        if config is None or len(config) == 0:
             config = []
+        if isinstance(config, Dict):
+            config = [config]
         self.loss_fn = LossHelper(config)
 
-    def build_inferer(self, config):
+    def build_inferer(self, config: Dict) -> None:
         """
         Build the inferer for making predictions.
 
@@ -108,12 +116,12 @@ class SupervisedLearningV2(LightningModule):
         """
 
         # If inferer is not given, use SimpleInferer
-        if config is None:
+        if config is None or len(config) == 0:
             config = {"name": "SimpleInferer"}
         builder = InfererBuilder()
         self.inferer = builder(config)
 
-    def build_post_transforms(self, config):
+    def build_post_transforms(self, config: Dict[str, List]) -> None:
         """
         Build the post-transforms for different phases.
 
@@ -123,12 +131,13 @@ class SupervisedLearningV2(LightningModule):
 
         if config is None:
             config = {}
+
         self.post_transforms = {
             phase: build_transforms(config.get(phase, []))
             for phase in ["training", "validation", "predict"]
         }
 
-    def build_metrics(self, config):
+    def build_metrics(self, config: Dict) -> None:
         """
         Build the metrics for different phases.
 
@@ -138,6 +147,7 @@ class SupervisedLearningV2(LightningModule):
 
         if config is None:
             config = {}
+
         self.training_metrics = MetricCollection(config.get("training", []))
         self.validation_metrics = MetricCollection(config.get("validation", []))
 

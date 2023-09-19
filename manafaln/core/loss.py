@@ -61,11 +61,14 @@ class LossHelper(ModuleDict, _Loss):
             # Get the factor of this loss, defaults to 1
             self.factors[log_label] = cfg.pop("factor", 1)
 
-            # Get keys of data that will be passed into loss input, defaults to DEFAULT_LOSS_INPUT_KEYS
-            self.input_keys[log_label] = ensure_tuple(cfg.pop("input_keys", DEFAULT_LOSS_INPUT_KEYS))
+            # Get keys of data that will be passed into loss input,
+            # defaults to DEFAULT_LOSS_INPUT_KEYS
+            self.input_keys[log_label] = ensure_tuple(
+                cfg.pop("input_keys", DEFAULT_LOSS_INPUT_KEYS)
+            )
 
             # Build the loss module
-            loss =  builder(cfg)
+            loss = builder(cfg)
 
             # Add the loss into ModuleDict with key log_label
             self.update({log_label: loss})

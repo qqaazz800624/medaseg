@@ -14,7 +14,7 @@ from lightning.pytorch.utilities.types import STEP_OUTPUT
 from torchmetrics import ConfusionMatrix
 
 from manafaln.common.constants import DefaultKeys
-from manafaln.core.metric_v2 import DEFAULT_METRIC_INPUT_KEYS
+from manafaln.core.metric_v2 import MetricCollection
 from manafaln.utils import get_items
 from manafaln.utils.misc import ensure_list, ensure_python_value, get_attr, get_item
 
@@ -234,7 +234,7 @@ class ConfusionMatrixSaver(Callback):
     def __init__(
         self,
         task: Literal["binary", "multiclass", "multilabel"],
-        input_keys: Sequence[str] = DEFAULT_METRIC_INPUT_KEYS,
+        input_keys: Sequence[str] = MetricCollection.DEFAULT_METRIC_INPUT_KEYS,
         output_file: PathLike = "confusion_matrix.png",
         threshold: float = 0.5,
         num_classes: Optional[int] = None,

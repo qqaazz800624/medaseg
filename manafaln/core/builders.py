@@ -55,10 +55,10 @@ class ComponentBuilder(object):
                     C = getattr(M, name)
                     out = C(*args, **kwargs)
                 except ModuleNotFoundError as e:
-                    self.logger.warning(f"Module {path} not found")
+                    self.logger.warning(f"Unable to import module {path}.")
                     continue
                 except AttributeError:
-                    self.logger.debug(f"Unable to find {name} in {path}")
+                    self.logger.debug(f"Component {name} not found in module {path}.")
                     continue
                 break
         else:
@@ -100,13 +100,7 @@ class ComponentBuilder(object):
         spec = ComponentSpecs[self.component_type.name]
         args = config.get("args", {}) # Actually kwargs
 
-        try:
-            out = self._build_instance(spec, name, path, [], args)
-        except Exception as e:
-            raise RuntimeError(
-                f"Error occurs while building component '{name}' "
-                f"with arguments {args}\n"
-            )
+        out = self._build_instance(spec, name, path, [], args)
 
         if out is None:
             raise RuntimeError(f"Failed to build component: {name}.")

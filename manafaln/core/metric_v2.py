@@ -7,10 +7,10 @@ from manafaln.common.constants import DefaultKeys
 from manafaln.core.builders import MetricV2Builder as MetricBuilder
 from manafaln.utils import get_items
 
-# Default keys for metric input
-DEFAULT_METRIC_INPUT_KEYS = [DefaultKeys.OUTPUT_KEY, DefaultKeys.LABEL_KEY]
 
 class MetricCollection(torchmetrics.MetricCollection):
+    DEFAULT_METRIC_INPUT_KEYS = [DefaultKeys.OUTPUT_KEY, DefaultKeys.LABEL_KEY]
+
     """
     A collection to compute different metrics with specified input keys.
 
@@ -29,32 +29,21 @@ class MetricCollection(torchmetrics.MetricCollection):
         ValueError: log_label is not unique
     """
     def __init__(self, config: List[Dict[str, Any]], **kwargs):
-        # Validate the log labels, ensure uniqueness
         self.validate_log_labels(config)
 
-        # The builder for metric
         builder = MetricBuilder()
 
-        # Initialize dict to hold input keys of each metric
         self.input_keys = {}
 
-        # Initialize dict to hold each metric module
         metrics = {}
-
-        # For each cfg for metric in config
         for cfg in config:
+            log_label = cfg.get("log_label", cfg["name"])
 
-            # Get log_label of this metric, defaults to class name
-            log_label = cfg.pop("log_label", cfg["name"])
+            self.input_keys[log_label] = ensure_tuple(
+                cfg.get("input_keys", MetricCollection.DEFAULT_METRIC_INPUT_KEYS)
+            )
 
-            # Get keys of data that will be passed into metric input, defaults to DEFAULT_METRIC_INPUT_KEYS
-            self.input_keys[log_label] = ensure_tuple(cfg.pop("input_keys", DEFAULT_METRIC_INPUT_KEYS))
-
-            # Build the metric module
-            metric = builder(cfg)
-
-            # Add the metric into dict with key log_label
-            metrics[log_label] = metric
+            metrics[log_label] = builder(cfg)
 
         # Initialize MetricCollection with the dict of metric modules
         super().__init__(metrics, compute_groups=False, **kwargs)
@@ -80,7 +69,6 @@ class MetricCollection(torchmetrics.MetricCollection):
 
         else:  # the first update always do per metric to form compute groups
             for log_label, m in self.items(keep_base=True, copy_state=False):
-                # Get the input with specified input keys
                 input = get_items(kwargs, self.input_keys[log_label])
                 m.update(*input)
 
@@ -129,18 +117,11 @@ class MetricCollection(torchmetrics.MetricCollection):
         Raises:
             ValueError: log_label is not unique
         """
-        # Create a set to hold log_labels for uniqueness checking
+
         log_labels = set()
 
-        # For each cfg for metric in config
         for cfg in config:
-
-            # Get log_label of this metric, defaults to class name
             log_label = cfg.get("log_label", cfg["name"])
-
-            # Raise ValueError if log_label is not unique
             if log_label in log_labels:
                 raise ValueError(f"log_label {log_label} in not unique.")
-
-            # Add log_label to the set for uniqueness checking
             log_labels.add(log_label)
