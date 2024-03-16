@@ -44,6 +44,7 @@ class MetricCollection(torchmetrics.MetricCollection):
             )
 
             metrics[log_label] = builder(cfg)
+        self.is_empty = True
 
         # Initialize MetricCollection with the dict of metric modules
         super().__init__(metrics, compute_groups=False, **kwargs)
@@ -78,6 +79,8 @@ class MetricCollection(torchmetrics.MetricCollection):
                 self._compute_groups_create_state_ref()
                 self._groups_checked = True
 
+        self.is_empty = False
+
     def compute(self) -> Dict[str, Any]:
         """
         Compute the result for each metric in the collection.
@@ -87,6 +90,9 @@ class MetricCollection(torchmetrics.MetricCollection):
         Returns:
             Dict[str, Any]: Computed metrics for each metric module.
         """
+        if self.is_empty:
+            return {}
+
         res = {k: m.compute() for k, m in self.items(keep_base=True, copy_state=False)}
         res = self._flatten_dict(res)
         res = {self._set_name(k): v for k, v in res.items()}
@@ -95,6 +101,7 @@ class MetricCollection(torchmetrics.MetricCollection):
     def reset(self) -> None:
         """Iteratively call reset for each metric."""
         super().reset()
+        self.is_empty = True
 
     def _flatten_dict(self, res: dict) -> dict:
         flatten_res = {}

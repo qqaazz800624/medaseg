@@ -1,5 +1,6 @@
 from typing import Dict, List
 
+import torch
 from lightning import LightningModule
 from monai.transforms import Decollated
 from monai.utils import ensure_tuple

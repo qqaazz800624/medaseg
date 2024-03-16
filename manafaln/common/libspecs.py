@@ -41,6 +41,7 @@ class LibSpecNative(metaclass=LibSpecMeta):
     METRICV2   = "manafaln.metrics"
     TRANSFORM  = "manafaln.transforms"
     DATAMODULE = "manafaln.data"
+    DATASET    = "manafaln.data"
     WORKFLOW   = "manafaln.workflow"
     CALLBACK   = "manafaln.callbacks"
     LOGGER     = "manafaln.loggers"

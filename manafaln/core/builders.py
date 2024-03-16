@@ -55,6 +55,8 @@ class ComponentBuilder(object):
                     C = getattr(M, name)
                     out = C(*args, **kwargs)
                 except ModuleNotFoundError as e:
+                    import traceback as tb
+                    self.logger.warning(tb.format_exc())
                     self.logger.warning(f"Unable to import module {path}.")
                     continue
                 except AttributeError:
