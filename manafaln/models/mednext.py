@@ -428,6 +428,7 @@ def mednext_small(
     in_channels: int,
     out_channels: int,
     kernel_size: int = 3,
+    filters: int = 32,
     deep_supervision: bool = False,
     use_grad_checkpoint: bool = False
 ) -> MedNeXt:
@@ -436,7 +437,7 @@ def mednext_small(
         in_channels,
         out_channels,
         kernel_size=kernel_size,
-        filters=32,
+        filters=filters,
         num_blocks=[2, 2, 2, 2, 2, 2, 2, 2, 2],
         expand_ratio=[2, 2, 2, 2, 2, 2, 2, 2, 2],
         res_block=True,
@@ -450,6 +451,7 @@ def mednext_base(
     in_channels: int,
     out_channels: int,
     kernel_size: int = 3,
+    filters: int = 32,
     deep_supervision: bool = False,
     use_grad_checkpoint: bool = False
 ) -> MedNeXt:
@@ -458,7 +460,7 @@ def mednext_base(
         in_channels,
         out_channels,
         kernel_size=kernel_size,
-        filters=32,
+        filters=filters,
         num_blocks=[2, 2, 2, 2, 2, 2, 2, 2, 2],
         expand_ratio=[2, 3, 4, 4, 4, 4, 4, 3, 2],
         res_block=True,
@@ -472,6 +474,7 @@ def mednext_medium(
     in_channels: int,
     out_channels: int,
     kernel_size: int = 3,
+    filters: int = 32,
     deep_supervision: bool = False,
     use_grad_checkpoint: bool = False
 ) -> MedNeXt:
@@ -480,7 +483,7 @@ def mednext_medium(
         in_channels,
         out_channels,
         kernel_size=kernel_size,
-        filters=32,
+        filters=filters,
         num_blocks=[3, 4, 4, 4, 4, 4, 4, 4, 3],
         expand_ratio=[2, 3, 4, 4, 4, 4, 4, 3, 2],
         res_block=True,
@@ -494,6 +497,7 @@ def mednext_large(
     in_channels: int,
     out_channels: int,
     kernel_size: int = 3,
+    filters: int = 32,
     deep_supervision: bool = False,
     use_grad_checkpoint: bool = False
 ) -> MedNeXt:
@@ -502,7 +506,7 @@ def mednext_large(
         in_channels,
         out_channels,
         kernel_size=kernel_size,
-        filters=32,
+        filters=filters,
         num_blocks=[3, 4, 8, 8, 8, 8, 8, 4, 3],
         expand_ratio=[3, 4, 8, 8, 8, 8, 8, 4, 3],
         res_block=True,
