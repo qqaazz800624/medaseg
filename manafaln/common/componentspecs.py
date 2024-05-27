@@ -145,7 +145,7 @@ class DatasetSpec(metaclass=ComponetSpecMeta):
         INSTANCE_TYPE (type): The type of the component instance (Dataset).
     """
     TYPE = ComponentType.DATASET
-    PROVIDERS = [_MONAI, _TorchVision]
+    PROVIDERS = [_MONAI, _TorchVision, _Native]
     INSTANCE_TYPE = Dataset
 
 class DataLoaderSpec(metaclass=ComponetSpecMeta):
