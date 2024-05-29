@@ -195,6 +195,7 @@ workflow:
           output_dir: results
           output_postfix: preds
           output_ext: .nii.gz
+          resample: True
           mode: nearest
           dtype: float32
           squeeze_end_dims: True
