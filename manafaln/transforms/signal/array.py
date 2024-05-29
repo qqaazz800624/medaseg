@@ -192,7 +192,7 @@ class RandButterworth(RandomizableTransform):
         self,
         freq: float,
         ch_axis: int = 0,
-        prob: float = 0.1,
+        prob: float = 0.3,
         dtype: DtypeLike = np.float32
     ):
         RandomizableTransform.__init__(self, prob)
@@ -401,8 +401,11 @@ class RandIFFTPhaseShift(RandomizableTransform):
 
     backend = [TransformBackends.NUMPY, TransformBackends.TORCH]
 
-    def __init__(self, prob: float = 0.5):
+    def __init__(self, angle: float = np.pi, scale: float = 0.8, prob: float = 0.5):
         RandomizableTransform.__init__(self, prob)
+
+        self.angle = angle
+        self.scale = scale
 
     def __call__(self, x: NdarrayOrTensor) -> NdarrayOrTensor:
         """
@@ -426,12 +429,12 @@ class RandIFFTPhaseShift(RandomizableTransform):
             phase = fd.angle()
 
             # Generate random angles for each channel, then apply to original phase
-            rand_angle = self.R.uniform(low=-np.pi, high=np.pi, size=(ch, 1))
+            rand_angle = self.R.uniform(low=-self.angle, high=self.angle, size=(ch, 1))
             rand_angle = np.repeat(rand_angle, length, axis=1)
             phase += rand_angle
 
             # Apply perturbation to amp
-            amp += self.R.normal(loc=0.0, scale=0.8, size=amp.shape)
+            amp += self.R.normal(loc=0.0, scale=self.scale, size=amp.shape)
 
             cmp = amp * torch.exp(1j * phase)
             ifft = torch.fft.ifftn(
