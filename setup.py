@@ -20,7 +20,7 @@ setup(
         "tqdm>=4.66.4",
         "tensorboard>=2.16.2",
         "torch>=2.3.0",
-        "torchmerics>=1.4.0",
+        "torchmetrics>=1.4.0",
         "monai>=1.3.1",
         "lightning>=2.2.5"
     ],
