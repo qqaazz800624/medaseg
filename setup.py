@@ -16,7 +16,7 @@ setup(
         "nibabel>=5.2.1",
         "pandas>=2.2.2",
         "matplotlib>=3.9.0",
-        "ruamel.yaml>=0.18.6"
+        "ruamel.yaml>=0.18.6",
         "tqdm>=4.66.4",
         "tensorboard>=2.16.2",
         "torch>=2.3.0",
