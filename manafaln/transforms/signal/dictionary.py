@@ -46,13 +46,13 @@ class ImputeEmptySignald(MapTransform):
     def __init__(
         self,
         keys: KeysCollection,
-        ch_axis: int = 0,
+        axis: int = -1,
         dtype: DtypeLike = np.float32,
         allow_missing_keys: bool = False
     ):
         MapTransform.__init__(self, keys, allow_missing_keys)
 
-        self.transform = ImputeEmptySignal(ch_axis=ch_axis, dtype=dtype)
+        self.transform = ImputeEmptySignal(axis=axis, dtype=dtype)
 
     def __call__(
         self,
@@ -93,7 +93,7 @@ class WienerFilteringd(MapTransform):
     """ Dictionary version of WienerFiltering """
     def __init__(
         self, keys: KeysCollection,
-        ch_axis: int = 0,
+        axis: int = -1,
         mysize: int = 5,
         noise: float = None,
         dtype: DtypeLike = np.float32,
@@ -102,7 +102,7 @@ class WienerFilteringd(MapTransform):
         MapTransform.__init__(self, keys, allow_missing_keys)
 
         self.transform = WienerFiltering(
-            ch_axis=ch_axis, mysize=mysize, noise=noise, dtype=dtype
+            axis=axis, mysize=mysize, noise=noise, dtype=dtype
         )
 
     def __call__(
@@ -121,7 +121,7 @@ class NormalizeSignald(MapTransform):
     def __init__(
         self,
         keys: KeysCollection,
-        ch_axis: int = 0,
+        axis: int = -1,
         percentile: Sequence[int] = (5, 95),
         dtype: DtypeLike = np.float32,
         allow_missing_keys: bool = False
@@ -129,7 +129,7 @@ class NormalizeSignald(MapTransform):
         MapTransform.__init__(self, keys, allow_missing_keys)
 
         self.transform = NormalizeSignal(
-            ch_axis=ch_axis,
+            axis=axis,
             percentile=percentile,
             dtype=dtype
         )
@@ -150,13 +150,13 @@ class MedianNormalizeSignald(MapTransform):
     def __init__(
         self,
         keys: KeysCollection,
-        ch_axis: int = 0,
+        axis: int = -1,
         dtype: DtypeLike = np.float32,
         allow_missing_keys: bool = False
     ) -> None:
         MapTransform.__init__(self, keys, allow_missing_keys)
 
-        self.transform = MedianNormalizeSignal(ch_axis=ch_axis, dtype=dtype)
+        self.transform = MedianNormalizeSignal(axis=axis, dtype=dtype)
 
     def __call__(
         self,
@@ -175,14 +175,14 @@ class BaselineWanderRemovald(MapTransform):
         self,
         keys: KeysCollection,
         freq: int,
-        ch_axis: int = 0,
+        axis: int = -1,
         dtype: DtypeLike = np.float32,
         allow_missing_keys: bool = False
     ) -> None:
         MapTransform.__init__(self, keys, allow_missing_keys)
 
         self.transform = BaselineWanderRemoval(
-            freq=freq, ch_axis=ch_axis, dtype=dtype
+            freq=freq, axis=axis, dtype=dtype
         )
 
     def __call__(
@@ -202,7 +202,7 @@ class RandButterworthd(MapTransform, RandomizableTransform):
         self,
         keys: KeysCollection,
         freq: float,
-        ch_axis: int = 0,
+        axis: int = -1,
         prob: float = 0.3,
         dtype: DtypeLike = np.float32,
         allow_missing_keys: bool = False
@@ -211,7 +211,7 @@ class RandButterworthd(MapTransform, RandomizableTransform):
         RandomizableTransform.__init__(self, prob)
 
         self.transform = RandButterworth(
-            freq, ch_axis=ch_axis, prob=1.0, dtype=dtype
+            freq, axis=axis, prob=1.0, dtype=dtype
         )
 
     def __call__(
@@ -315,7 +315,7 @@ class RandJitterd(MapTransform, RandomizableTransform):
     def __init__(
         self,
         keys: KeysCollection,
-        sigma: float = 0.3,
+        sigma: float = 0.01,
         prob: float = 0.1,
         allow_missing_keys: bool = False
     ) -> None:
@@ -444,7 +444,7 @@ class RandIFFTPhaseShiftd(MapTransform, RandomizableTransform):
         keys: KeysCollection,
         angle: float = np.pi,
         scale: float = 0.8,
-        prob: float = 0.1,
+        prob: float = 0.5,
         allow_missing_keys: bool = False
     ) -> None:
         MapTransform.__init__(self, keys, allow_missing_keys)

@@ -33,10 +33,10 @@ __all__ = [
 ]
 
 class ImputeEmptySignal(Transform):
-    def __init__(self, ch_axis: int = 0, dtype: DtypeLike = np.float32):
+    def __init__(self, axis: int = -1, dtype: DtypeLike = np.float32):
         super().__init__()
 
-        self.ch_axis = ch_axis
+        self.axis = axis
         self.dtype = dtype
 
     @staticmethod
@@ -51,7 +51,7 @@ class ImputeEmptySignal(Transform):
 
     def __call__(self, x: NdarrayOrTensor) -> NdarrayOrTensor:
         signal = convert_to_numpy(x)
-        signal = np.apply_along_axis(self.impute, self.ch_axis, signal)
+        signal = np.apply_along_axis(self.impute, self.axis, signal)
         return signal.astype(self.dtype)
 
 
@@ -61,7 +61,7 @@ class ResampleSignal(Transform):
     def __init__(
         self,
         samples: int,
-        axis: int = 1,
+        axis: int = -1,
         domain: str = "time",
         dtype: DtypeLike = np.float32
     ):
@@ -85,14 +85,14 @@ class WienerFiltering(Transform):
 
     def __init__(
         self,
-        ch_axis: int = 0,
+        axis: int = -1,
         mysize: int = 5,
         noise: float = None,
         dtype: DtypeLike = np.float32
     ):
         super().__init__()
 
-        self.ch_axis = ch_axis
+        self.axis = axis
         self.mysize = mysize
         self.noise = noise
         self.dtype = dtype
@@ -102,7 +102,7 @@ class WienerFiltering(Transform):
         with np.errstate(all="ignore"):
             signal = np.apply_along_axis(
                 S.wiener,
-                self.ch_axis,
+                self.axis,
                 signal,
                 mysize=self.mysize,
                 noise=self.noise
@@ -115,26 +115,26 @@ class NormalizeSignal(Transform):
 
     def __init__(
         self,
-        ch_axis: int = 0,
+        axis: int = -1,
         percentile: Sequence[int] = (5, 95),
         dtype: DtypeLike = np.float32
     ):
         super().__init__()
 
-        self.ch_axis = ch_axis
+        self.axis = axis
         self.q = percentile
         self.dtype = dtype
 
     def normalize(self, signal: np.array) -> np.array:
         p_lower, p_upper = np.percentile(signal, self.q)
         signal = np.clip(signal, p_lower, p_upper)
-        mean = np.mean(signal)
-        std = max(np.std(signal), 0.1)
+        mean = np.nanmean(signal)
+        std = np.nanstd(signal)
         return (signal - mean) / std
 
     def __call__(self, x: NdarrayOrTensor) -> NdarrayOrTensor:
         signal = convert_to_numpy(x)
-        signal = np.apply_along_axis(self.normalize, self.ch_axis, signal)
+        signal = np.apply_along_axis(self.normalize, self.axis, signal)
         return signal.astype(self.dtype)
 
 
@@ -143,12 +143,12 @@ class MedianNormalizeSignal(Transform):
 
     def __init__(
         self,
-        ch_axis: int = 0,
+        axis: int = -1,
         dtype: DtypeLike = np.float32
     ):
         super().__init__()
 
-        self.ch_axis = ch_axis
+        self.axis = axis
         self.dtype = dtype
 
     @staticmethod
@@ -158,7 +158,7 @@ class MedianNormalizeSignal(Transform):
 
     def __call__(self, x: NdarrayOrTensor) -> NdarrayOrTensor:
         signal = convert_to_numpy(x)
-        signal = np.apply_along_axis(self.normalize, self.ch_axis, signal)
+        signal = np.apply_along_axis(self.normalize, self.axis, signal)
         return signal.astype(self.dtype)
 
 
@@ -168,20 +168,20 @@ class BaselineWanderRemoval(Transform):
     def __init__(
         self,
         freq: int,
-        ch_axis: int = 0,
+        axis: int = -1,
         dtype: DtypeLike = np.float32
     ):
         super().__init__()
 
         self.freq = freq
-        self.ch_axis = ch_axis
+        self.axis = axis
         self.dtype = dtype
 
     def __call__(self, x: NdarrayOrTensor) -> NdarrayOrTensor:
         signal = convert_to_numpy(x)
         # Apply high-pass Butterworth filter
         butter_sos = S.butter(N=1, Wn=1, btype="hp", fs=self.freq, output="sos")
-        signal = S.sosfilt(butter_sos, signal, axis=self.ch_axis)
+        signal = S.sosfilt(butter_sos, signal, axis=self.axis)
         return signal.astype(self.dtype)
 
 
@@ -191,14 +191,14 @@ class RandButterworth(RandomizableTransform):
     def __init__(
         self,
         freq: float,
-        ch_axis: int = 0,
+        axis: int = -1,
         prob: float = 0.3,
         dtype: DtypeLike = np.float32
     ):
         RandomizableTransform.__init__(self, prob)
 
         self.freq = freq
-        self.ch_axis = ch_axis
+        self.axis = axis
         self.dtype = dtype
 
     def __call__(self, x: NdarrayOrTensor) -> NdarrayOrTensor:
@@ -206,7 +206,7 @@ class RandButterworth(RandomizableTransform):
         if self._do_transform:
             x = convert_to_numpy(x)
             butter_sos = S.butter(N=2, Wn=1, btype="hp", fs=self.freq, output="sos")
-            x = S.sosfilt(butter_sos, x, axis=self.ch_axis)
+            x = S.sosfilt(butter_sos, x, axis=self.axis)
         return x.astype(self.dtype)
 
 
@@ -276,7 +276,7 @@ class RandJitter(RandomizableTransform):
     # Reference: Data Augmentation of Wearable Sensor Data for Parkinson’s
     #            Disease Monitoring using Convolutional Neural Networks∗
     # Link to paper: https://arxiv.org/pdf/1706.00527.pdf
-    def __init__(self, sigma: float = 0.3, prob: float = 0.1):
+    def __init__(self, sigma: float = 0.01, prob: float = 0.1):
         RandomizableTransform.__init__(self, prob)
 
         self.sigma = sigma
@@ -308,13 +308,22 @@ class RandScalingSignal(RandomizableTransform):
 class RandNegateSignal(RandomizableTransform):
     backend = [TransformBackends.NUMPY, TransformBackends.TORCH]
 
-    def __init__(self, prob: float = 0.5):
+    def __init__(self, ch_axis: int = 0, prob: float = 0.5):
         RandomizableTransform.__init__(self, prob)
+
+        self.ch_axis = ch_axis
+        self.ch_signs = None
+
+    def randomize(self, data: NdarrayOrTensor) -> None:
+        RandomizableTransform.randomize(self, None)
+
+        ch = data.shape[self.ch_axis]
+        self.ch_signs = self.R.choice([-1, 1], size=(ch, 1))
 
     def __call__(self, x: NdarrayOrTensor) -> NdarrayOrTensor:
         self.randomize(None)
         if self._do_transform:
-            x *= -1.0
+            x *= self.ch_signs
         return x
 
 
@@ -337,7 +346,7 @@ class RandResampleSignal(RandomizableTransform):
 
             start = self.R.choice(orig_steps)
             resample_index = np.arange(start, 3 * x.shape[1], 2)[:x.shape[1]]
-            x = intp_vals[:, resample_index, :]
+            x = intp_vals[:, resample_index]
         return x
 
 
@@ -377,8 +386,8 @@ class RandTimeWarping(RandomizableTransform):
 
         x_out = np.empty_like(x)
         for c in range(ch):
-            x_out[c] = np.interp(distorted_time_stamps[c], time_stamps, x_out[c])
-        return x
+            x_out[c] = np.interp(distorted_time_stamps[c], time_stamps, x[c])
+        return x_out
 
     def __call__(self, x: NdarrayOrTensor) -> NdarrayOrTensor:
         self.randomize(None)
