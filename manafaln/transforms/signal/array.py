@@ -291,16 +291,17 @@ class RandJitter(RandomizableTransform):
 class RandScalingSignal(RandomizableTransform):
     backend = [TransformBackends.NUMPY, TransformBackends.TORCH]
 
-    def __init__(self, sigma: float = 1.1, prob: float = 0.1):
+    def __init__(self, mean: float = 1.0, std: float = 0.2, prob: float = 0.3):
         RandomizableTransform.__init__(self, prob)
 
-        self.sigma = sigma
+        self.mean = mean
+        self.std = std
 
     def __call__(self, x: NdarrayOrTensor) -> NdarrayOrTensor:
         self.randomize(None)
         if self._do_transform:
             ch, length = x.shape
-            factor = self.R.normal(loc=2.0, scale=self.sigma, size=(ch, 1))
+            factor = self.R.normal(loc=self.mean, scale=self.std, size=(ch, 1))
             x *= factor
         return x
 

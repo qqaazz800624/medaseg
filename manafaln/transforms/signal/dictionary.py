@@ -341,14 +341,15 @@ class RandScalingSignald(MapTransform, RandomizableTransform):
     def __init__(
         self,
         keys: KeysCollection,
-        sigma: float = 1.1,
-        prob: float = 0.1,
+        mean: float = 1.0,
+        std: float = 0.2,
+        prob: float = 0.3,
         allow_missing_keys: bool = False
     ) -> None:
         MapTransform.__init__(self, keys, allow_missing_keys)
         RandomizableTransform.__init__(self, prob)
 
-        self.transform = RandScalingSignal(sigma=sigma, prob=1.0)
+        self.transform = RandScalingSignal(mean=mean, std=std, prob=1.0)
 
     def __call__(
             self,
