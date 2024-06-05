@@ -322,7 +322,7 @@ class RandNegateSignal(RandomizableTransform):
         self.ch_signs = self.R.choice([-1, 1], size=(ch, 1))
 
     def __call__(self, x: NdarrayOrTensor) -> NdarrayOrTensor:
-        self.randomize(None)
+        self.randomize(x)
         if self._do_transform:
             x *= self.ch_signs
         return x
