@@ -9,10 +9,10 @@ variables:
 
   # For data transform
   intensity:
-    min: &intensity.min -20.0
-    max: &intensity.max 199.0
-    mean: &intensity.mean 96.90
-    std: &intensity.std 38.62
+    min: &intensity_min -20.0
+    max: &intensity_max 199.0
+    mean: &intensity_mean 96.90
+    std: &intensity_std 38.62
   spacing: &spacing [1.5, 1.5, 2.0]
   roi_size: &roi_size [160, 160, 96]
 
@@ -299,10 +299,10 @@ data:
     - name: NormalizeIntensityRanged
       args:
         keys: [image]
-        a_min: *intensity.min
-        a_max: *intensity.max
-        subtrahend: *intensity.mean
-        divisor: *intensity.std
+        a_min: *intensity_min
+        a_max: *intensity_max
+        subtrahend: *intensity_mean
+        divisor: *intensity_std
     - name: SpatialPadd
       args:
         keys: [image, label]
@@ -395,10 +395,10 @@ data:
     - name: NormalizeIntensityRanged
       args:
         keys: [image]
-        a_min: *intensity.min
-        a_max: *intensity.max
-        subtrahend: *intensity.mean
-        divisor: *intensity.std
+        a_min: *intensity_min
+        a_max: *intensity_max
+        subtrahend: *intensity_mean
+        divisor: *intensity_std
     - name: SaveMeta
       path: custom.meta
       args:
@@ -443,10 +443,10 @@ data:
     - name: NormalizeIntensityRanged
       args:
         keys: [image]
-        a_min: *intensity.min
-        a_max: *intensity.max
-        subtrahend: *intensity.mean
-        divisor: *intensity.std
+        a_min: *intensity_min
+        a_max: *intensity_max
+        subtrahend: *intensity_mean
+        divisor: *intensity_std
     - name: SaveMeta
       path: custom.meta
       args:
