@@ -135,7 +135,7 @@ class SupervisedLearningV2(LightningModule):
 
         self.post_transforms = {
             phase: build_transforms(config.get(phase, []))
-            for phase in ["training", "validation", "predict"]
+            for phase in ["training", "validation", "test", "predict"]
         }
 
     def build_metrics(self, config: Dict) -> None:
@@ -151,6 +151,7 @@ class SupervisedLearningV2(LightningModule):
 
         self.training_metrics = MetricCollection(config.get("training", []))
         self.validation_metrics = MetricCollection(config.get("validation", []))
+        self.test_metrics = MetricCollection(config.get("test", []))
 
     def build_decollate_fn(self, settings):
         """
@@ -161,7 +162,7 @@ class SupervisedLearningV2(LightningModule):
         """
 
         decollate_fn = {}
-        for phase in ["training", "validation", "predict"]:
+        for phase in ["training", "validation", "test", "predict"]:
             if (settings is None) or (phase not in settings):
                 decollate_fn[phase] = None
             else:
@@ -326,6 +327,43 @@ class SupervisedLearningV2(LightningModule):
         m = self.validation_metrics.compute()
         self.log_dict(m, sync_dist=True)
         self.validation_metrics.reset()
+
+    def test_step(self, batch, batch_idx):
+        """
+        Test step.
+
+        Args:
+            batch (dict): The batch data.
+            batch_idx: The index of the batch.
+        """
+        # Get model input
+        model_input = get_items(batch, self.model_input_keys)
+
+        # Run inference
+        preds = self.forward(*model_input)
+
+        # Update prediction to batch
+        batch = update_items(batch, self.model_output_keys, preds)
+
+        # Post transform & compute metrics
+        if self.decollate_fn["test"] is not None:
+            for item in self.decollate_fn["test"](batch):
+                # Apply post transforms first
+                item = self.post_transforms["test"](item)
+                # Calculate metrics
+                self.test_metrics.update(**item)
+        else:
+            batch = self.post_transforms["test"](batch)
+            self.test_metrics.update(**batch)
+
+    def on_test_epoch_end(self):
+        """
+        Aggregate test metrics when test epoch ends.
+        """
+
+        m = self.test_metrics.compute()
+        self.log_dict(m, sync_dist=True)
+        self.test_metrics.reset()
 
     def predict_step(self, batch: dict, batch_idx):
         """

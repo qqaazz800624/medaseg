@@ -83,5 +83,5 @@ if __name__ == "__main__":
         config_data=data,
         config_workflow=workflow,
         seed=seed,
-        ckpt_path=ckpt_path,
+        ckpt_path=ckpt_path
     )
