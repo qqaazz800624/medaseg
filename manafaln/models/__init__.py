@@ -8,6 +8,7 @@ from .mednext import (
     mednext_large
 )
 from .segclf import SegClfModel
+from .swin_transformer import SwinTransformer
 from .utils import (
     FromTorchScript,
     load_mednext_legacy_state_dict

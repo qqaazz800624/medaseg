@@ -48,7 +48,7 @@ def create_yaml_obj(orig_obj, new_value):
         return ScalarBoolean(new_value, anchor=anchor)
     if isinstance(orig_obj, ScalarInt):
         return ObjType(
-            value=new_value,
+            new_value,
             width=orig_obj._width,
             underscore=orig_obj._underscore,
             anchor=anchor
@@ -56,7 +56,7 @@ def create_yaml_obj(orig_obj, new_value):
     if isinstance(orig_obj, ScalarFloat):
         if ObjType in [ExponentialFloat, ExponentialCapsFloat]:
             new_obj = ObjType(
-                value=new_value,
+                new_value,
                 width=orig_obj._width,
                 underscore=orig_obj._underscore
             )
