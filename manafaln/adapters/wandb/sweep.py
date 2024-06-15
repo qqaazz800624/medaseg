@@ -1,7 +1,7 @@
 import os
+import shutil
 from argparse import ArgumentParser
 from pathlib import Path
-from tempfile import TemporaryDirectory
 from typing import Optional, Sequence
 
 import wandb
@@ -37,7 +37,6 @@ class SweepRunner:
         self.seed = seed
 
         self.yaml_loader = YAML()
-        self.temp_dir = TemporaryDirectory()
 
     def execute(self):
         wandb.init(project=self.project, group=self.group, entity=self.entity)
@@ -46,7 +45,7 @@ class SweepRunner:
         anchors = {}
         for key in self.anchor_keys:
             anchors[key] = getattr(wandb.config, key)
-        config_file = os.path.join(self.temp_dir.name, f"{wandb.run.id}.yaml")
+        config_file = os.path.join(wandb.run.dir, "config_sweep.yaml")
         yaml_update_anchors(self.template, anchors, config_file)
 
         with open(config_file) as f:
@@ -85,10 +84,15 @@ class SweepRunner:
         # Run test
         trainer.test(workflow, ckpt_path="best", datamodule=data)
 
-        wandb.finish()
+        # Copy config file to log_dir for convenience
+        if trainer.logger.log_dir is not None:
+            shutil.copy(
+                config_file,
+                os.path.join(trainer.logger.log_dir, "config_sweep.yaml")
+            )
 
-    def cleanup(self):
-        self.temp_dir.cleanup()
+        # Cleanup
+        wandb.finish()
 
 if __name__ == "__main__":
     wandb.login()
@@ -129,5 +133,3 @@ if __name__ == "__main__":
     )
     wandb.agent(sweep_id, function=runner.execute, count=args.count)
 
-    # Remove temporary directory
-    runner.cleanup()
