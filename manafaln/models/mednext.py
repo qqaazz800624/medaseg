@@ -231,7 +231,7 @@ class MedNeXt(nn.Module):
             )
 
         self.num_blocks = num_blocks
-        self.depth = len(self.num_blocks) // 2 
+        self.depth = len(self.num_blocks) // 2
 
         if isinstance(expand_ratio, int):
             self.expand_ratio = [expand_ratio] * len(num_blocks)

@@ -1,5 +1,5 @@
 __all__ = [
     "nvflare",
-    "torchserve"
+    "torchserve",
     "wandb"
 ]

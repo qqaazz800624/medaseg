@@ -53,7 +53,7 @@ class SweepRunner:
 
         # Set seed if necessary
         if self.seed is not None:
-            set_determinism(self.seed, use_deterministic_algorithm=True)
+            set_determinism(self.seed, use_deterministic_algorithms=True)
 
         # Build data module
         data = build_data_module(config["data"])
@@ -85,11 +85,11 @@ class SweepRunner:
         trainer.test(workflow, ckpt_path="best", datamodule=data)
 
         # Copy config file to log_dir for convenience
-        if trainer.logger.log_dir is not None:
-            shutil.copy(
-                config_file,
-                os.path.join(trainer.logger.log_dir, "config_sweep.yaml")
-            )
+        # if trainer.logger.log_dir is not None:
+        #     shutil.copy(
+        #         config_file,
+        #         os.path.join(trainer.logger.log_dir, "config_sweep.yaml")
+        #     )
 
         # Cleanup
         wandb.finish()
