@@ -32,8 +32,7 @@ class GradientNormMonitor(Callback):
         self,
         trainer: Trainer,
         pl_module: LightningModule,
-        optimizer: Optimizer,
-        opt_idx: int
+        optimizer: Optimizer
     ):
         """
         Callback method called before each optimizer step to calculate and log the gradient norm.
@@ -42,7 +41,6 @@ class GradientNormMonitor(Callback):
             trainer (Trainer): The PyTorch Lightning Trainer object.
             pl_module (LightningModule): The PyTorch Lightning LightningModule object.
             optimizer (Optimizer): The optimizer being used for training.
-            opt_idx (int): The index of the optimizer being used.
         """
         # Extract gradients
         grads = [p.grad for p in pl_module.parameters() if p.grad is not None]
