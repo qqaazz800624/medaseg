@@ -335,9 +335,6 @@ class MedNeXt(nn.Module):
                     OutBlock(spatial_dims, self.filters * (2 ** i), out_channels)
                 )
 
-        # Dummy tensor with require_grad to fix checkpointing bug
-        # self.dummy_tensor = nn.Parameter(torch.tensor([1.0]), requires_grad=True)
-
     def encode(self, x: Tensor):
         x = self.stem(x)
         skips = []
