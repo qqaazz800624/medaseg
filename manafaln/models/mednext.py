@@ -50,6 +50,7 @@ class MedNeXtBlock(nn.Module):
             padding=kernel_size // 2,
             groups=in_channels
         )
+        # This is actually instance norm
         layers["norm"] = nn.GroupNorm(
             num_groups=in_channels,
             num_channels=in_channels
