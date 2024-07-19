@@ -1,7 +1,8 @@
-import json
 from typing import Dict, List, IO
 from argparse import ArgumentParser
 from importlib import import_module
+
+import ruamel.yaml
 from manafaln.common.componentspecs import TransformSpec
 
 class ConfigParser(object):
@@ -243,8 +244,9 @@ if __name__ == "__main__":
     parser.add_argument("-o", "--output", type=str, help="Output file name.")
     args = parser.parse_args()
 
+    ryaml = ruamel.yaml.YAML()
     with open(args.input) as f:
-        config = json.load(f)
+        config = ryaml.load(f)
 
     entries = args.entry.split(".")
     for e in entries:
