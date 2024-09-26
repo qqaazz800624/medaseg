@@ -142,3 +142,5 @@ lightning_logs/
 
 # MacOS files
 .DS_Store
+
+mednext*
