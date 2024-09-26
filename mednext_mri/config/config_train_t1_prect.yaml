@@ -1,0 +1,451 @@
+variables:
+  # For training
+  lr: &lr 1e-3
+  max_steps: &max_steps 120000
+
+  # For data location
+  data_root: &data_root /neodata/pancreas/MRI_nifti/segmentation/manual_label_T1WIFS
+  data_list: &data_list datalist/mri_seg_20240607.json
+
+  # Path for persistent cache
+  # cache_dir: &cache_dir cache
+
+  # For data transform
+  # intensity:
+  #   min: &intensity.min -61.0
+  #   max: &intensity.max 161.0
+  #   mean: &intensity.mean 73.45
+  #   std: &intensity.std 39.99
+  spacing: &spacing [1.0, 1.0, 1.0]
+  roi_size: &roi_size [128, 128, 128]
+
+  num_samples: &num_samples 2
+  batch_size: &batch_size 2
+
+trainer:
+  settings:
+    # GPU usage
+    accelerator: cuda
+    devices: 1
+    # strategy: ddp_find_unused_parameters_true
+    strategy: ddp
+
+    # Set training steps
+    max_steps: *max_steps
+
+    # Validation and experiment monitoring
+    log_every_n_steps: 10
+    check_val_every_n_epoch: 10
+
+    # Options for trainings speed
+    benchmark: True
+    precision: 16-mixed
+    detect_anomaly: False
+
+    # Avoid gradient explosion
+    gradient_clip_val: 1.0
+    gradient_clip_algorithm: norm
+
+  callbacks:
+    - name: LearningRateMonitor
+    - name: ModelCheckpoint
+      args:
+        filename: best_model
+        monitor: val_meandice
+        mode: max
+        save_last: True
+        save_top_k: 1
+        verbose: False
+
+  logger:
+    - name: WandbLogger
+      args:
+        name: MRI-Seg-PreCT-20240612
+        project: MRI
+
+workflow:
+  name: SupervisedLearningV2
+
+  settings:
+    scheduler:
+      interval: step
+      frequency: 1
+    decollate:
+      predict:
+      - image
+      - image_meta_dict
+      - label
+      - label_meta_dict
+      - preds
+
+  components:
+    model:
+      name: mednext_base
+      path: custom.mednext
+      args:
+        spatial_dims: 3
+        in_channels: 1
+        out_channels: 3
+        kernel_size: 3
+        filters: 32
+        deep_supervision: True
+        use_grad_checkpoint: False
+        pretrain: mednext_pretrained_fda.ckpt
+
+    post_processing:
+    - name: DeepSupervisionSplitDimd
+      path: custom.post
+      args:
+        keys: [preds]
+        output_list_postfix: _ds
+        replace_preds: True
+
+    loss:
+    - name: DsDiceCELoss
+      path: custom.losses
+      input_keys: [preds_ds, label]
+      args:
+        include_background: True
+        to_onehot_y: True
+        softmax: True
+        smooth_nr: 0.0
+        batch: True
+
+    optimizer:
+      name: AdamW
+      args:
+        lr: *lr
+
+    scheduler:
+      name: CosineAnnealingLR
+      args:
+        T_max: *max_steps
+        eta_min: 1e-7
+
+    inferer:
+      name: SlidingWindowInferer
+      args:
+        roi_size: *roi_size
+        sw_batch_size: 1
+        overlap: 0.5
+        mode: gaussian
+
+    post_transforms:
+
+      training:
+      - name: AsDiscreted
+        path: monai.transforms
+        args:
+          keys: [preds, label]
+          argmax: [True, False]
+          to_onehot: [3, 3]
+          dim: 1
+
+      validation:
+      - name: RestoreMeta
+        path: custom.meta
+        args:
+          keys: [preds, label]
+          meta_keys: [image_meta_dict, label_meta_dict]
+      - name: AsDiscreted
+        path: monai.transforms
+        args:
+          keys: [preds, label]
+          argmax: [True, False]
+          to_onehot: [3, 3]
+          dim: 1
+      - name: SplitDimd
+        args:
+          keys: [preds, label]
+          dim: 1
+          output_postfixes:
+          - background
+          - pancreas
+          - pancreas_tumor
+          update_meta: False
+
+      predict:
+      - name: RestoreMeta
+        path: custom.meta
+        args:
+          keys: [preds]
+          meta_keys: [image_meta_dict]
+      - name: AsDiscreted
+        path: monai.transforms
+        args:
+          keys: [preds]
+          argmax: [True]
+      - name: KeepLargestConnectedComponentd
+        args:
+          keys: [preds]
+          is_onehot: False
+          independent: False
+      - name: SaveImaged
+        args:
+          keys: [preds]
+          output_dir: results
+          output_postfix: preds
+          output_ext: .nii.gz
+          resample: True
+          mode: nearest
+          dtype: float32
+          squeeze_end_dims: True
+          separate_folder: False
+          print_log: False
+
+    metrics:
+
+      training:
+      - name: FromMONAI
+        input_keys:
+        - preds
+        - label
+        log_label: train_meandice
+        args:
+          name: DiceMetric
+          include_background: False
+          reduction: mean
+          get_not_nans: False
+
+      validation:
+      - name: FromMONAI
+        input_keys:
+        - preds
+        - label
+        log_label: val_meandice
+        args:
+          name: DiceMetric
+          include_background: False
+          reduction: mean
+          get_not_nans: False
+      - name: FromMONAI
+        input_keys:
+        - preds_pancreas
+        - label_pancreas
+        log_label: val_meandice_pancreas
+        args:
+          name: DiceMetric
+          include_background: False
+          reduction: mean
+          get_not_nans: False
+      - name: FromMONAI
+        input_keys:
+        - preds_pancreas_tumor
+        - label_pancreas_tumor
+        log_label: val_meandice_pancreas_tumor
+        args:
+          name: DiceMetric
+          include_background: False
+          reduction: mean
+          get_not_nans: False
+
+
+data:
+  name: DecathlonDataModule
+
+  settings:
+    data_root: *data_root
+    data_list: *data_list
+    is_segmentation: True
+
+    use_shm_cache: False
+    shm_cache_path: /dev/shm
+
+  training:
+    data_list_key: training
+    transforms:
+    - name: LoadImaged
+      args:
+        keys: [image, label]
+        image_only: true
+    - name: EnsureChannelFirstd
+      args:
+        keys: [image, label]
+    - name: Orientationd
+      args:
+        keys: [image, label]
+        as_closest_canonical: true
+    - name: Spacingd
+      args:
+        keys: [image, label]
+        pixdim: *spacing
+        mode: [bilinear, nearest]
+    - name: RandRotated
+      args:
+        keys: [image, label]
+        range_x: 0.5236
+        range_y: 0.5236
+        range_z: 0.5236
+        prob: 0.2
+        keep_size: False
+        mode: [bilinear, nearest]
+    - name: RandZoomd
+      args:
+        keys: [image, label]
+        prob: 0.2
+        min_zoom: 0.7
+        max_zoom: 1.4
+        mode: [trilinear, nearest]
+        keep_size: False
+    - name: NormalizeIntensityd
+      args:
+        keys: [image]
+    - name: SpatialPadd
+      args:
+        keys: [image, label]
+        spatial_size: *roi_size
+    - name: RandCropByPosNegLabeld
+      args:
+        keys: [image, label]
+        label_key: label
+        spatial_size: *roi_size
+        pos: 2.0
+        neg: 1.0
+        num_samples: *num_samples
+    - name: RandGaussianNoised
+      args:
+        keys: [image]
+        prob: 0.15
+        mean: 0.0
+        std: 0.1
+    - name: RandGaussianSmoothd
+      args:
+        keys: [image]
+        sigma_x: [0.5, 1.5]
+        sigma_y: [0.5, 1.5]
+        sigma_z: [0.5, 1.5]
+        prob: 0.15
+    - name: RandAdjustBrightnessAndContrastd
+      args:
+        keys: [image]
+        probs: [0.15, 0.15]
+        brightness_range: [0.7, 1.3]
+        contrast_range: [0.65, 1.5]
+    - name: SimulateLowResolutiond
+      args:
+        keys: [image]
+        prob: 0.25
+        zoom_range: [0.5, 1.0]
+    - name: RandAdjustContrastd
+      args:
+        keys: [image]
+        prob: 0.15
+        gamma: [0.8, 1.2]
+    - name: RandInverseIntensityGammad
+      args:
+        keys: [image]
+        prob: 0.15
+        gamma: [0.8, 1.2]
+    - name: RandFlipAxes3Dd
+      args:
+        keys: [image, label]
+        prob_x: 0.50
+        prob_y: 0.50
+        prob_z: 0.50
+    - name: EnsureTyped
+      args:
+        keys: [image, label]
+
+    dataset:
+      name: HybridCacheDataset
+      path: manafaln.data
+      args:
+        cache_rate: 1.0
+        cache_mode: memory
+        # cache_dir: *cache_dir
+        num_workers: 8
+
+    dataloader:
+      name: DataLoader
+      args:
+        batch_size: *batch_size
+        shuffle: True
+        pin_memory: False
+        num_workers: 4
+
+  validation:
+    data_list_key: validation
+    transforms:
+    - name: LoadImaged
+      args:
+        keys: [image, label]
+        image_only: True
+    - name: EnsureChannelFirstd
+      args:
+        keys: [image, label]
+    - name: Orientationd
+      args:
+        keys: [image, label]
+        as_closest_canonical: True
+    - name: Spacingd
+      args:
+        keys: [image, label]
+        pixdim: *spacing
+        mode: [bilinear, nearest]
+    - name: NormalizeIntensityd
+      args:
+        keys: [image]
+    - name: SaveMeta
+      path: custom.meta
+      args:
+        keys: [image, label]
+        meta_keys: [image_meta_dict, label_meta_dict]
+    - name: EnsureTyped
+      args:
+        keys: [image, label]
+
+    dataset:
+      name: HybridCacheDataset
+      path: manafaln.data
+      args:
+        cache_rate: 1.0
+        num_workers: 8
+
+    dataloader:
+      name: DataLoader
+      args:
+        batch_size: 1
+        pin_memory: False
+        num_workers: 4
+
+  predict:
+    data_list_key: testing
+    transforms:
+    - name: LoadImaged
+      args:
+        keys: [image]
+        image_only: True
+    - name: EnsureChannelFirstd
+      args:
+        keys: [image]
+    - name: Orientationd
+      args:
+        keys: [image]
+        as_closest_canonical: True
+    - name: Spacingd
+      args:
+        keys: [image]
+        pixdim: *spacing
+        mode: [bilinear]
+    - name: NormalizeIntensityd
+      args:
+        keys: [image]
+    - name: SaveMeta
+      path: custom.meta
+      args:
+        keys: [image]
+        meta_keys: [image_meta_dict, label_meta_dict]
+    - name: EnsureTyped
+      args:
+        keys: [image]
+
+    dataset:
+      name: Dataset
+
+    dataloader:
+      name: DataLoader
+      args:
+        batch_size: 1
+        pin_memory: True
+        num_workers: 4
+

@@ -1,0 +1,3275 @@
+{
+    "training": [
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP64252388_20191019/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP34233744_20191009/6_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83597073_20190927/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP75480265_20191104/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83544638_20190819/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP56617050_20190819/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP08048574_20190409/8_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP65372839_20190731/9_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP66300885_20190927/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP84853692_20190225/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP71194674_20191228/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP09879115_20190831/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP49029118_20190502/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP31144742_20190215/9_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP77875803_20190102/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP66682817_20190430/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP02967515_20190329/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP50372548_20190117/6_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP08802074_20190412/7_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP26782292_20191202/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP59022131_20190822/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP63286688_20190124/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP61640854_20191015/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP38410775_20190822/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP92618945_20190620/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP04136193_20191202/5_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP36837592_20190518/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP01114401_20190613/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP22013489_20191017/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP79300300_20190306/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP30025836_20191115/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP04209974_20190626/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP63282380_20191024/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP55132941_20190401/5_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP41092197_20191012/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP48260334_20191115/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP47226185_20190114/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP25125276_20190318/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP03834919_20190603/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP37321319_20191109/3_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP23275752_20190202/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP48162953_20190429/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP75076175_20190401/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP39117381_20191112/6_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP59566094_20190723/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP94088285_20190820/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP60050127_20191226/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP82623884_20191213/10_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP04742443_20190727/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP24220012_20190806/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP08137342_20191021/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP82036314_20190626/6_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP20104247_20190323/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP61800937_20191018/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP06426861_20190720/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP88277117_20131206/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP81648117_20170224/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP74899778_20130726/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP52940375_20160603/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67034684_20160701/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP30175858_20130719/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP92386832_20160708/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP85606065_20170504/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13595098_20160805/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP19735757_20170929/20_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP17912708_20130610/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP86584907_20121127/5_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP56648251_20160705/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP39883502_20131213/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP27161252_20141120/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP55961761_20130726/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP07405291_20150529/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP39849538_20170301/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP43722723_20160912/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67061471_20150424/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP32723781_20150330/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP29618871_20130412/23_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP57852229_20160304/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP02306479_20151113/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP86125504_20150402/10_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP63610238_20151222/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP45854438_20140815/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP41026323_20160105/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP62326326_20160712/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP53990744_20150320/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP85465080_20120615/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP57395598_20130816/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP28838902_20150504/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP84544423_20170516/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP14523459_20130606/20_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP25976060_20151127/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP10549815_20160325/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP54036205_20100504/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP10025250_20100319/7_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP98761973_20100924/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP94505523_20140122/3_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP96089173_20150214/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP34407075_20160815/19_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP55330893_20170324/19_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP84594398_20150814/9_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP57521508_20161118/20_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP43349828_20170525/20_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP27399633_20150407/8_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP41247154_20130521/9_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP82000714_20150303/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP15733081_20130521/7_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP32013900_20130408/8_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP14610273_20130503/8_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP65313439_20130517/9_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67787475_20130719/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP80365244_20130906/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP11788887_20130906/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP12108326_20130711/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP38720477_20130711/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP91218063_20130809/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP44747438_20130906/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP61127280_20130910/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP32842102_20131108/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13085832_20131107/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP71984101_20150522/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP02273751_20131108/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP96372185_20131122/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP26933353_20131101/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP92772160_20131220/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP24959255_20140117/12_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP19648646_20131220/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP05658183_20140110/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP46771099_20140221/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP23667954_20140225/24_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP42973028_20140502/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP95881893_20140411/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP24450595_20140529/7_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP15690907_20151113/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP29938522_20171012/25_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP41697735_20141224/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP63058383_20160428/12_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP61898839_20150206/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP77163056_20141219/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP68692433_20150703/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP42935574_20151024/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP74550080_20141126/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP14719866_20141230/20_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP61279150_20141230/10_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP64266669_20150205/8_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP30883294_20150213/9_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP97580574_20150109/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP62223101_20150320/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67618367_20150410/19_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP12760955_20150821/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP52266312_20150504/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP79678651_20150525/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP68521580_20150518/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP73424912_20150513/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP22083689_20150601/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP94836662_20150612/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP49114302_20150710/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP25508038_20150917/20_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP98382404_20150724/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP35935212_20150717/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP20686182_20150825/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP57295860_20150828/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP24257475_20150911/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP87104761_20150911/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP34020220_20151002/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP96240634_20151221/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP17560544_20160108/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67279842_20160105/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP55304215_20151231/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP62640845_20160126/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP24280666_20160311/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP55697126_20160205/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP57187294_20160217/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP88456810_20170206/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP32248991_20170728/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP75450215_20160401/19_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP87473763_20160630/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP99633070_20160527/19_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP23386278_20160531/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP00271948_20160624/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP25159149_20160602/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP66844654_20160725/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP80321634_20160722/12_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP37855130_20160906/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP65021502_20160922/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP84987003_20170331/19_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP11074486_20161003/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP19266408_20161110/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP82840410_20161227/19_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP34648016_20161111/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13258636_20161118/20_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP18888684_20161202/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP24313503_20170206/19_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP12855361_20170106/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP44279004_20170106/20_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP75702647_20170112/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP43255219_20170315/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP33078014_20170303/23_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP18533330_20170322/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP42815208_20170414/10_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP66142771_20170417/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP54640710_20170505/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP31365070_20170613/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP45249327_20170630/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP06045041_20170721/7_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP64441012_20170922/21_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP07690157_20170928/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP93281232_20171013/24_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP05675321_20171013/23_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP04835216_20171110/20_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67249674_20171205/20_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP02677438_20171226/5_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP42878419_20190906/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP38517693_20170918/6_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP32158475_20180224/12_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP24221448_20180122/8_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP87332342_20200131/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP16356345_20091126/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13251435_20161210/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP78649925_20150325/1601_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP92774711_20210108/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP77484431_20190529/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP11910371_20150723/12_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP92037531_20190528/5_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP31235455_20190808/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP04752701_20181204/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP37321522_20151221/6_t1_fl2d_fs_bh_new-cs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP41649905_20140901/4_t1_fl2d_fs_tra_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP31309030_20231002/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP31046337_20140401/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP74575004_20180811/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP65210814_20170504/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP97021827_20131003/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP98545550_20180124/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13461699_20180108/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP17796444_20131011/7_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP31580139_20190223/7_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP09397036_20190202/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP00555154_20190329/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP75063451_20140526/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP59807238_20181117/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP95863516_20190528/7_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP36946982_20190831/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP79250637_20180518/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP35654963_20211030/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP85613045_20191102/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP32682837_20130607/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP49529062_20190212/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP04118958_20190329/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP09287446_20230804/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP50092929_20200323/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP32323584_20220726/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP71462402_20190223/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP45886042_20181120/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP78800674_20190510/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP99600739_20160222/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP96496650_20170501/11_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP82135646_20151207/4_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP36061113_20180414/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP66088070_20180409/3_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP18277402_20180817/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP00991987_20170522/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP32750256_20140905/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP37074637_20180111/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67094411_20200429/3_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP95461065_20201217/14_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP88363219_20180210/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP99796631_20170519/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP45431153_20181020/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83156456_20140124/7_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP57192829_20170126/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP26324228_20190420/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP66143483_20151023/12_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP11147952_20181018/19_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83982401_20190422/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP65543804_20180519/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP25361294_20181113/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP43863820_20161021/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP32473918_20141004/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP24991986_20171110/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP81659005_20140331/6_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP17284918_20190506/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP20313175_20181222/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP85128197_20181115/6_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP02268310_20190410/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP84756117_20150716/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP19909182_20180830/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP73943318_20170314/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP29810149_20210812/4_ax_t1_fs_bh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP52590674_20100924/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83717248_20170131/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP36178919_20090622/3_ax_t1w_fs_bh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP85630701_20210906/4_ax_t1_fs_bh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP90835104_20181213/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP10351872_20170722/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP95399911_20190518/3_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP72285581_20171020/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP81538024_20100415/9_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP25065870_20120110/5_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP91010883_20171226/12_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP79476088_20100714/3_t1_fl2d_fs_tra_mbh_320.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP50161584_20171109/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP75974368_20160627/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP71126140_20191015/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP76183599_20141224/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP89888178_20110613/22_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67728163_20170324/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP53797627_20201015/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13749234_20190312/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP98034642_20171207/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP89704601_20140305/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP52123061_20121106/8_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP28069603_20170524/9_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP06284952_20170517/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP90624643_20180813/14_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP89244683_20121211/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP75615218_20190703/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP70220773_20190618/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP29302722_20170515/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP92815258_20181203/3_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP50227361_20180621/12_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP82040734_20170922/13_ax__fl2d__fsabd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP91804300_20180523/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP75896485_20171221/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP18162583_20160330/8_t1_fl2d_tra_fs_abd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP95005155_20181128/20_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83720329_20150716/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP95252764_20190808/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13893409_20151228/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP25165511_20180226/6_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP64571845_20200227/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP44841947_20161213/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP92381918_20180926/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP35906583_20161117/5_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP30185516_20161216/9_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP06172796_20180709/11_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP47590785_20190827/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP15389324_20170722/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP26341166_20180710/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP70530260_20181128/11_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP64277342_20200226/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP31730891_20200306/12_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP63584181_20180730/11_ax__fl2d__fsap.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP18438412_20220416/7_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP71424751_20180814/16_t1_fl2d_tra_fs_abd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP93167125_20181019/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP99527891_20200215/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP50719810_20210226/8_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP82716042_20190821/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP34332785_20210112/12_ax__fl2d__fsabd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP05015818_20190509/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP80914439_20190612/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP42337846_20190824/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP70649396_20190920/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP16064323_20191114/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP38399505_20181112/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP37371197_20180908/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP97004586_20190907/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP63307213_20180221/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP76945503_20190422/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP63699512_20180322/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP00258088_20151225/9_t1_fl2d_tra_fs_abd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP66928384_20191219/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP42886932_20190819/3_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP14308278_20140308/12_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP05050073_20150821/6_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP59756648_20110615/7_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP74891886_20230728/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP05762950_20090313/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP34063112_20171123/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP47197668_20190831/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP56158071_20180818/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP53932568_20190822/9_ax__t1_fs_in-phase_trig.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP27705115_20191217/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP39903827_20190131/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP50592558_20160222/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP00850899_20160219/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP02486151_20160413/9_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP45157384_20160502/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP02726168_20160507/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP86905176_20160511/5_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP37424662_20160530/9_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP58910081_20160623/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13373455_20160624/11_ax__fl2d__fsabd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP94544722_20160705/9_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP24605325_20160707/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP55797791_20160711/7_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP01299623_20160901/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP19326629_20160819/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP01406441_20161007/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP70200354_20160922/6_ax_t1w_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP57244861_20161027/5_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP79368140_20161026/19_ax__fl2d__fsabd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP61499966_20161108/9_ax__fl2d__fsabd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP22265112_20161119/19_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP17618932_20161221/7_ax__fl2d__fsabd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP74521027_20151207/123_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP89656668_20150113/13_ax_lava-flex_bh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP48920964_20150113/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP31381681_20150209/8_abd_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP49885849_20150828/8_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP10565917_20150813/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83917339_20150820/7_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP40049326_20160112/7_ax__fl2d__fsabd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP26381689_20150606/6_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP42857158_20150415/71_abd_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP76447313_20150623/128_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP11920229_20151218/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP82249141_20150612/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP22309540_20151130/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP85999394_20150608/73_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP60217602_20150213/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP87360065_20150421/7_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP38425871_20140630/7_t1_fl2d_fs_tra_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP68036008_20150113/112_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP40873638_20150205/5_abd_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP47366161_20150223/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP81351678_20150306/6_abd_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP94553138_20150309/65_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP59888826_20150318/110_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP96006570_20150312/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP80357446_20150720/72_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP93019872_20150521/5_ax_t1_fs_fspgr.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP39043303_20150602/71_abd_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP72963352_20150803/76_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP89361562_20150814/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP04075560_20150917/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP76763065_20151126/9_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP76072767_20170323/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67697477_20170704/8_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13158689_20150817/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP30329576_20180410/11_ax__fl2d__fsabd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP34466081_20180621/8_ax_t1_fs_fspgr.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP84743275_20140214/7_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP57738522_20140224/21_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP78011871_20140529/7_ax_fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP84431025_20150203/29_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP72805417_20140714/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP27975188_20140916/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP58910387_20140902/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP36002210_20140730/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP02357784_20140226/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP41060593_20140124/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP08881502_20140317/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP41906342_20140708/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP25589814_20140509/4_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP60191839_20140621/5_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP62020635_20141211/11_t1_fl2d_fs_bh_new-cs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP64539720_20141112/10_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP89833686_20140529/10_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP16050363_20131031/7_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP52877276_20140202/13_t1_fl2d_fs_tra_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP59847367_20140812/6_axi_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP96587263_20140613/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67546843_20140703/5_t1_fl2d_fs_bh_new-cs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP61943476_20140122/5_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP08778280_20140401/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP48856226_20140308/6_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP52544910_20140327/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP53837032_20140506/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP85525010_20140501/8_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP15213339_20141112/123_abd_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP42588942_20140717/8_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP27291991_20140711/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP61148932_20140715/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83742596_20140811/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP87633328_20140922/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP20701266_20140916/15_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP63858571_20141014/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP04362162_20140929/5_ax_t1_fspgr__bh_asset.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP77805115_20141016/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP51149045_20141027/110_abd_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP68802641_20141201/117_abd_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP18140213_20141204/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP09397648_20130529/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83826423_20140107/8_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP29535238_20131219/5_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP28599600_20130226/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP68202647_20131007/5_ax_t1w_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP44437024_20131024/7_ax_t1w_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP74122993_20131025/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP32032574_20130822/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP32735381_20130521/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP93838734_20130730/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP09470311_20130508/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13075365_20130109/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP26276825_20130116/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP58992590_20130204/7_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP33775586_20130328/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP85239023_20130614/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP82083011_20130703/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP77484752_20130809/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP76773223_20130916/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP97359234_20131018/19_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP09980922_20131023/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP97197924_20131031/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP22650531_20131202/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83310486_20131209/5_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP70028371_20131129/7_t1_fl2d_fs_tra_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67624626_20140211/3_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP81859399_20121204/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP34769706_20120518/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP91285061_20111207/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP29787464_20121015/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83553575_20121023/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP64304326_20120911/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP34336578_20120323/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP33622895_20120416/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP17424373_20120208/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP54969998_20120224/8_t1_fl2d_fs_bh_new-cs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP22775720_20120308/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP18948917_20120612/7_t1_fl2d_fs_tra_mbh_p2.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP74200882_20121120/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP15134120_20121215/4_ax_t1_fspgr_fatsat_bh_asset.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP27267876_20130122/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP37356722_20131217/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP50759930_20121130/6_ax_t1w_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP34216315_20120510/6_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP47581851_20110601/7_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP08971491_20111104/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP84816553_20111017/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP27213387_20110517/8_t1_fl2d_fs_bh_new-cs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP36048189_20110629/9_ax_t1_3dspgr_fs_c-.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP49315938_20110815/6_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP26099086_20090423/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP09021572_20101103/7_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP51662834_20100408/7_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP49895183_20090716/8_t1_fl2d_fs_tra_mbh_320.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP38417649_20090929/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP91132373_20091130/5_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP10737497_20090716/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83466143_20080329/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP44520963_20081028/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP02072727_20080715/5_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP39724455_20070726/4_t1_fl2d_fs_tra_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP88299181_20111017/5_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP63541695_20160701/7_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP10932662_20110822/9_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP11512949_20111108/3_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP43147468_20120102/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP93882653_20111006/7_t1_fl2d_fs_tra_mbh_p2.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP25462886_20110530/11_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP96938924_20110709/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP59371750_20110714/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP74306164_20110908/7_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP30844607_20110909/8_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP01036527_20111125/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP43511035_20111206/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP40421503_20101022/5_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP43585522_20100125/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP94598075_20101206/6_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP30229632_20090820/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP56636554_20100107/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP42433270_20100621/4_ax_t1_fspgr_fatsat_bh_asset.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP07268920_20100204/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP75944712_20100408/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP12253319_20100413/6_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP17553564_20100617/11_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP34796384_20090331/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP65637589_20091023/4_t1_fl2d_fs_tra_mbh_320.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP32760002_20090813/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP59229829_20090520/8_t1_fl2d_fs_tra_mbh_320.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP56855125_20090316/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP37109016_20090929/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP42261702_20090113/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP21968040_20090409/7_ax_t1_fspgr_fs_bh_asset.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP19410168_20090518/14_livert1_bh_tra.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP34227191_20090713/3_abdoment1_tra_bh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP22706762_20090721/8_t1_fl2d_fs_tra_mbh_320.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP47267341_20090902/5_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP98290767_20091119/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP49555937_20080821/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP39619570_20081020/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP47737717_20081113/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP79955395_20080109/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP46067774_20080111/19_t1_fl2d_fs_tra_bh_concat2.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP66485807_20081127/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP82476843_20080721/22_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP06682171_20080625/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP25679812_20080911/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP02958393_20081011/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP09333525_20081024/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP42524386_20070926/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP46961547_20070323/6_t1_fl2d_fs_bh-cs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP75889299_20070613/6_t1_fl2d_fs_bh-cs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP70565342_20090320/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13102343_20141113/141_abd_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP11571755_20140415/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13332929_20170117/7_ax_t1w_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP23807918_20160301/9_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP53230667_20171106/5_ax__fl2d__fsabd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP51485207_20170909/7_ax_t1w_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP72666277_20051101/8_t1_fl2d_fs_bh_new-cs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP48157936_20190322/9_ax_fl2d_fs_abd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP61946445_20190304/17_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP24143971_20190202/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP48631899_20190128/3_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP54079706_20190621/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13321632_20190105/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP11268733_20191213/15_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP93072204_20190430/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP15013548_20190529/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP72995162_20190906/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP96858066_20190201/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP43197140_20190905/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP78706674_20190625/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP77320352_20191211/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP23594164_20191115/27_t1_fl2d_tra_fs_abd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP54634136_20190105/5_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP23756916_20190904/9_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP17168339_20190826/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP47108382_20190914/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP60167312_20190731/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP27702446_20190413/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP69107302_20190301/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP51744516_20191202/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP50066769_20191112/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP14581747_20190618/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP91618569_20190918/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP76418281_20191002/14_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83167956_20190507/3_ax_fl2d_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP00674596_20191018/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP90823604_20190511/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP16764246_20190314/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP36643245_20190917/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP30886572_20191014/12_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP62343052_20190311/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP47414282_20190812/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP54780262_20190105/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP04897091_20190126/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP02494270_20190419/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP03690653_20190406/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13238729_20191106/27_t1_fl2d_tra_fs_abd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP32880174_20190716/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP76393742_20190725/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP19384299_20190625/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP74294764_20191101/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP16707603_20190905/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP06720852_20190122/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP54920226_20190521/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP46811425_20190411/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP28234300_20191101/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP85260060_20190308/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP40153490_20191228/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP77687930_20190302/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP47466314_20190118/8_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP08394497_20190820/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP79130383_20190508/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP14191608_20190625/13_ax__fl2d__fsabd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP81989638_20190502/10_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP60044798_20190723/12_ax__fl2d__fsabd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP30014239_20191216/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP92051288_20190828/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP98585064_20190510/3_t1_fl2d_tra_fs.nii.gz"
+        }
+    ],
+    "validation": [
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67927733_20190522/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP95499022_20191126/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP33342846_20190925/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP17140528_20190218/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP90925599_20190124/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP73891898_20190830/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP60505219_20190710/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP55440577_20191203/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP86695727_20190426/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP31648376_20190305/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP17431956_20190909/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP14078719_20190610/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP69215653_20190730/10_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP06330092_20190130/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP35979325_20190124/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP32587198_20191119/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP31824567_20190304/17_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP39508650_20190504/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP49083816_20191003/11_ax__fl2d__fsabd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP07718571_20191221/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP44604590_20190413/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP62874694_20190110/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP99661381_20170324/20_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP38975466_20170114/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP23826280_20140815/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP19410983_20150506/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP58378642_20151002/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP56077922_20130823/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP72274905_20171027/10_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP53765505_20131111/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP41009291_20130830/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP03765661_20100924/3_t1_fl2d_fs_bh_new-cs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP75636252_20150515/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP20417227_20160205/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP53850986_20160421/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP92760769_20121204/7_ax_t1_fspgr.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP41949037_20150130/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP11439792_20130201/20_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP29963046_20151030/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP72785007_20130312/7_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP29195695_20130517/8_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP28631110_20131122/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP54810433_20130816/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP86884139_20130830/20_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP66207109_20131106/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP18814903_20131106/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP65434114_20140314/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP06137393_20140718/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP68250780_20140815/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP63428924_20140918/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67528887_20141105/10_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP38623199_20141127/19_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP03390300_20160307/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP08040482_20150130/8_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP02384883_20150203/25_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP72135971_20150303/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP89462945_20150710/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP89536417_20150402/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP56887762_20150626/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP73205317_20150731/23_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83533468_20150815/24_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP33793442_20151217/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP77629542_20160108/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP15681467_20160120/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP73008913_20160108/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP11743635_20160203/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP11301264_20160808/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP15536986_20160826/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP09504484_20170113/20_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP68439489_20170113/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP38851004_20170215/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP52735261_20170224/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP54016198_20170217/19_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP17584659_20171206/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP66606794_20171013/21_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP77719946_20171020/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP45235782_20171009/19_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP98673317_20171206/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP37252970_20140902/13_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP80072368_20180320/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP68477134_20180531/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP56656661_20181015/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP09384618_20160425/5_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP47198889_20100811/7_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP33991170_20190131/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP07630630_20180308/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP60584750_20190618/12_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP25491818_20170829/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP97586827_20190302/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP70787918_20190329/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP34298915_20140711/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP47937205_20181215/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP43053062_20160926/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP47288990_20160323/10_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP64857929_20181110/6_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP89603318_20170601/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP54410439_20190517/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP46990076_20140513/9_t1_fl2d_fs_tra_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP17461621_20170224/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP00245676_20091229/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP03848985_20181018/4_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP59550607_20190416/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP31960232_20160611/3_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP36699073_20181210/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67732268_20190731/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP86553412_20161005/5_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP97564360_20171228/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP02036609_20180926/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP29405132_20190424/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP35323527_20190328/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP89312102_20160318/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP22499894_20190119/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP01128882_20181231/3_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP10672032_20170310/6_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP74290056_20181201/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP08611841_20190221/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP00310532_20220326/8_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP97389302_20230523/18_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP03390712_20221026/10_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP03096721_20180425/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP65664476_20180927/5_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP06974926_20170605/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP71560916_20190726/4_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP81717190_20151109/7_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP71054516_20140604/5_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP82025241_20190923/4_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP85521614_20220430/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP44810855_20200420/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP91451512_20160127/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP35519213_20160318/9_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP59995956_20160530/9_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP19680868_20160926/8_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP14132178_20151124/9_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP74670949_20150804/121_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13747480_20150914/4_ax_haste_wb.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP90515862_20150723/77_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP09074522_20150427/27_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP04590582_20150120/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP02865632_20150121/7_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP14078628_20150416/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP50046247_20150707/136_abd_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP38911546_20150624/5_ax_t1w_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP99083569_20150703/7_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP55105348_20151020/14_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP47669386_20180105/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP62953189_20140728/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP18834080_20141024/123_abd_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP55511895_20130704/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP69264807_20140206/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP31577882_20141127/115_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP27372843_20131211/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP35046665_20140527/6_ax_t1w_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP43292152_20140521/6_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP74588040_20140516/15_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP57920781_20131230/7_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP08102666_20140121/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP39941590_20140313/11_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP30401724_20141023/59_abd_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP47266317_20141126/71_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP57898720_20141201/119_abd_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP62857156_20141210/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP21274764_20130426/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP20568982_20131101/6_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP82085268_20130409/3_t1_fl2d_we_tra_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP73280122_20130605/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP51017903_20130320/9_ax_t1_fspgr_bh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP57801133_20130615/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP48198562_20120531/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP91408714_20121027/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP42842804_20120719/9_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP31847664_20120106/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP07937148_20120210/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP43732272_20120320/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP44186752_20121211/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP35005421_20130423/14_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP69347822_20111217/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP61229578_20111118/6_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP12277010_20090428/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP34065978_20080512/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP66880566_20080829/3_ax_t1w_fs_bh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP90166973_20110701/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP35385702_20111019/3_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP26498259_20110428/4_t1_fl2d_fs_bh_new-cs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP93891169_20100619/2_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP38687537_20110908/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP84531075_20100414/6_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP52175181_20100406/3_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP11940133_20100830/7_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP99408031_20100525/7_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP10368798_20090309/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP69785891_20090402/11_ax_t1fs_fspgr_asset.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP79670850_20090804/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP80236256_20090814/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP22900700_20080822/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13335183_20080420/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP58845131_20080530/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP66875540_20140124/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP35240921_20121018/8_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP23789353_20190816/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP84306872_20190222/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP38260250_20190821/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP46123193_20191226/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67204631_20190103/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP11395967_20191231/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP03893716_20190122/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP61630911_20190220/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP22083792_20190622/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP08288809_20191119/5_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP71368420_20190918/4_ax_t1_fs-abd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP11255188_20191104/10_ax__fl2d__fsabd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP22097028_20190725/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP55780441_20191108/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP61516383_20190216/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP29258897_20190123/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP20497673_20190919/10_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP95202689_20190218/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP90196323_20191204/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP21012689_20161103/5_ax__fl2d___fs.nii.gz"
+        }
+    ],
+    "testing": [
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP94656557_20190824/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP69991314_20191127/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP43797625_20190426/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP93096922_20190302/7_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP73308021_20191023/3_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP87751528_20190402/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP69697120_20191113/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP56609870_20190223/7_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP55370801_20190919/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP00052650_20190823/6_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP01109272_20191122/4_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP24578238_20190614/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP87479295_20190614/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP72120981_20191228/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83543208_20191231/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13557026_20140725/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP16892719_20140110/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP44407571_20151230/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP92356461_20170331/22_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP33807184_20160120/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP10660223_20130815/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP80004034_20131220/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP10143559_20160311/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP84089016_20160729/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP79597990_20131108/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP33108997_20170607/19_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP57341415_20150506/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP68644712_20171222/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP49417215_20170421/10_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP96787772_20160325/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP51917729_20130809/19_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP08207845_20140521/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP63641951_20130306/7_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP57961622_20130322/8_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP09083250_20130426/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP55493230_20130920/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP18663957_20160108/21_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP45621098_20130910/18_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP80955483_20140417/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP45843977_20150626/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP35847271_20140815/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP45372053_20141107/12_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13673814_20151218/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP68884220_20160516/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP44591978_20160630/14_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP38690412_20160414/16_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP16647788_20160729/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP18109224_20160720/21_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP11544050_20161118/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP29716470_20130830/17_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP62210480_20161027/15_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP70318566_20170314/11_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP16742091_20170120/13_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP55655773_20171212/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP10036947_20190912/4_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP49879190_20180604/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP99164212_20170222/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP58344460_20180326/11_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP30104025_20110831/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP35758188_20181129/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP10448729_20170506/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP32464263_20170116/6_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP00380296_20190302/18_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP71262196_20191104/11_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP63749890_20170626/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP11696420_20171202/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP51792734_20150210/6_t1_fl2d_fs_tra_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP46790482_20181225/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP46651645_20180531/3_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP73171341_20190619/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP56808328_20220423/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP78896001_20161121/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP26180462_20190904/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP86813327_20171216/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP59397807_20200617/16_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP60819326_20181212/15_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP38761618_20151211/9_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP06503514_20110622/5_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP03644571_20180901/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP12035463_20200422/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83205710_20210506/6_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP64016591_20170213/5_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP06099009_20180221/23_t1_fl2d_tra_fs_abd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP99834906_20151113/9_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP50366398_20120913/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP37982058_20200521/15_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP48895625_20190419/19_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP66031736_20181024/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP13832040_20180809/10_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP89811316_20090811/3_t1_fl2d_fs_tra_mbh_320.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP54619670_20170123/6_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP53379471_20141014/12_t1_fl2d_fs_tra_mbh_320.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP37183309_20190620/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP80892475_20150225/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP64847259_20170317/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP35314699_20160706/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP89887869_20150625/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP47636240_20181005/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83625511_20170501/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP42921514_20120104/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67026998_20200123/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP40515512_20151105/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP09437680_20150616/5_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP61204754_20190605/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP32119388_20200207/5_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP12625093_20150527/13_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP63992791_20170107/14_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP19074621_20171230/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP29217656_20170726/6_ax_t1_fspgr_fs-abd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP61761747_20180423/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP44090604_20171229/14_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67137106_20190718/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP40885132_20210415/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP49124975_20210323/12_ax_flash_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP65714869_20191025/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP15296048_20190904/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67119953_20190626/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP74932615_20160406/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP22054742_20191107/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP87798637_20160909/6_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP49021129_20220401/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP95187799_20160820/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP60085436_20190411/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP05089802_20160215/7_ax__fl2d__fsabd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP64375438_20160401/9_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP19535042_20160608/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP04726956_20160812/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP03704301_20160812/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP36940732_20161203/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP72295318_20150120/107_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP52801332_20150126/6_abd_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP21529459_20150604/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP17407435_20150624/7_ax_t1_fspgr__bh_asset.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP93123197_20150416/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP81862286_20150612/6_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP02909139_20150821/7_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP99878113_20150116/73_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP71366978_20150828/8_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP17093340_20151017/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP15379575_20150923/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP96797921_20161114/1_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP93863143_20171230/9_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP93240791_20180403/8_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP85315770_20180323/10_waterax_lava-flex_bh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP29177021_20180508/12_ax__fl2d__fsabd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP21622117_20141223/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP00525498_20140903/76_abd_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP98912501_20141219/71_abd_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP46572123_20140706/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP60671461_20131021/4_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP25430458_20140707/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP03844880_20140722/5_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP70168132_20140116/6_t1_fl2d_fs_tra_mbh_320.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP66425986_20140528/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP58080758_20140729/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP36504517_20140819/3_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP10822054_20140421/7_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP09016225_20130924/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP53519841_20130313/7_ax_t1w_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP16476105_20130610/11_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP06813825_20130515/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP54068639_20140108/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP56754554_20120225/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP66780404_20120808/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP69841813_20120204/6_ax_t1_fspgr_fatsat_bh_asset.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP48647813_20120330/5_t1_fl2d_fs_bh_new-cs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP07378925_20120110/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP40960449_20121114/12_t1_fl2d_fs_tra_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP71940079_20121128/7_ax_t1_fspgr_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP71184819_20111207/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP18499157_20110104/7_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP82692951_20111018/7_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP08471753_20100306/9_liver_t1_fl2d_fs_tra_bh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP39434057_20100316/9_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP09862401_20101001/7_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP56406292_20090415/4_ax_t1_fspgr_fatsat_bh_asset.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP43215196_20080811/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP37247741_20110920/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP22099376_20110804/8_ax_t1fs_fspgr_asset.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP39052013_20110420/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP83689328_20110219/7_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP27545438_20111219/6_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP19600716_20111228/5_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67148179_20110326/8_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP19077384_20120105/8_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP63284334_20110902/11_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP00919033_20110620/5_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP75589776_20111122/12_ax_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP52201447_20101108/21_t1_tfl_tra_p2_trig.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP94542044_20100311/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP20603370_20100531/7_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP02018650_20100811/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP74526477_20101008/3_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP84151718_20090706/4_ax_flash_t1_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP42193765_20070706/6_t1_fl2d_fs_bh-cs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP37482326_20070620/4_t1_fl2d_fs_bh-cs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP72050784_20190912/20_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP27214108_20190823/8_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP41014935_20190509/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP44738816_20190302/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP82974630_20190511/7_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP57191605_20190918/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP49708540_20190319/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP51890845_20190219/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67952275_20191210/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP79706153_20190427/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP88064093_20190309/6_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP16712835_20190903/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP62132997_20190212/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP80615313_20190622/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP40302282_20191204/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP04615506_20190531/5_t1_fl2d_axi_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP10923643_20191025/5_ax__fl2d__fsabd.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP19333724_20190816/5_t1_fl2d_tra_fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP07326496_20190827/5_ax__fl2d___fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP84035869_20190906/5_ax__fl2d__fs.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP04849573_20190531/10_t1_fl2d_fs_tra_p2_mbh.nii.gz"
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_data/PP67014995_20191018/12_ax__fl2d__fsabd.nii.gz"
+        }
+    ]
+}

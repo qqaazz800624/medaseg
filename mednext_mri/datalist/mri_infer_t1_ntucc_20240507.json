@@ -1,0 +1,1600 @@
+{
+    "testing": [
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/AP0292_20221011/3_dummyseriesdesc.nii.gz",
+            "id": "AP0292_20221011_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                0,
+                53
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NE0199_20221031/3_water_ax_lava_flex_navigator_a.nii.gz",
+            "id": "NE0199_20221031_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                4,
+                60
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NE0194_20221205/3_water_ax_lava_flex_navigator.nii.gz",
+            "id": "NE0194_20221205_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                8,
+                61
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0016_20210204/9_water_ax_lava_flex_bh_a.nii.gz",
+            "id": "SCN0016_20210204_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                7,
+                63
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1139_20230816/5_dummyseriesdesc.nii.gz",
+            "id": "NP1139_20230816_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                14,
+                67
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1120_20220308/3_dummyseriesdesc.nii.gz",
+            "id": "NP1120_20220308_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                4,
+                57
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1135_20230919/3_dummyseriesdesc.nii.gz",
+            "id": "NP1135_20230919_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                13,
+                66
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/AP0289_20230828/3_water_ax_lava_flex_navigator.nii.gz",
+            "id": "AP0289_20230828_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                27,
+                80
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1111_20230425/7_water_ax_lava_flex_navigator.nii.gz",
+            "id": "NP1111_20230425_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                26,
+                79
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1112_20230906/3_water_ax_lava_flex_navigator.nii.gz",
+            "id": "NP1112_20230906_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                9,
+                62
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1106_20210315/4_water_ax_lava_flex_bh_a.nii.gz",
+            "id": "NP1106_20210315_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                0,
+                55
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0105_20220316/4_dummyseriesdesc.nii.gz",
+            "id": "IPMN0105_20220316_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                1,
+                18
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1105_20210414/10_water_ax_lava_flex_bh_a.nii.gz",
+            "id": "NP1105_20210414_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                14,
+                70
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/PC1388_20210324/6_dummyseriesdesc.nii.gz",
+            "id": "PC1388_20210324_T1WIFS",
+            "label": [
+                1,
+                1
+            ],
+            "zrange": [
+                2,
+                24
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NE0195_20210825/10_water_ax_lava_flex_bh_abd.nii.gz",
+            "id": "NE0195_20210825_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                0,
+                54
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1121_20221031/14_dummyseriesdesc.nii.gz",
+            "id": "NP1121_20221031_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                7,
+                63
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1147_20211208/6_dummyseriesdesc.nii.gz",
+            "id": "NP1147_20211208_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                20,
+                76
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0115_20220126/6_dummyseriesdesc.nii.gz",
+            "id": "IPMN0115_20220126_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                3,
+                56
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1131_20211207/3_dummyseriesdesc.nii.gz",
+            "id": "NP1131_20211207_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                16,
+                72
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0116_20211005/3_dummyseriesdesc.nii.gz",
+            "id": "IPMN0116_20211005_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                9,
+                62
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/AP0287_20230214/3_water_ax_lava_flex_navigator_a.nii.gz",
+            "id": "AP0287_20230214_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                15,
+                71
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0011_20220816/3_water_ax_lava_flex_navigator.nii.gz",
+            "id": "SCN0011_20220816_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                1,
+                54
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1119_20220706/2_dummyseriesdesc.nii.gz",
+            "id": "NP1119_20220706_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                13,
+                66
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1144_20220628/6_dummyseriesdesc.nii.gz",
+            "id": "NP1144_20220628_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                16,
+                69
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0019_20220224/4_water_ax_lava_flex_navigator.nii.gz",
+            "id": "SCN0019_20220224_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                4,
+                57
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1124_20220627/2_dummyseriesdesc.nii.gz",
+            "id": "NP1124_20220627_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                8,
+                64
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1145_20221102/3_dummyseriesdesc.nii.gz",
+            "id": "NP1145_20221102_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                0,
+                49
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1140_20220616/3_dummyseriesdesc.nii.gz",
+            "id": "NP1140_20220616_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                11,
+                67
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1146_20221103/3_dummyseriesdesc.nii.gz",
+            "id": "NP1146_20221103_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                8,
+                61
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1125_20220701/3_dummyseriesdesc.nii.gz",
+            "id": "NP1125_20220701_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                11,
+                67
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1133_20220601/3_dummyseriesdesc.nii.gz",
+            "id": "NP1133_20220601_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                6,
+                62
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1118_20220307/3_dummyseriesdesc.nii.gz",
+            "id": "NP1118_20220307_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                2,
+                58
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/MCN0003_20211018/4_water_ax_lava_flex_bh_a.nii.gz",
+            "id": "MCN0003_20211018_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                7,
+                63
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1104_20220222/5_water_ax_lava_flex_nav.nii.gz",
+            "id": "NP1104_20220222_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                2,
+                58
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0017_20210928/7_water_ax_lava_flex_bh_abd.nii.gz",
+            "id": "SCN0017_20210928_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                17,
+                73
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1136_20220615/5_dummyseriesdesc.nii.gz",
+            "id": "NP1136_20220615_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                10,
+                63
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0020_20221213/3_water_ax_lava_flex_navigator.nii.gz",
+            "id": "SCN0020_20221213_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                11,
+                64
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1127_20211207/3_dummyseriesdesc.nii.gz",
+            "id": "NP1127_20211207_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                10,
+                63
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1129_20220628/4_dummyseriesdesc.nii.gz",
+            "id": "NP1129_20220628_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                3,
+                56
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0127_20211110/14_dummyseriesdesc.nii.gz",
+            "id": "IPMN0127_20211110_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                17,
+                73
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1138_20220627/3_dummyseriesdesc.nii.gz",
+            "id": "NP1138_20220627_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                6,
+                62
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0015_20211021/7_water_ax_lava_flex_navigator_a.nii.gz",
+            "id": "SCN0015_20211021_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                0,
+                56
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/CY0319_20211122/4_dummyseriesdesc.nii.gz",
+            "id": "CY0319_20211122_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                10,
+                63
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1114_20220118/7_dummyseriesdesc.nii.gz",
+            "id": "NP1114_20220118_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                9,
+                62
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1137_20220606/3_dummyseriesdesc.nii.gz",
+            "id": "NP1137_20220606_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                6,
+                62
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0007_20230503/3_water_ax_lava_flex_navigator_abd.nii.gz",
+            "id": "SCN0007_20230503_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                2,
+                58
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/CP0257_20211103/9_dummyseriesdesc.nii.gz",
+            "id": "CP0257_20211103_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                5,
+                61
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1108_20230522/4_water_ax_lava_flex_navigator.nii.gz",
+            "id": "NP1108_20230522_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                6,
+                59
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1142_20220629/4_dummyseriesdesc.nii.gz",
+            "id": "NP1142_20220629_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                11,
+                64
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/CP0261_20211116/4_dummyseriesdesc.nii.gz",
+            "id": "CP0261_20211116_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                19,
+                75
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/CP0260_20211115/9_dummyseriesdesc.nii.gz",
+            "id": "CP0260_20211115_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                2,
+                58
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1141_20220628/4_dummyseriesdesc.nii.gz",
+            "id": "NP1141_20220628_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                19,
+                72
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0176_20221109/3_water_ax_lava_flex_navigator.nii.gz",
+            "id": "IPMN0176_20221109_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                12,
+                65
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0133_20230428/6_dummyseriesdesc.nii.gz",
+            "id": "IPMN0133_20230428_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                12,
+                65
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1115_20220111/3_dummyseriesdesc.nii.gz",
+            "id": "NP1115_20220111_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                3,
+                59
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/CP0262_20220316/3_dummyseriesdesc.nii.gz",
+            "id": "CP0262_20220316_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                3,
+                56
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0139_20230901/3_dummyseriesdesc.nii.gz",
+            "id": "IPMN0139_20230901_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                18,
+                74
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0012_20220125/3_water_ax_lava_flex_navigator_a.nii.gz",
+            "id": "SCN0012_20220125_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                0,
+                56
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0177_20231128/4_water_ax_lava_flex_navigator.nii.gz",
+            "id": "IPMN0177_20231128_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                7,
+                60
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NE0201_20221021/4_water_ax_lava_flex_navigator_a.nii.gz",
+            "id": "NE0201_20221021_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                10,
+                66
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NE0193_20220602/3_water_ax_lava_flex_navigator_a.nii.gz",
+            "id": "NE0193_20220602_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                6,
+                62
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1132_20230424/4_dummyseriesdesc.nii.gz",
+            "id": "NP1132_20230424_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                21,
+                77
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1116_20221118/3_dummyseriesdesc.nii.gz",
+            "id": "NP1116_20221118_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                8,
+                61
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NE0190_20220309/3_water_ax_lava_flex_nav.nii.gz",
+            "id": "NE0190_20220309_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                11,
+                67
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1150_20220615/3_dummyseriesdesc.nii.gz",
+            "id": "NP1150_20220615_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                25,
+                78
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1126_20220311/3_dummyseriesdesc.nii.gz",
+            "id": "NP1126_20220311_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                14,
+                67
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0178_20230412/4_water_ax_lava_flex_navigator_a.nii.gz",
+            "id": "IPMN0178_20230412_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                19,
+                75
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/CY0316_20230214/3_dummyseriesdesc.nii.gz",
+            "id": "CY0316_20230214_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                11,
+                64
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1151_20220613/3_dummyseriesdesc.nii.gz",
+            "id": "NP1151_20220613_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                8,
+                64
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/MCN0004_20230331/6_water_ax_lava_flex_navigator_a.nii.gz",
+            "id": "MCN0004_20230331_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                20,
+                76
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NE0202_20220414/3_water_ax_lava_flex_nav_abd.nii.gz",
+            "id": "NE0202_20220414_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                4,
+                60
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1148_20220601/3_dummyseriesdesc.nii.gz",
+            "id": "NP1148_20220601_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                3,
+                59
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1152_20220614/3_dummyseriesdesc.nii.gz",
+            "id": "NP1152_20220614_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                0,
+                56
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/AP0291_20221031/3_dummyseriesdesc.nii.gz",
+            "id": "AP0291_20221031_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                10,
+                63
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1123_20220428/14_dummyseriesdesc.nii.gz",
+            "id": "NP1123_20220428_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                10,
+                66
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1156_20220719/3_dummyseriesdesc.nii.gz",
+            "id": "NP1156_20220719_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                3,
+                56
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NE0200_20220608/3_water_ax_lava_flex_navigator_abd.nii.gz",
+            "id": "NE0200_20220608_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                3,
+                59
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0023_20220505/11_3d_ax_lava_nav.nii.gz",
+            "id": "SCN0023_20220505_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                10,
+                94
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0147_20230915/3_dummyseriesdesc.nii.gz",
+            "id": "IPMN0147_20230915_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                8,
+                61
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0008_20230306/4_water_ax_lava_flex_navigator_a.nii.gz",
+            "id": "SCN0008_20230306_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                14,
+                70
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1155_20230907/2_dummyseriesdesc.nii.gz",
+            "id": "NP1155_20230907_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                13,
+                69
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1154_20230907/2_dummyseriesdesc.nii.gz",
+            "id": "NP1154_20230907_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                9,
+                65
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0022_20230711/5_water_ax_lava_flex_navigator.nii.gz",
+            "id": "SCN0022_20230711_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                5,
+                58
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0179_20230222/3_water_ax_lava_flex_navigator.nii.gz",
+            "id": "IPMN0179_20230222_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                3,
+                56
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/MCN0005_20220926/4_water_ax_lava_flex_navigator.nii.gz",
+            "id": "MCN0005_20220926_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                18,
+                71
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1113_20220912/3_water_ax_lava_flex_navigator.nii.gz",
+            "id": "NP1113_20220912_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                1,
+                54
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0021_20220831/9_water_ax_lava_flex_navigator.nii.gz",
+            "id": "SCN0021_20220831_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                12,
+                65
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/CY0317_20221019/3_dummyseriesdesc.nii.gz",
+            "id": "CY0317_20221019_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                9,
+                62
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0180_20230706/3_water_ax_lava_flex_navigator_a.nii.gz",
+            "id": "IPMN0180_20230706_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                13,
+                69
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/MCN0006_20220923/3_water_ax_lava_flex_navigator_a.nii.gz",
+            "id": "MCN0006_20220923_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                5,
+                61
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1110_20230727/6_water_ax_lava_flex_bh_abd.nii.gz",
+            "id": "NP1110_20230727_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                12,
+                65
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0155_20221231/14_dummyseriesdesc.nii.gz",
+            "id": "IPMN0155_20221231_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                11,
+                67
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/CP0258_20230120/10_dummyseriesdesc.nii.gz",
+            "id": "CP0258_20230120_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                14,
+                70
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NE0192_20231122/3_water_ax_lava_flex_navigator_a.nii.gz",
+            "id": "NE0192_20231122_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                4,
+                60
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1128_20221103/3_dummyseriesdesc.nii.gz",
+            "id": "NP1128_20221103_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                12,
+                65
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NE0197_20221111/3_water_ax_lava_flex_navigator.nii.gz",
+            "id": "NE0197_20221111_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                5,
+                58
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0018_20221128/3_water_ax_lava_flex_navigator_a.nii.gz",
+            "id": "SCN0018_20221128_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                10,
+                66
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/CY0318_20221125/3_dummyseriesdesc.nii.gz",
+            "id": "CY0318_20221125_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                5,
+                61
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/AP0288_20230428/3_water_ax_lava_flex_navigator_abd.nii.gz",
+            "id": "AP0288_20230428_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                5,
+                61
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1153_20221210/3_dummyseriesdesc.nii.gz",
+            "id": "NP1153_20221210_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                8,
+                64
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0010_20230406/4_water_ax_lava_flex_navigator_a.nii.gz",
+            "id": "SCN0010_20230406_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                6,
+                62
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NE0198_20230109/3_water_ax_lava_flex_navigator.nii.gz",
+            "id": "NE0198_20230109_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                20,
+                73
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/AIP0018_20230221/3_water_ax_lava_flex_navigator.nii.gz",
+            "id": "AIP0018_20230221_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                13,
+                66
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NE0191_20230810/3_water_ax_lava_flex_navigator.nii.gz",
+            "id": "NE0191_20230810_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                1,
+                54
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/MCN0007_20230224/4_water_ax_lava_flex_navigator.nii.gz",
+            "id": "MCN0007_20230224_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                15,
+                68
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0166_20231116/3_water_ax_lava_flex_navigator_a.nii.gz",
+            "id": "IPMN0166_20231116_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                13,
+                69
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0014_20230330/4_water_ax_lava_flex_nav.nii.gz",
+            "id": "SCN0014_20230330_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                12,
+                68
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0009_20230629/4_water_ax_lava_flex_navigator.nii.gz",
+            "id": "SCN0009_20230629_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                20,
+                73
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/SCN0013_20231115/4_water_ax_lava_flex_navigator.nii.gz",
+            "id": "SCN0013_20231115_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                9,
+                62
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1122_20230605/4_dummyseriesdesc.nii.gz",
+            "id": "NP1122_20230605_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                11,
+                64
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1130_20230606/3_dummyseriesdesc.nii.gz",
+            "id": "NP1130_20230606_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                8,
+                64
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0181_20230605/4_water_ax_lava_flex_navigator.nii.gz",
+            "id": "IPMN0181_20230605_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                14,
+                67
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/AP0290_20230912/3_dummyseriesdesc.nii.gz",
+            "id": "AP0290_20230912_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                19,
+                72
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/AIP0017_20230811/4_water_ax_lava_flex_navigator.nii.gz",
+            "id": "AIP0017_20230811_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                12,
+                65
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NE0196_20231011/11_water_ax_lava_flex_nav_a.nii.gz",
+            "id": "NE0196_20231011_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                6,
+                62
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1134_20230726/4_dummyseriesdesc.nii.gz",
+            "id": "NP1134_20230726_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                12,
+                65
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/CY0320_20231019/12_dummyseriesdesc.nii.gz",
+            "id": "CY0320_20231019_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                7,
+                60
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NE0203_20230906/3_water_ax_lava_flex_navigator.nii.gz",
+            "id": "NE0203_20230906_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                14,
+                67
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0172_20230718/13_water_ax_lava_flex_nav_abd.nii.gz",
+            "id": "IPMN0172_20230718_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                12,
+                68
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/PC1400_20230822/5_t2_haste_cor_ap.nii.gz",
+            "id": "PC1400_20230822_T1WIFS",
+            "label": [
+                1,
+                1
+            ],
+            "zrange": [
+                68,
+                321
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1143_20230911/2_dummyseriesdesc.nii.gz",
+            "id": "NP1143_20230911_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                6,
+                62
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1109_20231024/7_water_ax_lava_flex_bh_abd.nii.gz",
+            "id": "NP1109_20231024_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                7,
+                63
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/NP1157_20230911/4_dummyseriesdesc.nii.gz",
+            "id": "NP1157_20230911_T1WIFS",
+            "label": [
+                0,
+                0
+            ],
+            "zrange": [
+                1,
+                57
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/PC1401_20230926/5_dummyseriesdesc.nii.gz",
+            "id": "PC1401_20230926_T1WIFS",
+            "label": [
+                1,
+                1
+            ],
+            "zrange": [
+                0,
+                53
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0173_20211109/7_water_ax_lava_flex_bh_a.nii.gz",
+            "id": "IPMN0173_20211109_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                5,
+                61
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/PC1406_20231014/5_dummyseriesdesc.nii.gz",
+            "id": "PC1406_20231014_T1WIFS",
+            "label": [
+                1,
+                1
+            ],
+            "zrange": [
+                5,
+                25
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/PC1407_20231028/9_ax_vibe_dixon_w.nii.gz",
+            "id": "PC1407_20231028_T1WIFS",
+            "label": [
+                1,
+                1
+            ],
+            "zrange": [
+                32,
+                99
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/PC1408_20231225/5_dummyseriesdesc.nii.gz",
+            "id": "PC1408_20231225_T1WIFS",
+            "label": [
+                1,
+                1
+            ],
+            "zrange": [
+                2,
+                30
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/PC1410_20231125/8_ax_ssfse_bh_te130_arc.nii.gz",
+            "id": "PC1410_20231125_T1WIFS",
+            "label": [
+                1,
+                1
+            ],
+            "zrange": [
+                1,
+                29
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/PC1411_20231019/5_ax_2d_fiesta_shim.nii.gz",
+            "id": "PC1411_20231019_T1WIFS",
+            "label": [
+                1,
+                1
+            ],
+            "zrange": [
+                0,
+                27
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/PC1412_20231226/11_dummyseriesdesc.nii.gz",
+            "id": "PC1412_20231226_T1WIFS",
+            "label": [
+                1,
+                1
+            ],
+            "zrange": [
+                182,
+                435
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/PC1413_20231218/5_t1_fl2d_tra_fs.nii.gz",
+            "id": "PC1413_20231218_T1WIFS",
+            "label": [
+                1,
+                1
+            ],
+            "zrange": [
+                8,
+                36
+            ]
+        },
+        {
+            "image": "/neodata/pancreas/MRI_nifti/mri_nifti_ntucc/IPMN0153_20221212/14_water_ax_lava_flex_bh_a.nii.gz",
+            "id": "IPMN0153_20221212_T1WIFS",
+            "label": [
+                0,
+                1
+            ],
+            "zrange": [
+                17,
+                73
+            ]
+        }
+    ]
+}

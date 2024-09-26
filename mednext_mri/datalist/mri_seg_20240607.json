@@ -1,0 +1,276 @@
+{
+    "training": [
+        {
+            "image": "LD0002_20170224_14.nii.gz",
+            "label": "LD0002_20170224_14_man_seg.nii.gz"
+        },
+        {
+            "image": "LD0004_20130726_17.nii.gz",
+            "label": "LD0004_20130726_17_man_seg.nii.gz"
+        },
+        {
+            "image": "LD0006_20160603_13.nii.gz",
+            "label": "LD0006_20160603_13_man_seg.nii.gz"
+        },
+        {
+            "image": "LD0007_20160701_13.nii.gz",
+            "label": "LD0007_20160701_13_man_seg.nii.gz"
+        },
+        {
+            "image": "LD0008_20130719_17.nii.gz",
+            "label": "LD0008_20130719_17_man_seg.nii.gz"
+        },
+        {
+            "image": "LD0009_20160708_13.nii.gz",
+            "label": "LD0009_20160708_13_man_seg.nii.gz"
+        },
+        {
+            "image": "LD0010_20170504_16.nii.gz",
+            "label": "LD0010_20170504_16_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0103_20200131_4.nii.gz",
+            "label": "NP0103_20200131_4_man_seg.nii.gz"
+        },
+        {
+            "image": "LD0001_20131206_15.nii.gz",
+            "label": "LD0001_20131206_15_man_seg.nii.gz"
+        },
+        {
+            "image": "RD0001_20051101_8.nii.gz",
+            "label": "RD0001_20051101_8_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0013_20170918_6.nii.gz",
+            "label": "NP0013_20170918_6_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0108_20091126_3.nii.gz",
+            "label": "NP0108_20091126_3_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0109_20161210_5.nii.gz",
+            "label": "NP0109_20161210_5_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0115_20150325_1601.nii.gz",
+            "label": "NP0115_20150325_1601_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0123_20210108_5.nii.gz",
+            "label": "NP0123_20210108_5_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0139_20190529_5.nii.gz",
+            "label": "NP0139_20190529_5_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0162_20150723_12.nii.gz",
+            "label": "NP0162_20150723_12_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0166_20190528_5.nii.gz",
+            "label": "NP0166_20190528_5_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0170_20190808_5.nii.gz",
+            "label": "NP0170_20190808_5_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0173_20181204_5.nii.gz",
+            "label": "NP0173_20181204_5_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0174_20151221_6.nii.gz",
+            "label": "NP0174_20151221_6_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0909_20190907_5.nii.gz",
+            "label": "NP0909_20190907_5_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0999_20150821_6.nii.gz",
+            "label": "NP0999_20150821_6_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0175_20160707_5.nii.gz",
+            "label": "PC0175_20160707_5_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0246_20160819_4.nii.gz",
+            "label": "PC0246_20160819_4_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0361_20151207_123.nii.gz",
+            "label": "PC0361_20151207_123_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0394_20150415_71.nii.gz",
+            "label": "PC0394_20150415_71_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0609_20140214_7.nii.gz",
+            "label": "PC0609_20140214_7_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0610_20140224_21.nii.gz",
+            "label": "PC0610_20140224_21_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0773_20130529_5.nii.gz",
+            "label": "PC0773_20130529_5_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0867_20121204_5.nii.gz",
+            "label": "PC0867_20121204_5_man_seg.nii.gz"
+        },
+        {
+            "image": "PC1020_20090716_8.nii.gz",
+            "label": "PC1020_20090716_8_man_seg.nii.gz"
+        },
+        {
+            "image": "PC1257_20080821_3.nii.gz",
+            "label": "PC1257_20080821_3_man_seg.nii.gz"
+        },
+        {
+            "image": "PC1258_20081020_3.nii.gz",
+            "label": "PC1258_20081020_3_man_seg.nii.gz"
+        }
+    ],
+    "validation": [
+        {
+            "image": "LD0005_20161103_5.nii.gz",
+            "label": "LD0005_20161103_5_man_seg.nii.gz"
+        },
+        {
+            "image": "RD0004_20121018_8.nii.gz",
+            "label": "RD0004_20121018_8_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0106_20140902_13.nii.gz",
+            "label": "NP0106_20140902_13_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0122_20180320_5.nii.gz",
+            "label": "NP0122_20180320_5_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0137_20180531_5.nii.gz",
+            "label": "NP0137_20180531_5_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0145_20181015_5.nii.gz",
+            "label": "NP0145_20181015_5_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0359_20151124_9.nii.gz",
+            "label": "PC0359_20151124_9_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0612_20140728_5.nii.gz",
+            "label": "PC0612_20140728_5_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0769_20130426_6.nii.gz",
+            "label": "PC0769_20130426_6_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0772_20131101_6.nii.gz",
+            "label": "PC0772_20131101_6_man_seg.nii.gz"
+        },
+        {
+            "image": "PC1021_20090428_3.nii.gz",
+            "label": "PC1021_20090428_3_man_seg.nii.gz"
+        }
+    ],
+    "testing": [
+        {
+            "image": "LD0003_20140725_17.nii.gz",
+            "label": "LD0003_20140725_17_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0104_20180326_11.nii.gz",
+            "label": "NP0104_20180326_11_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0130_20110831_3.nii.gz",
+            "label": "NP0130_20110831_3_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0138_20181129_4.nii.gz",
+            "label": "NP0138_20181129_4_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0144_20170506_5.nii.gz",
+            "label": "NP0144_20170506_5_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0149_20170116_6.nii.gz",
+            "label": "NP0149_20170116_6_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0155_20190302_18.nii.gz",
+            "label": "NP0155_20190302_18_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0157_20191104_11.nii.gz",
+            "label": "NP0157_20191104_11_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0158_20170626_5.nii.gz",
+            "label": "NP0158_20170626_5_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0171_20171202_5.nii.gz",
+            "label": "NP0171_20171202_5_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0172_20150210_6.nii.gz",
+            "label": "NP0172_20150210_6_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0904_20190626_5.nii.gz",
+            "label": "NP0904_20190626_5_man_seg.nii.gz"
+        },
+        {
+            "image": "NP0916_20160406_5.nii.gz",
+            "label": "NP0916_20160406_5_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0360_20150120_107.nii.gz",
+            "label": "PC0360_20150120_107_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0567_20171230_9.nii.gz",
+            "label": "PC0567_20171230_9_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0767_20130924_5.nii.gz",
+            "label": "PC0767_20130924_5_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0868_20120225_5.nii.gz",
+            "label": "PC0868_20120225_5_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0872_20120808_5.nii.gz",
+            "label": "PC0872_20120808_5_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0969_569620811_4.nii.gz",
+            "label": "PC0969_569620811_4_man_seg.nii.gz"
+        },
+        {
+            "image": "PC0998_20100306_9.nii.gz",
+            "label": "PC0998_20100306_9_man_seg.nii.gz"
+        },
+        {
+            "image": "PC1078_20110920_3.nii.gz",
+            "label": "PC1078_20110920_3_man_seg.nii.gz"
+        },
+        {
+            "image": "PC1079_20110804_8.nii.gz",
+            "label": "PC1079_20110804_8_man_seg.nii.gz"
+        }
+    ]
+}
