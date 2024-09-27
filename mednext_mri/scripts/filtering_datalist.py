@@ -46,22 +46,3 @@ with open(os.path.join(root_dir, 'datalist/datalist_mr.json'), 'w') as f:
 #%%
 
 
-
-
-
-
-
-
-
-#%%
-
-
-
-
-
-
-
-
-
-
-#%%
