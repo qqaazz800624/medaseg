@@ -145,3 +145,4 @@ lightning_logs/
 
 mednext
 AMOS22
+*.json
