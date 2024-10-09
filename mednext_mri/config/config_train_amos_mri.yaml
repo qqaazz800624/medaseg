@@ -5,7 +5,7 @@ variables:
 
   # For data location
   data_root: &data_root /data2/open_dataset/AMOS22
-  data_list: &data_list datalist/datalist_mr_direct_path.json
+  data_list: &data_list datalist/datalist_mr.json
 
   # Path for persistent cache
   # cache_dir: &cache_dir cache
@@ -60,8 +60,9 @@ trainer:
   logger:
     - name: WandbLogger
       args:
-        name: AMOS-MRI
+        name: AMOS-MRI_v0
         project: AMOS
+        version: 'version_0'
 
 workflow:
   name: SupervisedLearningV2
@@ -160,20 +161,20 @@ workflow:
           output_postfixes:
           - background
           - spleen
-          - right kidney
-          - left kidney
-          - gall bladder
+          - right_kidney
+          - left_kidney
+          - gall_bladder
           - esophagus
           - liver
           - stomach
           - arota
           - postcava
           - pancreas
-          - right adrenal gland
-          - left adrenal gland
+          - right_adrenal_gland
+          - left_adrenal_gland
           - duodenum
           - bladder
-          - prostate/uterus
+          - prostate_uterus
           update_meta: False
 
       predict:
@@ -240,16 +241,46 @@ workflow:
           include_background: False
           reduction: mean
           get_not_nans: False
-      # - name: FromMONAI
-      #   input_keys:
-      #   - preds_pancreas_tumor
-      #   - label_pancreas_tumor
-      #   log_label: val_meandice_pancreas_tumor
-      #   args:
-      #     name: DiceMetric
-      #     include_background: False
-      #     reduction: mean
-      #     get_not_nans: False
+      - name: FromMONAI
+        input_keys:
+        - preds_liver
+        - label_liver
+        log_label: val_meandice_liver
+        args:
+          name: DiceMetric
+          include_background: False
+          reduction: mean
+          get_not_nans: False
+      - name: FromMONAI
+        input_keys:
+        - preds_spleen
+        - label_spleen
+        log_label: val_meandice_spleen
+        args:
+          name: DiceMetric
+          include_background: False
+          reduction: mean
+          get_not_nans: False
+      - name: FromMONAI
+        input_keys:
+        - preds_right_kidney
+        - label_right_kidney
+        log_label: val_meandice_right_kidney
+        args:
+          name: DiceMetric
+          include_background: False
+          reduction: mean
+          get_not_nans: False
+      - name: FromMONAI
+        input_keys:
+        - preds_left_kidney
+        - label_left_kidney
+        log_label: val_meandice_left_kidney
+        args:
+          name: DiceMetric
+          include_background: False
+          reduction: mean
+          get_not_nans: False
 
 
 data:
