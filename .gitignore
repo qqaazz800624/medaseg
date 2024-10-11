@@ -149,3 +149,5 @@ AMOS22
 wandb
 *.ckpt
 amos22
+*.csv
+data
