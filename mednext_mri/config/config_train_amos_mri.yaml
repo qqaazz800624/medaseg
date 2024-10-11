@@ -4,7 +4,7 @@ variables:
   max_steps: &max_steps 120000
 
   # For data location
-  data_root: &data_root /data2/open_dataset/AMOS22
+  data_root: &data_root /neodata/hap/AMOS_MRI
   data_list: &data_list datalist/datalist_mr.json
 
   # Path for persistent cache
@@ -60,9 +60,9 @@ trainer:
   logger:
     - name: WandbLogger
       args:
-        name: AMOS-MRI_v0
+        name: AMOS-MRI_four_organs_v1
         project: AMOS
-        version: 'version_0'
+        version: 'version_1'
 
 workflow:
   name: SupervisedLearningV2
@@ -86,7 +86,7 @@ workflow:
       args:
         spatial_dims: 3
         in_channels: 1
-        out_channels: 16  #3
+        out_channels: 5  #3
         kernel_size: 3
         filters: 32
         deep_supervision: True
@@ -138,7 +138,7 @@ workflow:
         args:
           keys: [preds, label]
           argmax: [True, False]
-          to_onehot: [16, 16]
+          to_onehot: [5, 5]
           dim: 1
 
       validation:
@@ -152,7 +152,7 @@ workflow:
         args:
           keys: [preds, label]
           argmax: [True, False]
-          to_onehot: [16, 16]
+          to_onehot: [5, 5]
           dim: 1
       - name: SplitDimd
         args:
@@ -160,21 +160,10 @@ workflow:
           dim: 1
           output_postfixes:
           - background
-          - spleen
-          - right_kidney
-          - left_kidney
-          - gall_bladder
-          - esophagus
+          - kidney
           - liver
-          - stomach
-          - arota
-          - postcava
           - pancreas
-          - right_adrenal_gland
-          - left_adrenal_gland
-          - duodenum
-          - bladder
-          - prostate_uterus
+          - spleen
           update_meta: False
 
       predict:
@@ -233,9 +222,9 @@ workflow:
           get_not_nans: False
       - name: FromMONAI
         input_keys:
-        - preds_pancreas
-        - label_pancreas
-        log_label: val_meandice_pancreas
+        - preds_kidney
+        - label_kidney
+        log_label: val_meandice_kidney
         args:
           name: DiceMetric
           include_background: False
@@ -253,6 +242,16 @@ workflow:
           get_not_nans: False
       - name: FromMONAI
         input_keys:
+        - preds_pancreas
+        - label_pancreas
+        log_label: val_meandice_pancreas
+        args:
+          name: DiceMetric
+          include_background: False
+          reduction: mean
+          get_not_nans: False
+      - name: FromMONAI
+        input_keys:
         - preds_spleen
         - label_spleen
         log_label: val_meandice_spleen
@@ -261,26 +260,7 @@ workflow:
           include_background: False
           reduction: mean
           get_not_nans: False
-      - name: FromMONAI
-        input_keys:
-        - preds_right_kidney
-        - label_right_kidney
-        log_label: val_meandice_right_kidney
-        args:
-          name: DiceMetric
-          include_background: False
-          reduction: mean
-          get_not_nans: False
-      - name: FromMONAI
-        input_keys:
-        - preds_left_kidney
-        - label_left_kidney
-        log_label: val_meandice_left_kidney
-        args:
-          name: DiceMetric
-          include_background: False
-          reduction: mean
-          get_not_nans: False
+      
 
 
 data:
