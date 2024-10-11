@@ -1,16 +1,18 @@
 #%%
 import json
 from pathlib import Path
-
+import os
 import nibabel as nib
 import numpy as np
+from tqdm import tqdm
 
 mapping = {
-    1: 0,    # spleen
+    0: 0,    # background
     2: 1,    # kidney
     3: 1,    # kidney
     6: 2,    # liver
-    10: 3    # pancreas
+    10: 3,   # pancreas
+    1: 4     # spleen
 }
 
 for i in range(30):
@@ -32,7 +34,7 @@ datalist = {}
 
 for split in ["training", "validation"]:
     datalist[split] = []
-    for case in dataset[split]:
+    for case in tqdm(dataset[split]):
         seg_name = Path(case["label"]).name
         
         # Convert label format
@@ -52,7 +54,8 @@ import numpy as np
 import os
 
 data_root = '/neodata/hap/AMOS_MRI'
-file_name = 'labelsTr/amos_0508.nii.gz'
+#file_name = 'labelsTr/amos_0507.nii.gz'
+file_name = 'labelsVa/amos_0544.nii.gz'
 
 file_path = os.path.join(data_root, file_name)
 
