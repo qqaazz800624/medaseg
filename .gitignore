@@ -143,7 +143,6 @@ lightning_logs/
 # MacOS files
 .DS_Store
 
-mednext
 AMOS22
 *.json
 wandb
@@ -154,3 +153,4 @@ data
 MONAILabel
 datasets
 *.pt
+MSD
