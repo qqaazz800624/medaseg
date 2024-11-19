@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set default CUDA device to use
-DEFAULT_CUDA_DEVICE="2"
+DEFAULT_CUDA_DEVICE="1"
 
 # Allow overriding the default CUDA device with a command-line argument
 CUDA_DEVICE=${1:-$DEFAULT_CUDA_DEVICE}
