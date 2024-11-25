@@ -156,3 +156,4 @@ datasets
 MSD
 cache
 *.nii.gz
+segmentation_spleen
