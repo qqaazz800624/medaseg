@@ -1,0 +1,301 @@
+# Common variables for all tasks
+variables:
+  # Inferer setting (for infer & validation)
+  dim: &dim 3
+  roi_size: &roi_size [128, 128, 128]
+  inferer: &inferer
+    name: SlidingWindowInferer
+    args:
+      roi_size: *roi_size
+      sw_batch_size: 1
+      overlap: 0.25
+
+  # Model parameters
+  model: &model
+    name: mednext_base
+    path: manafaln.models
+    args:
+      spatial_dims: 3
+      in_channels: 1
+      out_channels: 8
+      kernel_size: 3
+      deep_supervision: True
+      use_grad_checkpoint: True
+
+  labels: &labels
+    background: 0
+    liver: 1
+    liver_tumor: 2
+    spleen: 3
+    pancreas: 4
+    pancreas_tumor: 5
+    kidney: 6
+    kidney_tumor: 7
+  num_classes: &num_classes 8
+
+  # Parameters for image processing
+  intensity:
+    min:  &intensity_min   -54.0
+    max:  &intensity_max   258.0
+    mean: &intensity_mean  100.0
+    std:  &intensity_std    50.0
+  spacing: &spacing [1.5, 1.5, 1.5]
+
+  # Active learning parameters
+  num_samples: &num_samples 2
+  batch_size: &batch_size 2
+
+# Config parameters for ManafalnTaskConfig
+app:
+  # Model (pretrained checkpoint) configurations
+  model_path: pretrained_mednext.ckpt # should locate in radiology/model dir
+  model_type: checkpoint # checkpoint or torchscript
+  model_state_dict: state_dict
+
+  # Output labels
+  labels: *labels
+
+  # Epistemic settings
+  epistemic_enabled: False
+  epistemic_samples: 5
+  epistemic_model: null # Note: epistemic_model may need to enable dropout
+
+# Config parameters for ManafalnInferTask
+task_infer:
+  # if using torchscript, this setting will be ignored
+  model: *model
+
+  dimension: *dim
+  description: >
+    MedNeXt multiorgan segmentaion model open CT dataset.
+  load_strict: True
+
+  roi_size: *roi_size
+  inferer: *inferer
+
+  pre_transforms:
+  - name: LoadImaged
+    args:
+      keys: [image]
+  - name: EnsureChannelFirstd
+    args:
+      keys: [image]
+  - name: Orientationd
+    args:
+      keys: [image]
+      axcodes: RAS
+  - name: Spacingd
+    args:
+      keys: [image]
+      pixdim: *spacing
+  - name: NormalizeIntensityRanged
+    args:
+      keys: [image]
+      a_min: *intensity_min
+      a_max: *intensity_max
+      subtrahend: *intensity_mean
+      divisor: *intensity_std
+  - name: EnsureTyped
+    args:
+      keys: [image]
+
+  inv_transforms: []
+
+  post_transforms:
+  - name: EnsureTyped
+    args:
+      keys: [pred]
+  - name: Activationsd
+    args:
+      keys: [pred]
+      softmax: True
+  - name: AsDiscreted
+    args:
+      keys: [pred]
+      argmax: True
+  - name: Restored
+    path: monailabel.transform.post
+    args:
+      keys: [pred]
+      ref_image: image
+
+# Config parameters for ManafalnTrainTask
+task_train:
+  model: *model
+
+  description: >
+    Active learning finetuning configuration for CT multiorgan segmentation
+
+  # Training parameters
+  train_save_interval: 20
+  val_interval: 1
+  n_saved: 5
+  find_unused_parameters: False
+  load_strict: True
+
+  # These parameters will overwrite BasicTrainTask._config defaults
+  config:
+    max_epochs: 100
+    early_stop_patience: -1
+    val_split: 0.2
+    train_batch_size: *batch_size
+    val_batch_size: 1
+
+  loss:
+    name: DsDiceCELoss
+    path: custom.losses
+    args:
+      include_background: True
+      to_onehot_y: True
+      softmax: True
+      smooth_nr: 0.0
+      batch: True
+
+  optimizer:
+    name: AdamW
+    args:
+      lr: 1e-4
+
+  scheduler:
+    name: CosineAnnealingLR
+    args:
+      T_max: 100
+      eta_min: 1e-7
+
+  inferers:
+    train_inferer:
+      name: SimpleInferer
+    val_inferer: *inferer
+
+  # Training transforms
+  training:
+    pre_transforms:
+    - name: LoadImaged
+      args:
+        keys: [image, label]
+        image_only: True
+    - name: NormalizeLabelsd
+      path: custom.transforms
+      args:
+        keys: [label]
+        label_names: *labels
+    - name: EnsureChannelFirstd
+      args:
+        keys: [image, label]
+    - name: Orientationd
+      args:
+        keys: [image, label]
+        axcodes: RAS
+    - name: Spacingd
+      args:
+        keys: [image, label]
+        pixdim: *spacing
+        mode: [bilinear, nearest]
+    - name: NormalizeIntensityRanged
+      args:
+        keys: [image]
+        a_min: *intensity_min
+        a_max: *intensity_max
+        subtrahend: *intensity_mean
+        divisor: *intensity_std
+    - name: SpatialPadd
+      args:
+        keys: [image, label]
+        spatial_size: *roi_size
+    - name: RandCropByPosNegLabeld
+      args:
+        keys: [image, label]
+        label_key: label
+        spatial_size: *roi_size
+        pos: 2.0
+        neg: 1.0
+        num_samples: *num_samples
+    - name: EnsureTyped
+      args:
+        keys: [image, label]
+    - name: SelectItemsd
+      args:
+        keys: [image, label]
+
+    post_transforms:
+    - name: ToTensord
+      args:
+        keys: [pred, label]
+    - name: RemoveDsHeadsd
+      path: custom.transforms
+      args:
+        keys: [pred]
+        dim: 0
+    - name: Activationsd
+      args:
+        keys: [pred]
+        softmax: True
+    - name: AsDiscreted
+      args:
+        keys: [pred, label]
+        argmax: [True, False]
+        to_onehot: *num_classes
+
+  # Validation transforms
+  validation:
+    pre_transforms:
+    - name: LoadImaged
+      args:
+        keys: [image, label]
+        image_only: True
+    - name: NormalizeLabelsd
+      path: custom.transforms
+      args:
+        keys: [label]
+        label_names: *labels
+    - name: EnsureChannelFirstd
+      args:
+        keys: [image, label]
+    - name: Orientationd
+      args:
+        keys: [image, label]
+        axcodes: RAS
+    - name: Spacingd
+      args:
+        keys: [image, label]
+        pixdim: *spacing
+        mode: [bilinear, nearest]
+    - name: NormalizeIntensityRanged
+      args:
+        keys: [image]
+        a_min: *intensity_min
+        a_max: *intensity_max
+        subtrahend: *intensity_mean
+        divisor: *intensity_std
+    - name: EnsureTyped
+      args:
+        keys: [image, label]
+    - name: SelectItemsd
+      args:
+        keys: [image, label]
+
+    post_transforms:
+    - name: ToTensord
+      args:
+        keys: [pred, label]
+    - name: Activationsd
+      args:
+        keys: [pred]
+        softmax: True
+    - name: AsDiscreted
+      args:
+        keys: [pred, label]
+        argmax: [True, False]
+        to_onehot: *num_classes
+
+  dataset:
+    name: HybridCacheDataset
+    args:
+      cache_rate: 1.0
+      num_workers: 4
+
+  dataloader:
+    name: DataLoader
+    args:
+      batch_size: 1
+
