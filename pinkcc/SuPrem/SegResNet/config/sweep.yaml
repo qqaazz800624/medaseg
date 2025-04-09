@@ -1,0 +1,23 @@
+template: config/finetune.yaml
+
+wandb:
+  entity: nanaha1003
+  project: SuPrem-AutoTune
+  group: SegResNet
+
+configuration:
+  name: SuPrem-SegResNet
+  method: bayes
+  metric:
+    goal: maximize
+    name: test_meandice
+  parameters:
+    epochs:
+      values: [200, 400, 600, 800]
+    base_lr:
+      min: 1e-5
+      max: 1e-3
+    warmup_epochs:
+      values: [10, 20, 25, 50]
+    weight_decay:
+      values: [1e-4, 1e-5, 1e-6]
