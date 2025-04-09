@@ -1,23 +1,20 @@
 variables:
   # For training
-  lr: &lr 1e-3
+  lr: &lr 1e-2
   max_steps: &max_steps 120000
 
   # For data location
   data_root: &data_root /neodata/open_dataset/PINKCC
   data_list: &data_list /neodata/open_dataset/PINKCC/datalist.json
 
-  # Path for persistent cache
-  # cache_dir: &cache_dir cache
-
   # For data transform
-  # intensity:
-  #   min: &intensity.min -61.0
-  #   max: &intensity.max 161.0
-  #   mean: &intensity.mean 73.45
-  #   std: &intensity.std 39.99
-  spacing: &spacing [1.5, 1.5, 1.5] # &spacing [1.0, 1.0, 1.0]
-  roi_size: &roi_size [128, 128, 128]
+  intensity:
+    min: &intensity_min -941.0
+    max: &intensity_max 133.0
+    mean: &intensity_mean 38.804985821291375
+    std: &intensity_std 92.42229571222241
+  spacing: &spacing [1.5, 1.5, 5.0]
+  roi_size: &roi_size [224, 224, 48]
 
   num_samples: &num_samples 4
   batch_size: &batch_size 2
@@ -25,9 +22,8 @@ variables:
 trainer:
   settings:
     # GPU usage
-    accelerator: cuda
+    accelerator: auto
     devices: 1
-    # strategy: ddp_find_unused_parameters_true
     strategy: ddp
 
     # Set training steps
@@ -35,11 +31,11 @@ trainer:
 
     # Validation and experiment monitoring
     log_every_n_steps: 10
-    check_val_every_n_epoch: 50
+    check_val_every_n_epoch: 10
 
     # Options for trainings speed
     benchmark: True
-    precision: bf16-mixed
+    precision: 16-mixed
     detect_anomaly: False
 
     # Avoid gradient explosion
@@ -55,14 +51,14 @@ trainer:
         mode: max
         save_last: True
         save_top_k: 1
-        verbose: False
+        verbose: True
 
   logger:
     - name: WandbLogger
       args:
-        name: AMOS-MRI_four_organs_v1
-        project: AMOS
-        version: 'version_1'
+        name: PINKCC-Challenge
+        project: PINKCC
+        version: 'version_0'
 
 workflow:
   name: SupervisedLearningV2
@@ -81,16 +77,33 @@ workflow:
 
   components:
     model:
-      name: mednext_base
-      path: custom.mednext
+      name: DynUNet
       args:
         spatial_dims: 3
         in_channels: 1
-        out_channels: 5  #3
-        kernel_size: 3
-        filters: 32
+        out_channels: 3
+        kernel_size:
+        - [3, 3, 3]
+        - [3, 3, 3]
+        - [3, 3, 3]
+        - [3, 3, 3]
+        - [3, 3, 3]
+        - [3, 3, 3]
+        strides:
+        - [1, 1, 1]
+        - [2, 2, 1]
+        - [2, 2, 1]
+        - [2, 2, 2]
+        - [2, 2, 2]
+        - [2, 2, 2]
+        upsample_kernel_size:
+        - [2, 2, 1]
+        - [2, 2, 1]
+        - [2, 2, 2]
+        - [2, 2, 2]
+        - [2, 2, 2]
         deep_supervision: True
-        use_grad_checkpoint: True
+        deep_supr_num: 3
 
     post_processing:
     - name: DeepSupervisionSplitDimd
@@ -112,9 +125,12 @@ workflow:
         batch: True
 
     optimizer:
-      name: AdamW
+      name: SGD
       args:
         lr: *lr
+        momentum: 0.99
+        nesterov: True
+        weight_decay: 1e-5
 
     scheduler:
       name: CosineAnnealingLR
@@ -138,7 +154,7 @@ workflow:
         args:
           keys: [preds, label]
           argmax: [True, False]
-          to_onehot: [5, 5]
+          to_onehot: [3, 3]
           dim: 1
 
       validation:
@@ -152,7 +168,7 @@ workflow:
         args:
           keys: [preds, label]
           argmax: [True, False]
-          to_onehot: [5, 5]
+          to_onehot: [3, 3]
           dim: 1
       - name: SplitDimd
         args:
@@ -160,10 +176,31 @@ workflow:
           dim: 1
           output_postfixes:
           - background
-          - kidney
-          - liver
-          - pancreas
-          - spleen
+          - tumor
+          - metastasis
+          update_meta: False
+
+      test:
+      - name: RestoreMeta
+        path: custom.meta
+        args:
+          keys: [preds, label]
+          meta_keys: [image_meta_dict, label_meta_dict]
+      - name: AsDiscreted
+        path: monai.transforms
+        args:
+          keys: [preds, label]
+          argmax: [True, False]
+          to_onehot: [3, 3]
+          dim: 1
+      - name: SplitDimd
+        args:
+          keys: [preds, label]
+          dim: 1
+          output_postfixes:
+          - background
+          - tumor
+          - metastasis
           update_meta: False
 
       predict:
@@ -177,11 +214,6 @@ workflow:
         args:
           keys: [preds]
           argmax: [True]
-      - name: KeepLargestConnectedComponentd
-        args:
-          keys: [preds]
-          is_onehot: False
-          independent: False
       - name: SaveImaged
         args:
           keys: [preds]
@@ -198,7 +230,7 @@ workflow:
     metrics:
 
       training:
-      - name: FromMONAI
+      - name: MONAI
         input_keys:
         - preds
         - label
@@ -210,7 +242,7 @@ workflow:
           get_not_nans: False
 
       validation:
-      - name: FromMONAI
+      - name: MONAI
         input_keys:
         - preds
         - label
@@ -220,48 +252,58 @@ workflow:
           include_background: False
           reduction: mean
           get_not_nans: False
-      - name: FromMONAI
+      - name: MONAI
         input_keys:
-        - preds_kidney
-        - label_kidney
-        log_label: val_meandice_kidney
+        - preds_tumor
+        - label_tumor
+        log_label: val_meandice_tumor
         args:
           name: DiceMetric
           include_background: False
           reduction: mean
           get_not_nans: False
-      - name: FromMONAI
+      - name: MONAI
         input_keys:
-        - preds_liver
-        - label_liver
-        log_label: val_meandice_liver
+        - preds_metastasis
+        - label_metastasis
+        log_label: val_meandice_metastasis
         args:
           name: DiceMetric
           include_background: False
           reduction: mean
           get_not_nans: False
-      - name: FromMONAI
-        input_keys:
-        - preds_pancreas
-        - label_pancreas
-        log_label: val_meandice_pancreas
-        args:
-          name: DiceMetric
-          include_background: False
-          reduction: mean
-          get_not_nans: False
-      - name: FromMONAI
-        input_keys:
-        - preds_spleen
-        - label_spleen
-        log_label: val_meandice_spleen
-        args:
-          name: DiceMetric
-          include_background: False
-          reduction: mean
-          get_not_nans: False
-      
 
+      test:
+      - name: MONAI
+        input_keys:
+        - preds
+        - label
+        log_label: test_meandice
+        args:
+          name: DiceMetric
+          include_background: False
+          reduction: mean
+          get_not_nans: False
+      - name: MONAI
+        input_keys:
+        - preds_tumor
+        - label_tumor
+        log_label: test_meandice_tumor
+        args:
+          name: DiceMetric
+          include_background: False
+          reduction: mean
+          get_not_nans: False
+      - name: MONAI
+        input_keys:
+        - preds_metastasis
+        - label_metastasis
+        log_label: test_meandice_metastasis
+        args:
+          name: DiceMetric
+          include_background: False
+          reduction: mean
+          get_not_nans: False
 
 data:
   name: DecathlonDataModule
@@ -275,7 +317,7 @@ data:
     shm_cache_path: /dev/shm
 
   training:
-    data_list_key: training
+    data_list_key: [fold_0, fold_1, fold_2]
     transforms:
     - name: LoadImaged
       args:
@@ -310,9 +352,13 @@ data:
         max_zoom: 1.4
         mode: [trilinear, nearest]
         keep_size: False
-    - name: NormalizeIntensityd
+    - name: NormalizeIntensityRanged
       args:
         keys: [image]
+        a_min: *intensity_min
+        a_max: *intensity_max
+        subtrahend: *intensity_mean
+        divisor: *intensity_std
     - name: SpatialPadd
       args:
         keys: [image, label]
@@ -374,8 +420,6 @@ data:
       path: manafaln.data
       args:
         cache_rate: 1.0
-        cache_mode: memory
-        # cache_dir: *cache_dir
         num_workers: 8
 
     dataloader:
@@ -384,10 +428,10 @@ data:
         batch_size: *batch_size
         shuffle: True
         pin_memory: False
-        num_workers: 4
+        num_workers: 8
 
   validation:
-    data_list_key: validation
+    data_list_key: [fold_3]
     transforms:
     - name: LoadImaged
       args:
@@ -405,9 +449,13 @@ data:
         keys: [image, label]
         pixdim: *spacing
         mode: [bilinear, nearest]
-    - name: NormalizeIntensityd
+    - name: NormalizeIntensityRanged
       args:
         keys: [image]
+        a_min: *intensity_min
+        a_max: *intensity_max
+        subtrahend: *intensity_mean
+        divisor: *intensity_std
     - name: SaveMeta
       path: custom.meta
       args:
@@ -429,10 +477,55 @@ data:
       args:
         batch_size: 1
         pin_memory: False
-        num_workers: 4
+        num_workers: 8
+
+  test:
+    data_list_key: [fold_4]
+    transforms:
+    - name: LoadImaged
+      args:
+        keys: [image, label]
+        image_only: True
+    - name: EnsureChannelFirstd
+      args:
+        keys: [image, label]
+    - name: Orientationd
+      args:
+        keys: [image, label]
+        as_closest_canonical: True
+    - name: Spacingd
+      args:
+        keys: [image, label]
+        pixdim: *spacing
+        mode: [bilinear, nearest]
+    - name: NormalizeIntensityRanged
+      args:
+        keys: [image]
+        a_min: *intensity_min
+        a_max: *intensity_max
+        subtrahend: *intensity_mean
+        divisor: *intensity_std
+    - name: SaveMeta
+      path: custom.meta
+      args:
+        keys: [image, label]
+        meta_keys: [image_meta_dict, label_meta_dict]
+    - name: EnsureTyped
+      args:
+        keys: [image, label]
+
+    dataset:
+      name: Dataset
+
+    dataloader:
+      name: DataLoader
+      args:
+        batch_size: 1
+        pin_memory: False
+        num_workers: 8
 
   predict:
-    data_list_key: testing
+    data_list_key: [fold_4]
     transforms:
     - name: LoadImaged
       args:
@@ -450,9 +543,13 @@ data:
         keys: [image]
         pixdim: *spacing
         mode: [bilinear]
-    - name: NormalizeIntensityd
+    - name: NormalizeIntensityRanged
       args:
         keys: [image]
+        a_min: *intensity_min
+        a_max: *intensity_max
+        subtrahend: *intensity_mean
+        divisor: *intensity_std
     - name: SaveMeta
       path: custom.meta
       args:
@@ -470,5 +567,5 @@ data:
       args:
         batch_size: 1
         pin_memory: True
-        num_workers: 4
+        num_workers: 8
 
