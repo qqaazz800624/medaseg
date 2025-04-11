@@ -56,7 +56,7 @@ trainer:
   logger:
     - name: WandbLogger
       args:
-        name: PINKCC-Challenge
+        name: PINKCC-Challenge_v0
         project: PINKCC
         version: 'version_0'
 
@@ -218,7 +218,7 @@ workflow:
         args:
           keys: [preds]
           output_dir: results
-          output_postfix: preds
+          output_postfix: seg
           output_ext: .nii.gz
           resample: True
           mode: nearest

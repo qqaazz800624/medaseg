@@ -9,4 +9,4 @@ CUDA_DEVICE=${1:-$DEFAULT_CUDA_DEVICE}
 # Set the CUDA device to use
 export CUDA_VISIBLE_DEVICES=$CUDA_DEVICE
 
-python -m manafaln.apps.train --config config/config_train_pinkcc.yaml --seed 42 $@
+python -m manafaln.apps.train --config config/config_train_pinkcc_nnUNet.yaml --seed 42 $@
