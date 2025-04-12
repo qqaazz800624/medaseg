@@ -8,13 +8,13 @@ variables:
   data_list: &data_list /neodata/open_dataset/PINKCC/datalist.json
 
   # For data transform
-  intensity:
-    min: &intensity_min -941.0
-    max: &intensity_max 133.0
-    mean: &intensity_mean 38.804985821291375
-    std: &intensity_std 92.42229571222241
-  spacing: &spacing [1.5, 1.5, 5.0]
-  roi_size: &roi_size [224, 224, 48]
+  # intensity:
+  #   min: &intensity_min -941.0
+  #   max: &intensity_max 133.0
+  #   mean: &intensity_mean 38.804985821291375
+  #   std: &intensity_std 92.42229571222241
+  spacing: &spacing [1.5, 1.5, 1.5]
+  roi_size: &roi_size [128, 128, 128]
 
   num_samples: &num_samples 4
   batch_size: &batch_size 2
@@ -56,9 +56,9 @@ trainer:
   logger:
     - name: WandbLogger
       args:
-        name: PINKCC-Challenge_v0
+        name: PINKCC-Challenge_mednext_v1
         project: PINKCC
-        version: 'version_0'
+        version: 'version_1'
 
 workflow:
   name: SupervisedLearningV2
@@ -77,33 +77,16 @@ workflow:
 
   components:
     model:
-      name: DynUNet
+      name: mednext_base
+      path: custom.mednext
       args:
         spatial_dims: 3
         in_channels: 1
         out_channels: 3
-        kernel_size:
-        - [3, 3, 3]
-        - [3, 3, 3]
-        - [3, 3, 3]
-        - [3, 3, 3]
-        - [3, 3, 3]
-        - [3, 3, 3]
-        strides:
-        - [1, 1, 1]
-        - [2, 2, 1]
-        - [2, 2, 1]
-        - [2, 2, 2]
-        - [2, 2, 2]
-        - [2, 2, 2]
-        upsample_kernel_size:
-        - [2, 2, 1]
-        - [2, 2, 1]
-        - [2, 2, 2]
-        - [2, 2, 2]
-        - [2, 2, 2]
+        kernel_size: 3
+        filters: 32
         deep_supervision: True
-        deep_supr_num: 3
+        use_grad_checkpoint: True
 
     post_processing:
     - name: DeepSupervisionSplitDimd
@@ -125,12 +108,9 @@ workflow:
         batch: True
 
     optimizer:
-      name: SGD
+      name: AdamW
       args:
         lr: *lr
-        momentum: 0.99
-        nesterov: True
-        weight_decay: 1e-5
 
     scheduler:
       name: CosineAnnealingLR
@@ -352,13 +332,9 @@ data:
         max_zoom: 1.4
         mode: [trilinear, nearest]
         keep_size: False
-    - name: NormalizeIntensityRanged
+    - name: NormalizeIntensityd
       args:
         keys: [image]
-        a_min: *intensity_min
-        a_max: *intensity_max
-        subtrahend: *intensity_mean
-        divisor: *intensity_std
     - name: SpatialPadd
       args:
         keys: [image, label]
@@ -428,7 +404,7 @@ data:
         batch_size: *batch_size
         shuffle: True
         pin_memory: False
-        num_workers: 8
+        num_workers: 4
 
   validation:
     data_list_key: [fold_3]
@@ -449,13 +425,9 @@ data:
         keys: [image, label]
         pixdim: *spacing
         mode: [bilinear, nearest]
-    - name: NormalizeIntensityRanged
+    - name: NormalizeIntensityd
       args:
         keys: [image]
-        a_min: *intensity_min
-        a_max: *intensity_max
-        subtrahend: *intensity_mean
-        divisor: *intensity_std
     - name: SaveMeta
       path: custom.meta
       args:
@@ -477,7 +449,7 @@ data:
       args:
         batch_size: 1
         pin_memory: False
-        num_workers: 8
+        num_workers: 4
 
   test:
     data_list_key: [fold_4]
@@ -498,13 +470,9 @@ data:
         keys: [image, label]
         pixdim: *spacing
         mode: [bilinear, nearest]
-    - name: NormalizeIntensityRanged
+    - name: NormalizeIntensityd
       args:
         keys: [image]
-        a_min: *intensity_min
-        a_max: *intensity_max
-        subtrahend: *intensity_mean
-        divisor: *intensity_std
     - name: SaveMeta
       path: custom.meta
       args:
@@ -522,7 +490,7 @@ data:
       args:
         batch_size: 1
         pin_memory: False
-        num_workers: 8
+        num_workers: 4
 
   predict:
     data_list_key: [fold_0, fold_1, fold_2, fold_3, fold_4]
@@ -543,13 +511,9 @@ data:
         keys: [image]
         pixdim: *spacing
         mode: [bilinear]
-    - name: NormalizeIntensityRanged
+    - name: NormalizeIntensityd
       args:
         keys: [image]
-        a_min: *intensity_min
-        a_max: *intensity_max
-        subtrahend: *intensity_mean
-        divisor: *intensity_std
     - name: SaveMeta
       path: custom.meta
       args:
@@ -567,5 +531,5 @@ data:
       args:
         batch_size: 1
         pin_memory: True
-        num_workers: 8
+        num_workers: 4
 
