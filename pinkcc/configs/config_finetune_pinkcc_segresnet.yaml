@@ -171,7 +171,7 @@ workflow:
         args:
           keys: [preds]
           output_dir: results
-          output_postfix: preds
+          output_postfix: seg
           output_ext: .nii.gz
           resample: True
           mode: nearest
