@@ -1,0 +1,471 @@
+variables:
+  epochs: &epochs 1200
+  base_lr: &base_lr 1e-4
+  warmup_epochs: &warmup_epochs 20
+  weight_decay: &weight_decay 1e-5
+
+  # Model configuration
+  num_classes: &num_classes 3
+  backbone: &backbone SegResNet
+  pretrained: &pretrained pretrained/supervised_suprem_segresnet_2100.pth
+
+  # Data settings
+  data_root: &data_root /neodata/open_dataset/PINKCC
+  data_list: &data_list /neodata/open_dataset/PINKCC/datalist.json
+
+  # Transform settings
+  spacing: &spacing [1.5, 1.5, 1.5]
+  roi_size: &roi_size [96, 96, 96]
+  min_intensity: &min_intensity -100.0
+  max_intensity: &max_intensity  200.0
+
+  num_samples: &num_samples 2
+  batch_size: &batch_size 4
+
+trainer:
+  settings:
+    # GPU Usage
+    accelerator: auto
+    devices: 1
+    strategy: ddp
+
+    max_epochs: *epochs
+    check_val_every_n_epoch: 10
+
+    benchmark: True
+    precision: 32
+    deterministic: False
+    detect_anomaly: False
+
+    # Avoid gradient explosion
+    gradient_clip_val: 0.1
+    gradient_clip_algorithm: norm
+
+  callbacks:
+    - name: LearningRateMonitor
+    - name: EarlyStopping
+      args:
+        monitor: val_meandice
+        mode: max
+        patience: 10 
+    - name: ModelCheckpoint
+      args:
+        filename: best_model
+        monitor: val_meandice
+        mode: max
+        save_top_k: 1
+        save_last: True
+        verbose: True
+
+  logger:
+    - name: WandbLogger
+      args:
+        project: PINKCC
+        name: PINKCC_SuPrem_segresnet_v2
+        job_type: hptune
+        version: version_2
+
+workflow:
+  name: SupervisedLearningV2
+
+  settings:
+    scheduler:
+      interval: epoch
+      frequency: 1
+    decollate:
+      predict: [image, image_meta_dict, label, label_meta_dict, preds]
+
+  components:
+    model:
+      name: SuPremModel
+      path: custom.suprem_model
+      args:
+        backbone: *backbone
+        img_size: *roi_size
+        in_channels: 1
+        out_channels: *num_classes
+        pretrained: *pretrained
+
+    post_processing: []
+
+    loss:
+      - name: DiceCELoss
+        args:
+          to_onehot_y: True
+          softmax: True
+
+    optimizer:
+      name: AdamW
+      args:
+        lr: *base_lr
+        weight_decay: *weight_decay
+
+    scheduler:
+      name: LinearWarmupCosineAnnealingLR
+      path: custom.scheduler
+      args:
+        warmup_epochs: *warmup_epochs
+        max_epochs: *epochs
+
+    inferer:
+      name: SlidingWindowInferer
+      args:
+        roi_size: *roi_size
+        sw_batch_size: 1
+        overlap: 0.75
+        mode: gaussian
+
+    post_transforms:
+      training:
+        - name: AsDiscreted
+          path: monai.transforms
+          args:
+            keys: [preds, label]
+            argmax: [True, False]
+            to_onehot: [3, 3]
+            dim: 1
+
+      validation:
+        - name: AsDiscreted
+          path: monai.transforms
+          args:
+            keys: [preds, label]
+            argmax: [True, False]
+            to_onehot: [3, 3]
+            dim: 1
+        - name: SplitDimd
+          args:
+            keys: [preds, label]
+            dim: 1
+            output_postfixes:
+              - background
+              - tumor
+              - metastasis
+            update_meta: False
+
+      test:
+        - name: AsDiscreted
+          path: monai.transforms
+          args:
+            keys: [preds, label]
+            argmax: [True, False]
+            to_onehot: [3, 3]
+            dim: 1
+        - name: SplitDimd
+          args:
+            keys: [preds, label]
+            dim: 1
+            output_postfixes:
+              - background
+              - tumor
+              - metastasis
+            update_meta: False
+
+      predict:
+      - name: AsDiscreted
+        path: monai.transforms
+        args:
+          keys: [preds]
+          argmax: [True]
+      - name: SaveImaged
+        args:
+          keys: [preds]
+          output_dir: results
+          output_postfix: preds
+          output_ext: .nii.gz
+          resample: True
+          mode: nearest
+          dtype: float32
+          squeeze_end_dims: True
+          separate_folder: False
+          print_log: False
+
+    metrics:
+      training:
+        - name: FromMONAI
+          input_keys:
+            - preds
+            - label
+          log_label: train_meandice
+          args:
+            name: DiceMetric
+            include_background: False
+            reduction: mean
+            get_not_nans: False
+
+      validation:
+        - name: FromMONAI
+          input_keys: [preds, label]
+          log_label: val_meandice
+          args:
+            name: DiceMetric
+            include_background: False
+            reduction: mean
+            get_not_nans: False
+        - name: FromMONAI
+          input_keys: [preds_tumor, label_tumor]
+          log_label: val_meandice_tumor
+          args:
+            name: DiceMetric
+            include_background: False
+            reduction: mean
+            get_not_nans: False
+        - name: FromMONAI
+          input_keys: [preds_metastasis, label_metastasis]
+          log_label: val_meandice_metastasis
+          args:
+            name: DiceMetric
+            include_background: False
+            reduction: mean
+            get_not_nans: False
+
+      test:
+        - name: FromMONAI
+          input_keys: [preds, label]
+          log_label: test_meandice
+          args:
+            name: DiceMetric
+            include_background: False
+            reduction: mean
+            get_not_nans: False
+        - name: FromMONAI
+          input_keys: [preds_tumor, label_tumor]
+          log_label: test_meandice_tumor
+          args:
+            name: DiceMetric
+            include_background: False
+            reduction: mean
+            get_not_nans: False
+        - name: FromMONAI
+          input_keys: [preds_metastasis, label_metastasis]
+          log_label: test_meandice_metastasis
+          args:
+            name: DiceMetric
+            include_background: False
+            reduction: mean
+            get_not_nans: False
+
+data:
+  name: DecathlonDataModule
+
+  settings:
+    data_root: *data_root
+    data_list: *data_list
+    is_segmentation: True
+
+  training:
+    data_list_key: [fold_0, fold_1, fold_2]
+    transforms:
+      - name: LoadImaged
+        args:
+          keys: [image, label]
+          image_only: True
+      - name: EnsureChannelFirstd
+        args:
+          keys: [image, label]
+      - name: Orientationd
+        args:
+          keys: [image, label]
+          axcodes: RAS
+      - name: ScaleIntensityRanged
+        args:
+          keys: [image]
+          a_min: *min_intensity
+          a_max: *max_intensity
+          b_min: 0.0
+          b_max: 1.0
+          clip: True
+      - name: Spacingd
+        args:
+          keys: [image, label]
+          pixdim: *spacing
+          mode: [bilinear, nearest]
+      - name: RandRotate90d
+        args:
+          keys: [image, label]
+          prob: 0.8
+          max_k: 3
+      - name: RandFlipd
+        args:
+          keys: [image, label]
+          prob: 0.4
+          spatial_axis: null
+      - name: SpatialPadd
+        args:
+          keys: [image, label]
+          spatial_size: *roi_size
+          mode: constant
+      - name: RandCropByPosNegLabeld
+        args:
+          keys: [image, label]
+          label_key: label
+          spatial_size: *roi_size
+          pos: 3
+          neg: 1
+          num_samples: *num_samples
+          image_key: image
+          image_threshold: 0
+      - name: RandShiftIntensityd
+        args:
+          keys: [image]
+          offsets: 0.1
+          prob: 0.5
+      - name: RandGaussianSmoothd
+        args:
+          keys: [image]
+          sigma_x: [0.5, 1.15]
+          sigma_y: [0.5, 1.15]
+          sigma_z: [0.5, 1.15]
+          prob: 0.2
+      - name: RandGaussianNoised
+        args:
+          keys: [image]
+          mean: 0.0
+          std: 0.01
+          prob: 0.2
+      - name: EnsureTyped
+        args:
+          keys: [image, label]
+
+    dataset:
+      name: HybridCacheDataset
+      args:
+        cache_rate: 1.0
+        cache_mode: persistent
+        cache_dir: cache
+        num_workers: 8
+
+    dataloader:
+      name: DataLoader
+      args:
+        batch_size: *batch_size
+        shuffle: True
+        num_workers: 8
+
+  validation:
+    data_list_key: [fold_3]
+    transforms:
+      - name: LoadImaged
+        args:
+          keys: [image, label]
+          image_only: True
+      - name: EnsureChannelFirstd
+        args:
+          keys: [image, label]
+      - name: Orientationd
+        args:
+          keys: [image, label]
+          axcodes: RAS
+      - name: ScaleIntensityRanged
+        args:
+          keys: [image]
+          a_min: *min_intensity
+          a_max: *max_intensity
+          b_min: 0.0
+          b_max: 1.0
+          clip: True
+      - name: Spacingd
+        args:
+          keys: [image, label]
+          pixdim: *spacing
+          mode: [bilinear, nearest]
+      - name: EnsureTyped
+        args:
+          keys: [image, label]
+
+    dataset:
+      name: HybridCacheDataset
+      args:
+        cache_rate: 1.0
+        cache_mode: persistent
+        cache_dir: cache
+        num_workers: 8
+
+    dataloader:
+      name: DataLoader
+      args:
+        batch_size: 1
+        shuffle: False
+        num_workers: 8
+
+  test:
+    data_list_key: [fold_4]
+    transforms:
+      - name: LoadImaged
+        args:
+          keys: [image, label]
+          image_only: True
+      - name: EnsureChannelFirstd
+        args:
+          keys: [image, label]
+      - name: Orientationd
+        args:
+          keys: [image, label]
+          axcodes: RAS
+      - name: ScaleIntensityRanged
+        args:
+          keys: [image]
+          a_min: *min_intensity
+          a_max: *max_intensity
+          b_min: 0.0
+          b_max: 1.0
+          clip: True
+      - name: Spacingd
+        args:
+          keys: [image, label]
+          pixdim: *spacing
+          mode: [bilinear, nearest]
+      - name: EnsureTyped
+        args:
+          keys: [image, label]
+
+    dataset:
+      name: Dataset
+
+    dataloader:
+      name: DataLoader
+      args:
+        batch_size: 1
+        shuffle: False
+        num_workers: 8
+
+  predict:
+    data_list_key: [fold_4]
+    transforms:
+      - name: LoadImaged
+        args:
+          keys: [image]
+          image_only: True
+      - name: EnsureChannelFirstd
+        args:
+          keys: [image]
+      - name: Orientationd
+        args:
+          keys: [image]
+          axcodes: RAS
+      - name: ScaleIntensityRanged
+        args:
+          keys: [image]
+          a_min: *min_intensity
+          a_max: *max_intensity
+          b_min: 0.0
+          b_max: 1.0
+          clip: True
+      - name: Spacingd
+        args:
+          keys: [image]
+          pixdim: *spacing
+          mode: [bilinear]
+      - name: EnsureTyped
+        args:
+          keys: [image]
+
+    dataset:
+      name: Dataset
+
+    dataloader:
+      name: DataLoader
+      args:
+        batch_size: 1
+        shuffle: False
+        num_workers: 8

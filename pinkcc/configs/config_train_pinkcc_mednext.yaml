@@ -35,7 +35,7 @@ trainer:
 
     # Options for trainings speed
     benchmark: True
-    precision: 16-mixed
+    precision: bf16-mixed
     detect_anomaly: False
 
     # Avoid gradient explosion
@@ -194,11 +194,16 @@ workflow:
         args:
           keys: [preds]
           argmax: [True]
+      - name: KeepLargestConnectedComponentd
+        args:
+          keys: [preds]
+          is_onehot: False
+          independent: False
       - name: SaveImaged
         args:
           keys: [preds]
           output_dir: results
-          output_postfix: seg
+          output_postfix: preds
           output_ext: .nii.gz
           resample: True
           mode: nearest
@@ -210,7 +215,7 @@ workflow:
     metrics:
 
       training:
-      - name: MONAI
+      - name: FromMONAI
         input_keys:
         - preds
         - label
@@ -222,7 +227,7 @@ workflow:
           get_not_nans: False
 
       validation:
-      - name: MONAI
+      - name: FromMONAI
         input_keys:
         - preds
         - label
@@ -232,7 +237,7 @@ workflow:
           include_background: False
           reduction: mean
           get_not_nans: False
-      - name: MONAI
+      - name: FromMONAI
         input_keys:
         - preds_tumor
         - label_tumor
@@ -242,7 +247,7 @@ workflow:
           include_background: False
           reduction: mean
           get_not_nans: False
-      - name: MONAI
+      - name: FromMONAI
         input_keys:
         - preds_metastasis
         - label_metastasis
@@ -254,7 +259,7 @@ workflow:
           get_not_nans: False
 
       test:
-      - name: MONAI
+      - name: FromMONAI
         input_keys:
         - preds
         - label
@@ -264,7 +269,7 @@ workflow:
           include_background: False
           reduction: mean
           get_not_nans: False
-      - name: MONAI
+      - name: FromMONAI
         input_keys:
         - preds_tumor
         - label_tumor
@@ -274,7 +279,7 @@ workflow:
           include_background: False
           reduction: mean
           get_not_nans: False
-      - name: MONAI
+      - name: FromMONAI
         input_keys:
         - preds_metastasis
         - label_metastasis
@@ -493,7 +498,7 @@ data:
         num_workers: 4
 
   predict:
-    data_list_key: [fold_0, fold_1, fold_2, fold_3, fold_4]
+    data_list_key: [fold_4]
     transforms:
     - name: LoadImaged
       args:
