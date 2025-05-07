@@ -11,4 +11,4 @@ export CUDA_VISIBLE_DEVICES=$CUDA_DEVICE
 
 python -m manafaln.apps.predict \
     -c ${1:-"configs/config_finetune_pinkcc_segresnet.yaml"} \
-    -f PINKCC/49cfo62r/checkpoints/best_model.ckpt 
+    -f PINKCC/49cfo62r/checkpoints/best_model.ckpt

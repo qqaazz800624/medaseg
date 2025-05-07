@@ -62,9 +62,9 @@ trainer:
     - name: WandbLogger
       args:
         project: PINKCC
-        name: PINKCC_SuPrem_segresnet_v2
+        name: PINKCC_SuPrem_segresnet_v3
         job_type: hptune
-        version: version_2
+        version: 'version_3'
 
 workflow:
   name: SupervisedLearningV2
@@ -171,7 +171,7 @@ workflow:
       - name: SaveImaged
         args:
           keys: [preds]
-          output_dir: results
+          output_dir: results_20250506
           output_postfix: seg
           output_ext: .nii.gz
           resample: True
@@ -296,24 +296,24 @@ data:
           keys: [image, label]
           spatial_size: *roi_size
           mode: constant
-      - name: RandCropByLabelClassesd
-        args:
-          keys: [image, label]
-          label_key: label
-          spatial_size: *roi_size
-          ratios: *ratios
-          num_classes: 3
-          num_samples: *num_samples
-      # - name: RandCropByPosNegLabeld
+      # - name: RandCropByLabelClassesd
       #   args:
       #     keys: [image, label]
       #     label_key: label
       #     spatial_size: *roi_size
-      #     pos: 3
-      #     neg: 1
+      #     ratios: *ratios
+      #     num_classes: 3
       #     num_samples: *num_samples
-      #     image_key: image
-      #     image_threshold: 0
+      - name: RandCropByPosNegLabeld
+        args:
+          keys: [image, label]
+          label_key: label
+          spatial_size: *roi_size
+          pos: 3
+          neg: 1
+          num_samples: *num_samples
+          image_key: image
+          image_threshold: 0
       - name: RandShiftIntensityd
         args:
           keys: [image]
@@ -439,7 +439,7 @@ data:
         num_workers: 8
 
   predict:
-    data_list_key: [fold_4]
+    data_list_key: [fold_0, fold_1, fold_2, fold_3]
     transforms:
       - name: LoadImaged
         args:
