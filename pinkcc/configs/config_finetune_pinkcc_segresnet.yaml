@@ -11,7 +11,7 @@ variables:
 
   # Data settings
   data_root: &data_root /neodata/open_dataset/PINKCC
-  data_list: &data_list /neodata/open_dataset/PINKCC/datalist.json
+  data_list: &data_list /neodata/open_dataset/PINKCC/datalist_eval.json
 
   # Transform settings
   spacing: &spacing [1.5, 1.5, 1.5]
@@ -171,7 +171,7 @@ workflow:
       - name: SaveImaged
         args:
           keys: [preds]
-          output_dir: results_20250506
+          output_dir: /neodata/open_dataset/PINKCC/results_eval_20250508
           output_postfix: seg
           output_ext: .nii.gz
           resample: True
@@ -439,7 +439,7 @@ data:
         num_workers: 8
 
   predict:
-    data_list_key: [fold_0, fold_1, fold_2, fold_3]
+    data_list_key: [fold_eval]
     transforms:
       - name: LoadImaged
         args:
