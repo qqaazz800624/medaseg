@@ -24,21 +24,28 @@ def resolve_datalist(
 
     cases = []
     for split in split_keys:
+        if split not in raw_data:
+            raise ValueError(f"Split key '{split}' not found in datalist.")
         cases += raw_data[split]
 
     data = []
     prefix = Path(dataroot)
     for case in cases:
-        img = prefix / case[img_key]
+        img_list = [prefix / img_path for img_path in case[img_key]]
         seg = prefix / case[seg_key]
-        if img.exists() and seg.exists():
-            data.append({"image": str(img), "label": str(seg)})
-        else:
+
+        # 檢查每個影像是否存在
+        for img in img_list:
             if not img.exists():
                 raise RuntimeError(f"Image file {img} does not exist!")
-            if not seg.exists():
-                raise RuntimeError(f"Segmentation label file does not exist!")
+        if not seg.exists():
+            raise RuntimeError(f"Segmentation label file {seg} does not exist!")
+
+        data.append({"image": [str(p) for p in img_list], "label": str(seg)})
+
     return data
+
+
 
 def percentile(hist):
     cs = np.cumsum(hist)
@@ -51,50 +58,45 @@ def analysis(data):
     spacings = []
     histogram = np.zeros(2049, dtype=np.int64)
 
-    # Scan through all cases
     for case in tqdm(data, desc="Collecting information from data"):
-        img = nib.load(case["image"])
-        img = nib.as_closest_canonical(img)
         seg = nib.load(case["label"])
         seg = nib.as_closest_canonical(seg)
+        seg_shape = seg.shape
 
-        if img.shape != seg.shape:
-            raise RuntimeError(f"The shape of image and segmentation must be the same.")
+        for img_path in case["image"]:
+            img = nib.load(img_path)
+            img = nib.as_closest_canonical(img)
 
-        x, y, z = img.shape
-        xs, ys, zs, _ = np.absolute(
-            np.diag(img.affine)
-        )
+            if img.shape != seg_shape:
+                raise RuntimeError(f"Shape mismatch between image {img_path} and segmentation.")
 
-        shapes.append([x / xs, y / ys, z / zs])
-        spacings.append([xs, ys, zs])
+            x, y, z = img.shape
+            xs, ys, zs, _ = np.abs(np.diag(img.affine))
+            shapes.append([x / xs, y / ys, z / zs])
+            spacings.append([xs, ys, zs])
 
-        img_data = np.asanyarray(img.dataobj).astype(np.int16)
-        seg_data = np.asanyarray(seg.dataobj).astype(np.uint8)
+            img_data = np.asanyarray(img.dataobj).astype(np.int16)
+            seg_data = np.asanyarray(seg.dataobj).astype(np.uint8)
 
-        mask = np.where(seg_data > 0, False, True)
-        masked_data = np.ma.array(img_data, mask=mask)
+            # 遮罩只看 label > 0 的區域（只統計 foreground）
+            mask = np.where(seg_data > 0, False, True)
+            masked_data = np.ma.array(img_data, mask=mask)
 
-        hist, _ = np.histogram(masked_data.compressed(), bins=2049, range=(-1024, 1024))
-        histogram += hist
+            hist, _ = np.histogram(masked_data.compressed(), bins=2049, range=(-1024, 1024))
+            histogram += hist
 
-    # Find the global intensity percentiles
+    # 統計 intensity 範圍與 mean/std
     min_intensity, max_intensity = percentile(histogram)
     min_intensity -= 1024
     max_intensity -= 1024
 
-    # Compute global mean and std from histogram
-    intensity = np.array(range(-1024, 1025))
+    intensity = np.arange(-1024, 1025)
     mean = np.average(intensity, weights=histogram)
     var = np.sum(((intensity - mean) ** 2) * histogram) / np.sum(histogram)
     std = np.sqrt(var)
 
-    # Compute target spacing
     spacing = np.median(spacings, axis=0)
-
-    # Compute median of shape in target spacing
-    shape = np.median(shapes, axis=0) * spacing
-    shape = shape.astype(np.int32)
+    shape = (np.median(shapes, axis=0) * spacing).astype(np.int32)
 
     stats = {
         "intensity": {
@@ -107,6 +109,7 @@ def analysis(data):
         "shape": shape.tolist()
     }
     return stats
+
 
 if __name__ == "__main__":
     parser = ArgumentParser()
