@@ -158,4 +158,4 @@ cache
 *.nii.gz
 segmentation_spleen
 apps
-hypo
+hypo_dataset
