@@ -1,7 +1,17 @@
 #!/bin/bash
 
-python scripts/run_analysis.py \
-    --datalist /neodata/hsu/hypo/Final_dataset/HYPO_NTUH_dataset/datalist.json \
-    --dataroot /neodata/hsu/hypo/Final_dataset/HYPO_NTUH_dataset \
-    --data_split_keys fold_0 fold_1 fold_2 fold_3 fold_4 fold_5 fold_6 fold_7 fold_8 \
-    --output scripts/analysis.json \
+python scripts/run_analysis_new.py \
+    --data-list-keys fold_0 \
+    --data-list-keys fold_1 \
+    --data-list-keys fold_2 \
+    --data-list-keys fold_3 \
+    --data-list-keys fold_4 \
+    --data-list-keys fold_5 \
+    --data-list-keys fold_6 \
+    --data-list-keys fold_7 \
+    --data-list-keys fold_8 \
+    --data-list-keys fold_9 \
+    --output-file scripts/analysis.json \
+    /neodata/hsu/hypo/Final_dataset/HYPO_NTUH_dataset_affine_matched \
+    /neodata/hsu/hypo/Final_dataset/HYPO_NTUH_dataset_affine_matched/datalist.json
+

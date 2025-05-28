@@ -8,11 +8,16 @@ from sklearn.model_selection import KFold
 # Dataset root
 data_root = "/neodata/hsu/hypo/Final_dataset/HYPO_NTUH_dataset"
 output_json = "datalist.json"
+excluded_patient = "3729053"
 
-# List all patient IDs (folder names)
+# patient_ids = sorted([
+#     name for name in os.listdir(data_root)
+#     if os.path.isdir(os.path.join(data_root, name))
+# ])
+
 patient_ids = sorted([
-    name for name in os.listdir(data_root)
-    if os.path.isdir(os.path.join(data_root, name))
+    pid for pid in os.listdir(data_root)
+    if os.path.isdir(os.path.join(data_root, pid)) and pid != excluded_patient
 ])
 
 #%%
@@ -24,7 +29,7 @@ for pid in patient_ids:
         "image": [
             f"{pid}/Bspline_6DOF_regi_SITK_corrected_T1c_origin.nii.gz",
             f"{pid}/Bspline_6DOF_regi_SITK_corrected_T1n_origin.nii.gz",
-            f"{pid}/T2_origin.nii.gz"
+            f"{pid}/SITK_corrected_T2_origin.nii.gz"
         ],
         "label": f"{pid}/T2_label.nii.gz"
     }
@@ -38,8 +43,8 @@ for fold_idx, (_, test_idx) in enumerate(kf.split(samples)):
     fold_key = f"fold_{fold_idx}"
     folds[fold_key] = [samples[i] for i in test_idx]
 
-#%%
 
+#%%
 # Save JSON
 with open(os.path.join(data_root, output_json), "w") as f:
     json.dump(folds, f, indent=4)
